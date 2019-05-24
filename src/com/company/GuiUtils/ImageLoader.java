@@ -5,13 +5,15 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 public class ImageLoader {
 
-    public static Image loadImage(String uri){
+    public static Image loadImage(URL url){
         BufferedImage img = null;
         try {
-            img = ImageIO.read(new File(uri));
+            System.out.println(url);
+            img = ImageIO.read(url);
         } catch (IOException e) {e.printStackTrace();
         }
 

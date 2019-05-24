@@ -1,22 +1,25 @@
 package com.company.Hero;
 
+import java.net.URL;
+
 public class Hero extends FieldItem{
     private String name;
     private int health;
     private int damage;
     private TurnState turnState;
 
-    private String view = "d:/default.png";
+    //private String view = "d:/default.png";
+    private URL view;
 
     public void setHealth(int health) {
         this.health = health;
     }
 
-    public void setView(String view) {
+    public void setView(URL view) {
         this.view = view;
     }
 
-    public String getView() {
+    public URL getView() {
         return view;
     }
 
