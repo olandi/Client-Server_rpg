@@ -26,6 +26,8 @@ public class Timer extends JPanel {
                 this.duration.reset();
             }
 
+            if (ServerUtils.isOneHeroRemain()){timer.stop(); jLabel.setText("Game over");}
+
         } );
         timer.start();
     }

@@ -1,6 +1,8 @@
 package com.company.Timer;
 
 import com.company.BattleView.Main1;
+import com.company.GameFieldGUI;
+import com.company.Hero.Hero;
 import com.company.Main;
 import com.company.gameField.GameField;
 
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 public class Tim {
     private int initialValue;
     private int count;
+    private int turn = 0;
 
     public Tim(int count) {
         this.count = count;
@@ -32,15 +35,20 @@ public class Tim {
     }
 
     public void reset(){
-
+        turn++;
         while (ServerUtils.movementActions.size()>0){
             ServerUtils.movementActions.poll().perform();
         }
 
         ServerUtils.computeDamage();
 
+        GameFieldGUI.combatLog.appendText("Round "+turn+"\n");
 
+        for(Hero hero: ServerUtils.heroes){
+            GameFieldGUI.combatLog.appendText("Hero: "+hero.getName()+" ("+hero.getHealth()+") HP"+"\n");
+        }
 
+        ServerUtils.checkAliveHero();
 
 
         GameField.setAllSelectedFalse();

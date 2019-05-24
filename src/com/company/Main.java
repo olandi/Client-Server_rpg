@@ -35,8 +35,8 @@ public class Main {
         {
             frame = new JFrame("W");
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            frame.setSize(800, 600);
-            frame.setResizable(false);
+            frame.setSize(800, 800);
+            frame.setResizable(true);
 
 
             //frame.add(BorderLayout)
@@ -46,6 +46,8 @@ public class Main {
 
 
             frame.add(gameFieldGUI, BorderLayout.CENTER);
+
+            frame.add(GameFieldGUI.combatLog.getMiddlePanel(),BorderLayout.SOUTH);
 
             gameFieldGUI.addMouseListener(new MouseAdapter() {
                 @Override
@@ -203,6 +205,7 @@ public class Main {
                 }
             });
 
+            //frame.pack();
             frame.setVisible(true);
         });
     }

@@ -26,8 +26,7 @@ public class ServerUtils {
         boolean result = false;
         for (Hero hero : heroes) {
 
-            System.out.println("Hero: " + hero+" " + hero.getTurnState());
-
+            System.out.println("Hero: " + hero + " " + hero.getTurnState());
 
 
             //result = result || hero.getTurnState().equals(TurnState.ReadyForTurn);
@@ -35,11 +34,23 @@ public class ServerUtils {
 
 
         }
-        System.out.println("Current hero: "+Battle.currentHero);
+        System.out.println("Current hero: " + Battle.currentHero);
         return result;
     }
 
     /*public static boolean isReadyToMoveHeroExist() {return true;}*/
+
+    public static void checkAliveHero() {
+        for (Hero hero : heroes) {
+            if (hero.getHealth() < 0) GameField.removeHero(hero);
+        }
+    }
+
+
+    public static boolean isOneHeroRemain() {
+        return heroes.size() <= 1;
+    }
+
 
     public static void getAndUpdateAllHeroes() {
         heroes = new ArrayList<>();

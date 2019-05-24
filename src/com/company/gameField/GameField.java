@@ -1,16 +1,12 @@
 package com.company.gameField;
 
-import com.company.Hero.FieldItem;
-import com.company.Hero.Hero;
-import com.company.Hero.HeroImages;
-import com.company.Hero.TurnState;
+import com.company.Hero.*;
 import com.company.ex2.Hexagon;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameField {
-
 
 
     static private List<HexagonItem> list;
@@ -38,7 +34,7 @@ public class GameField {
             int fieldOffset = 30;
 
 
-            list.add(new HexagonItem(new Hexagon(xx + fieldOffset, yy + fieldOffset, 40),i));
+            list.add(new HexagonItem(new Hexagon(xx + fieldOffset, yy + fieldOffset, 40), i));
         }
 
         Hero pirate = new Hero("Pirate");
@@ -54,28 +50,40 @@ public class GameField {
 
     }
 
-
-    public static void setAllSelectedFalse(){
-        list.forEach(i-> i.getCellContent().setSelected(false));
-    }
-
-    public static void setAllHeroMovable(){
-        list.forEach(i->{
-            if(i.getCellContent().getContentType().equals("Hero")){((Hero)i.getCellContent()).setTurnState(TurnState.ReadyForTurn);}
+    //kill hero
+    public static void removeHero(Hero hero) {
+        list.forEach(i -> {
+            if (i.getCellContent() == hero){ // именно по ссылкам
+                //TODO; сделать нормальный индекс элемента
+                i.setCellContent(new EmptyCell(100));
+            }
         });
     }
 
 
-    public static void moveHero(HexagonItem hero, HexagonItem moveTo){
+    public static void setAllSelectedFalse() {
+        list.forEach(i -> i.getCellContent().setSelected(false));
+    }
 
-        FieldItem buffer =  moveTo.getCellContent();
+    public static void setAllHeroMovable() {
+        list.forEach(i -> {
+            if (i.getCellContent().getContentType().equals("Hero")) {
+                ((Hero) i.getCellContent()).setTurnState(TurnState.ReadyForTurn);
+            }
+        });
+    }
+
+
+    public static void moveHero(HexagonItem hero, HexagonItem moveTo) {
+
+        FieldItem buffer = moveTo.getCellContent();
 
         moveTo.setCellContent(hero.getCellContent());
         hero.setCellContent(buffer);
 
         //list.set(list.indexOf(moveTo),hero);//move hero to new place
-       // list.set(list.indexOf(hero),moveTo);//remove hero from old place
-       // System.out.println("done");
+        // list.set(list.indexOf(hero),moveTo);//remove hero from old place
+        // System.out.println("done");
 
     }
 

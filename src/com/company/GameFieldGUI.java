@@ -4,6 +4,7 @@ import com.company.GuiUtils.ImageLoader;
 import com.company.Hero.EmptyCell;
 import com.company.Hero.FieldItem;
 import com.company.Hero.Hero;
+import com.company.combatLog.CombatLog;
 import com.company.ex2.Hexagon;
 import com.company.gameField.GameField;
 import com.company.gameField.HexagonItem;
@@ -17,10 +18,15 @@ public class GameFieldGUI extends JPanel {
     //public static List<HexagonItem> list = new GameField().getGameField();
     public static List<HexagonItem> list = GameField.getGameField();
 
+    public static CombatLog combatLog = new CombatLog();
 
     @Override
     protected void paintComponent(Graphics g) {
+
+
         super.paintComponent(g);
+
+       // this.setSize(800, 600);
         Graphics2D g2 = (Graphics2D) g;
 
 
