@@ -3,7 +3,7 @@ package com.company.ex2;
 import java.awt.*;
 import javax.swing.*;
 
-public class Main extends JPanel {
+public class MainEX extends JPanel {
     private static final long serialVersionUID = 1L;
     private final int WIDTH = 1200;
     private final int HEIGHT = 800;
@@ -11,7 +11,7 @@ public class Main extends JPanel {
     private Font font = new Font("Arial", Font.BOLD, 18);
     FontMetrics metrics;
 
-    public Main() {
+    public MainEX() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
     }
 
@@ -93,7 +93,7 @@ public class Main extends JPanel {
 
     public static void main(String[] args) {
         JFrame f = new JFrame();
-        Main p = new Main();
+        MainEX p = new MainEX();
 
         f.setContentPane(p);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -27,6 +27,10 @@ public class Tim {
         return count;
     }
 
+    public void setCount(int count) {
+        this.count = count;
+    }
+
     public void reset(){
 
         while (ServerUtils.movementActions.size()>0){

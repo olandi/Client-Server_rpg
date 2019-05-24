@@ -1,19 +1,17 @@
 package com.company.BattleView;
 
-import com.company.GuiUtils.ImageLoader;
-import com.company.Hero.FieldItem;
+
 import com.company.Hero.Hero;
 import com.company.Hero.TurnState;
+import com.company.Main;
 import com.company.Timer.ServerUtils;
 import com.company.ex2.BattleHexagon;
 import com.company.ex2.HexSection;
 import com.company.ex2.Hexagon;
-import com.company.ex2.Main;
-import com.company.gameField.GameField;
-import com.company.gameField.HexagonItem;
+
 import com.company.heroActions.AttackAction;
 import com.company.heroActions.BlockAction;
-import com.company.heroActions.MoveHero;
+
 import com.company.serverToDamage.DamageTo;
 
 import javax.swing.*;
@@ -35,7 +33,7 @@ public class Battle extends JPanel {
 
     private List<BodyParts> secAttack = new ArrayList<>();
     private List<BodyParts> secDef = new ArrayList<>();
-    private Hero currentHero;
+    public static Hero currentHero;
 
 
     public void addHeroSelection(HexSection hexSection, List<BodyParts> sectionsList) {
@@ -124,7 +122,9 @@ public class Battle extends JPanel {
                     ServerUtils.map.put(currentHero, new DamageTo(currentHero,targetHero,secAttack,secDef) );
 
 
+
                     Main1.frame.dispatchEvent(new WindowEvent(Main1.frame, WindowEvent.WINDOW_CLOSING));
+                    Main.turnManager.setCurrentHero(null);
                     //Main1.frame.cl
                 }
 

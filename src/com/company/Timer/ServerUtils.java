@@ -1,7 +1,9 @@
 package com.company.Timer;
 
+import com.company.BattleView.Battle;
 import com.company.BattleView.BodyParts;
 import com.company.Hero.Hero;
+import com.company.Hero.TurnState;
 import com.company.gameField.GameField;
 import com.company.heroActions.HeroAction;
 import com.company.serverToDamage.DamageTo;
@@ -17,6 +19,27 @@ public class ServerUtils {
     public static Map<Hero, DamageTo> map = new HashMap<>();
 
     public static List<Hero> heroes = new ArrayList<>();
+
+
+    public static boolean isReadyToMoveHeroExist() {
+        getAndUpdateAllHeroes();
+        boolean result = false;
+        for (Hero hero : heroes) {
+
+            System.out.println("Hero: " + hero+" " + hero.getTurnState());
+
+
+
+            //result = result || hero.getTurnState().equals(TurnState.ReadyForTurn);
+            result |= hero.getTurnState().equals(TurnState.ReadyForTurn);
+
+
+        }
+        System.out.println("Current hero: "+Battle.currentHero);
+        return result;
+    }
+
+    /*public static boolean isReadyToMoveHeroExist() {return true;}*/
 
     public static void getAndUpdateAllHeroes() {
         heroes = new ArrayList<>();
@@ -37,47 +60,47 @@ public class ServerUtils {
 
         getAndUpdateAllHeroes();
 
-       // heroes.forEach( hero-> map.put(hero,new DamageTo()));
+        // heroes.forEach( hero-> map.put(hero,new DamageTo()));
 
 
         //для каждого героя
-        heroes.forEach(hero->{
+        heroes.forEach(hero -> {
 
-                //для каждой атаки героя
-            if (map.get(hero)!=null) map.get(hero).getAttack().forEach( attack -> {
+            //для каждой атаки героя
+            if (map.get(hero) != null) map.get(hero).getAttack().forEach(attack -> {
 
-                    //если в списке защиты врага нет этой атаки
+                        //если в списке защиты врага нет этой атаки
 
-                //исли цель не сделала ход, не поставила блоки
-               if(map.get(map.get(hero).getToHero())==null){
-                   map.get(hero).getToHero().setHealth(
-                           map.get(hero).getToHero().getHealth() -
-                                   hero.getDamage());
+                        //исли цель не сделала ход, не поставила блоки
+                        if (map.get(map.get(hero).getToHero()) == null) {
+                            map.get(hero).getToHero().setHealth(
+                                    map.get(hero).getToHero().getHealth() -
+                                            hero.getDamage());
 
-                   System.out.println("Hero "+map.get(hero).getToHero()+" receives damage");
-
-
-               }
-
-                         if (
-                                 map.get(map.get(hero).getToHero())!=null
-                                 && !map.get(map.get(hero).getToHero()).getDefense()
-                                 .contains(attack)) {
-
-                             System.out.println("Hero "+hero+" hits");
-
-                             map.get(hero).getToHero().setHealth(
-                                     map.get(hero).getToHero().getHealth() -
-                                     hero.getDamage());
-
-                             System.out.println("Hero "+map.get(hero).getToHero()+" receives damage");
+                            System.out.println("Hero " + map.get(hero).getToHero() + " receives damage");
 
 
-                         }
-                     }
+                        }
+
+                        if (
+                                map.get(map.get(hero).getToHero()) != null
+                                        && !map.get(map.get(hero).getToHero()).getDefense()
+                                        .contains(attack)) {
+
+                            System.out.println("Hero " + hero + " hits");
+
+                            map.get(hero).getToHero().setHealth(
+                                    map.get(hero).getToHero().getHealth() -
+                                            hero.getDamage());
+
+                            System.out.println("Hero " + map.get(hero).getToHero() + " receives damage");
 
 
-             );
+                        }
+                    }
+
+
+            );
 
 
         });

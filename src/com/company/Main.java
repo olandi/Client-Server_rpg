@@ -18,13 +18,17 @@ import java.awt.event.MouseEvent;
 
 public class Main {
 
-    public static int timerDuration = 10;
+    public static int timerDuration = 40;
     public static TurnManager turnManager = new TurnManager();
     static HexagonItem turnItem;
 
 
     static GameFieldGUI gameFieldGUI = new GameFieldGUI();
     public static JFrame frame;
+
+    public static TurnManager getTurnManager() {
+        return turnManager;
+    }
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() ->
@@ -60,62 +64,16 @@ public class Main {
                             System.out.println(
                                     hexagon.getCenter() + " -- " +
                                             fieldItem);
+
                         /*
-
-                            //если гексагон не пустой(если гексагон - герой) и герой может ходить
-                           // if (!EmptyCell.EMPTY_CELL.equals(fieldItem) && (((Hero) fieldItem).getTurnState().equals(TurnState.ReadyForTurn))) {
-                            if ("Hero".equals(fieldItem.getContentType()) && (((Hero) fieldItem).getTurnState().equals(TurnState.ReadyForTurn))) {
-
-                                    //если повторно выделяется герой
-                                if (((Hero) fieldItem).equals(turnManager.getCurrentHero())) {
-
-                                    turnItem = null;
-                                    turnManager.setCurrentHero(null);
-                                    fieldItem.turnSelect();
-                                    frame.repaint();
-
-                                } else
-                                    //если нет активного героя
-                                    if (turnManager.getCurrentHero() == null) {
-
-                                        turnItem = i;
-                                        turnManager.setCurrentHero((Hero) fieldItem);
-
-                                        fieldItem.turnSelect();
-                                        frame.repaint();
-                                    }
-
-                            }
-
-                           // if (EmptyCell.EMPTY_CELL.equals(fieldItem) &&
-                            if ("EmptyCell".equals(fieldItem.getContentType()) &&
-                                    turnManager.getCurrentHero() != null &&
-                                    turnManager.getCurrentHero().getTurnState().equals(TurnState.ReadyForTurn)) {
-
-
-                                System.out.println("------------->"+hexagon);
-
-                                fieldItem.turnSelect();
-                                frame.repaint();
-                                //тут герой ходит на клетку вперед, кидает в стэк действие хождения на клетку
-                                //отмечает перса как походившего
-                                Timer.movementActions.add(new MoveHero(turnItem, i));
-                                turnManager.getCurrentHero().setTurnState(TurnState.TurnIsFinished);
-
-                                turnManager.setCurrentHero(null);
-
-                            }
-
-
-                            System.out.println(turnManager);
-                            */
+                        //2 вариант
 
                             //Если нет активного игрока(выделенного)
                             if (turnManager.getCurrentHero() != null) {
 
                                 //Если кликнули не на игрока //  текущий игрок может ходить
                                 if (!"Hero".equals(fieldItem.getContentType())
-                                      //  && turnManager.getCurrentHero().getTurnState().equals(TurnState.ReadyForTurn)
+                                        //&& turnManager.getCurrentHero().getTurnState().equals(TurnState.ReadyForTurn)
                                 ) {
 
                                     //move
@@ -165,9 +123,82 @@ public class Main {
                                 }
 
                             }
+*/
+                            //2) Если существует куррентХеро
+                            if (turnManager.getCurrentHero() != null){
+
+                                //3) Если куррентХеро может ходить
+                                if (turnManager.getCurrentHero().getTurnState().equals(TurnState.ReadyForTurn)){
+
+                                    //4) Если попадаем в Героя
+                                    if ("Hero".equals(fieldItem.getContentType())){
+
+                                        //5) Если попадаем не в себя
+                                        if (!turnManager.getCurrentHero().equals(fieldItem)){
+
+                                            //БЬЕМ ВРАГА (КуррентХиро = NULL  обнуляется)
+                                            //обнуляется только после успешной атаки
+                                            System.out.println("hit");
+                                            Main1.mainn(turnManager.getCurrentHero(),(Hero) fieldItem);
+                                            //turnManager.setCurrentHero(null);
+
+                                        }
+                                        else {
+                                            //ДЕЛАЕМ куррентХеро НЕ АКТИВНЫМ (КуррентХиро = NULL  обнуляется)
+                                            turnItem = null;
+                                            turnManager.setCurrentHero(null);
+                                            fieldItem.turnSelect();
+                                            frame.repaint();
+
+                                        }
+                                    }
+                                    else {
+                                        // ПЕРСОНАЖ ХОДИТ НА СВОБОДНУЮ КЛЕТКУ (КуррентХиро = NULL  обнуляется)
+                                        fieldItem.turnSelect();
+                                        frame.repaint();
+                                        //тут герой ходит на клетку вперед, кидает в стэк действие хождения на клетку
+                                        //отмечает перса как походившего
+                                        ServerUtils.movementActions.add(new MoveHero(turnItem, i));
+                                        turnManager.getCurrentHero().setTurnState(TurnState.TurnIsFinished);
+                                        turnManager.setCurrentHero(null);
 
 
-                        }
+                                    }
+                                }
+                                else {
+                                    turnManager.setCurrentHero(null);
+                                    //!!! ТЕОРЕТИЧЕСКИ УСЛОВИЕ НИКОГДА НЕ БУДЕТ ДОСТИГНУТО(????????)
+                                    //на практике нет)
+                                }
+                            }
+                            else {
+                                // 6) Если попадаем в игрока
+                                if ("Hero".equals(fieldItem.getContentType())){
+                                    //Делаем этого игрока - КуррентХиро
+                                    turnItem = i;
+                                    turnManager.setCurrentHero((Hero) fieldItem);
+                                    fieldItem.turnSelect();
+                                    frame.repaint();
+
+                                }
+                                else {
+                                    //НИЧЕГО НЕ ДЕЛАЕМ
+                                }
+                            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        }// end if (hexagon.contains(e.getPoint()))
                     });
                 }
             });
@@ -181,10 +212,29 @@ public class Main {
 
 
 1) Если вообще попадаем в хексагон
-    2) если попадаем в героя
-        3)если герой не установлен
+1) то
+     2) Если существует куррентХеро
+     2) то
+          3) Если куррентХеро может ходить
+          3) то
+                4) Если попадаем в Героя
+                4) то
+                      5) Если попадаем не в себя
+                      5) то
+                            БЬЕМ ВРАГА (КуррентХиро = NULL  обнуляется)
+                      5) иначе
+                            ДЕЛАЕМ куррентХеро НЕ АКТИВНЫМ (КуррентХиро = NULL  обнуляется)
 
-
-
-
+                4) иначе
+                        ПЕРСОНАЖ ХОДИТ НА СВОБОДНУЮ КЛЕТКУ (КуррентХиро = NULL  обнуляется)
+          3) иначе
+                   !!! ТЕОРЕТИЧЕСКИ УСЛОВИЕ НИКОГДА НЕ БУДЕТ ДОСТИГНУТО
+     2) иначе
+             6) Если попадаем в игрока
+             6) то
+                  Делаем этого игрока - КуррентХиро
+             6) иначе
+                  НИЧЕГО НЕ ДЕЛАЕМ
+1) иначе
+        НИЧЕГО НЕ ДЕЛАЕМ
  */

@@ -18,6 +18,14 @@ public class Timer extends JPanel {
             this.duration.dec();
 
             jLabel.setText(Integer.toString(this.duration.getCount()));
+
+            if (!ServerUtils.isReadyToMoveHeroExist()) {
+               // this.duration.setCount(1);
+               // jLabel.setText(Integer.toString(this.duration.getCount()));
+                jLabel.setText(0+"");
+                this.duration.reset();
+            }
+
         } );
         timer.start();
     }
