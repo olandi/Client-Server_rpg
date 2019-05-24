@@ -8,6 +8,10 @@ public class Hero extends FieldItem{
 
     private String view = "d:/default.png";
 
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
     public void setView(String view) {
         this.view = view;
     }
@@ -23,6 +27,8 @@ public class Hero extends FieldItem{
         this.damage = 20;
 
     }
+
+
 
     public String getName() {
         return name;

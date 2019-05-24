@@ -1,5 +1,7 @@
 package com.company.BattleView;
 
+import com.company.Hero.Hero;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -9,14 +11,16 @@ import java.awt.event.MouseEvent;
 
 public class Main1 {
 
-    static Battle battle = new Battle();
-    public static JFrame frame;
+    public static Battle battle ;
+    public static JFrame frame = new JFrame();
 
-    public static void main(String[] args) {
+    public static void mainn(Hero hero, Hero targetHero) {
         EventQueue.invokeLater(() ->
         {
+            battle = new Battle(hero,targetHero);
+
             frame = new JFrame("Battle frame");
-            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
             frame.setSize(800, 600);
             frame.setResizable(false);
 

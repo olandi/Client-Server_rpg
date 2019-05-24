@@ -27,6 +27,10 @@ public class HexSection extends Polygon {
         isFilled = !isFilled;
     }
 
+    public void setFilled(boolean filled) {
+        isFilled = filled;
+    }
+
     private boolean isFilled = false;
 
     public HexSection(int[] xpoints, int[] ypoints) {

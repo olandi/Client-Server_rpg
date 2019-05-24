@@ -3,56 +3,72 @@ package com.company.BattleView;
 import com.company.GuiUtils.ImageLoader;
 import com.company.Hero.FieldItem;
 import com.company.Hero.Hero;
+import com.company.Hero.TurnState;
+import com.company.Timer.ServerUtils;
 import com.company.ex2.BattleHexagon;
 import com.company.ex2.HexSection;
 import com.company.ex2.Hexagon;
+import com.company.ex2.Main;
 import com.company.gameField.GameField;
 import com.company.gameField.HexagonItem;
+import com.company.heroActions.AttackAction;
+import com.company.heroActions.BlockAction;
+import com.company.heroActions.MoveHero;
+import com.company.serverToDamage.DamageTo;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
+import java.awt.event.*;
+import java.util.*;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class Battle extends JPanel {
 
     private static final int ACTION_COUNT = 2;
-    private Deque<BattleHexagon> hexagonAttackList = new ArrayDeque<>();
-    private Deque<BattleHexagon> hexagonDefenseList = new ArrayDeque<>();
+    private final Hero targetHero;
 
     private Deque<HexSection> sectionsAttackList = new ArrayDeque<>();
     private Deque<HexSection> sectionsDefenseList = new ArrayDeque<>();
 
-    private Hexagon go = new Hexagon(new Point(400,400),40);
+    private Hexagon go = new Hexagon(new Point(400, 400), 40);
 
-    private Deque<HexSection> secAttack = new ArrayDeque<>();
-    private Deque<HexSection> secDef = new ArrayDeque<>();
+    private List<BodyParts> secAttack = new ArrayList<>();
+    private List<BodyParts> secDef = new ArrayList<>();
+    private Hero currentHero;
 
-    public void addHeroSelection(HexSection hexSection, Deque<HexSection> sectionsList) {
+
+    public void addHeroSelection(HexSection hexSection, List<BodyParts> sectionsList) {
         if (sectionsList.size() < ACTION_COUNT)
-            sectionsList.add(hexSection);
+            sectionsList.add(hexSection.getBodyParts());
     }
 
-    public void removeHeroSelection(HexSection hexSection, Deque<HexSection> sectionsList) {
+    public void removeHeroSelection(HexSection hexSection, List<BodyParts> sectionsList) {
         if (!sectionsList.isEmpty())
-            sectionsList.remove(hexSection);
+            sectionsList.remove(hexSection.getBodyParts());
     }
 
-    public Battle() {
+    public void resetBattleActions() {
+        secAttack = new ArrayList<>();
+        secDef = new ArrayList<>();
+
+        sectionsAttackList.forEach(i -> i.setFilled(false));
+        sectionsDefenseList.forEach(i -> i.setFilled(false));
+        currentHero = null;
+    }
+
+
+    public Battle(Hero currentHero, Hero targetHero) {
         super();
         initAttackAndDefense();
+        this.currentHero = currentHero;
+        this.targetHero = targetHero;
 
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-               // e.getPoint();
+                // e.getPoint();
 
                 //если кликаем по атака хексам
                 sectionsAttackList.forEach(i -> {
@@ -98,22 +114,24 @@ public class Battle extends JPanel {
                 if (go.contains(e.getPoint())) {
                     System.out.println(secAttack);
                     System.out.println(secDef);
-                }
 
+                    currentHero.setTurnState(TurnState.TurnIsFinished);
+                    System.out.println("hitting hero: " + currentHero);
+
+
+                    ServerUtils.attackAction.add(new AttackAction(currentHero, secAttack));
+                    ServerUtils.blockAction.add(new BlockAction(currentHero, secDef));
+                    ServerUtils.map.put(currentHero, new DamageTo(currentHero,targetHero,secAttack,secDef) );
+
+
+                    Main1.frame.dispatchEvent(new WindowEvent(Main1.frame, WindowEvent.WINDOW_CLOSING));
+                    //Main1.frame.cl
+                }
 
 
             }
         });
     }
-
-    public Deque<BattleHexagon> getHexagonAttackList() {
-        return hexagonAttackList;
-    }
-
-    public Deque<BattleHexagon> getHexagonDefenseList() {
-        return hexagonDefenseList;
-    }
-
 
     public void initAttackAndDefense() {
         int xOffset = 200;
@@ -132,27 +150,30 @@ public class Battle extends JPanel {
         rightArm.setRotation(60);
         leftArm.setRotation(60);
 
-/*        hexagonAttackList.add(head);
-        hexagonAttackList.add(body);
-        hexagonAttackList.add(leg);
-        hexagonAttackList.add(rightArm);
-        hexagonAttackList.add(leftArm);*/
-
-        sectionsAttackList.add(head.getLeftSegment());head.getLeftSegment().setBodyParts(BodyParts.HeadR);
-        sectionsAttackList.add(head.getRightSegment());head.getRightSegment().setBodyParts(BodyParts.HeadL);
-        sectionsAttackList.add(body.getLeftSegment());body.getLeftSegment().setBodyParts(BodyParts.BodyR);
-        sectionsAttackList.add(body.getRightSegment());body.getRightSegment().setBodyParts(BodyParts.BodyL);
-        sectionsAttackList.add(leg.getLeftSegment());leg.getLeftSegment().setBodyParts(BodyParts.LegsR);
-        sectionsAttackList.add(leg.getRightSegment());leg.getRightSegment().setBodyParts(BodyParts.LegsL);
-        sectionsAttackList.add(rightArm.getLeftSegment());rightArm.getLeftSegment().setBodyParts(BodyParts.RightArmR);
-        sectionsAttackList.add(rightArm.getRightSegment());rightArm.getRightSegment().setBodyParts(BodyParts.RightArmL);
-        sectionsAttackList.add(leftArm.getLeftSegment());leftArm.getLeftSegment().setBodyParts(BodyParts.LeftArmR);
-        sectionsAttackList.add(leftArm.getRightSegment());leftArm.getRightSegment().setBodyParts(BodyParts.LeftArmL);
+        sectionsAttackList.add(head.getLeftSegment());
+        head.getLeftSegment().setBodyParts(BodyParts.HeadR);
+        sectionsAttackList.add(head.getRightSegment());
+        head.getRightSegment().setBodyParts(BodyParts.HeadL);
+        sectionsAttackList.add(body.getLeftSegment());
+        body.getLeftSegment().setBodyParts(BodyParts.BodyR);
+        sectionsAttackList.add(body.getRightSegment());
+        body.getRightSegment().setBodyParts(BodyParts.BodyL);
+        sectionsAttackList.add(leg.getLeftSegment());
+        leg.getLeftSegment().setBodyParts(BodyParts.LegsR);
+        sectionsAttackList.add(leg.getRightSegment());
+        leg.getRightSegment().setBodyParts(BodyParts.LegsL);
+        sectionsAttackList.add(rightArm.getLeftSegment());
+        rightArm.getLeftSegment().setBodyParts(BodyParts.RightArmR);
+        sectionsAttackList.add(rightArm.getRightSegment());
+        rightArm.getRightSegment().setBodyParts(BodyParts.RightArmL);
+        sectionsAttackList.add(leftArm.getLeftSegment());
+        leftArm.getLeftSegment().setBodyParts(BodyParts.LeftArmR);
+        sectionsAttackList.add(leftArm.getRightSegment());
+        leftArm.getRightSegment().setBodyParts(BodyParts.LeftArmL);
 
 
         /*---------------------------------------------*/
 
-//int xOffset1 = 200+200;
         xOffset += 250;
 
         BattleHexagon head1 = new BattleHexagon(new Point(xOffset + 40, yOffset + 40), 40);
@@ -167,41 +188,26 @@ public class Battle extends JPanel {
         rightArm1.setRotation(60);
         leftArm1.setRotation(60);
 
-/*        hexagonDefenseList.add(head1);
-        hexagonDefenseList.add(body1);
-        hexagonDefenseList.add(leg1);
-        hexagonDefenseList.add(rightArm1);
-        hexagonDefenseList.add(leftArm1);*/
-
-/*
         sectionsDefenseList.add(head1.getLeftSegment());
+        head1.getLeftSegment().setBodyParts(BodyParts.HeadR);
         sectionsDefenseList.add(head1.getRightSegment());
+        head1.getRightSegment().setBodyParts(BodyParts.HeadL);
         sectionsDefenseList.add(body1.getLeftSegment());
+        body1.getLeftSegment().setBodyParts(BodyParts.BodyR);
         sectionsDefenseList.add(body1.getRightSegment());
+        body1.getRightSegment().setBodyParts(BodyParts.BodyL);
         sectionsDefenseList.add(leg1.getLeftSegment());
+        leg1.getLeftSegment().setBodyParts(BodyParts.LegsR);
         sectionsDefenseList.add(leg1.getRightSegment());
+        leg1.getRightSegment().setBodyParts(BodyParts.LegsL);
         sectionsDefenseList.add(rightArm1.getLeftSegment());
+        rightArm1.getLeftSegment().setBodyParts(BodyParts.RightArmR);
         sectionsDefenseList.add(rightArm1.getRightSegment());
+        rightArm1.getRightSegment().setBodyParts(BodyParts.RightArmL);
         sectionsDefenseList.add(leftArm1.getLeftSegment());
-        sectionsDefenseList.add(leftArm1.getRightSegment());*/
-
-
-        sectionsDefenseList.add(head1.getLeftSegment());head1.getLeftSegment().setBodyParts(BodyParts.HeadR);
-        sectionsDefenseList.add(head1.getRightSegment());head1.getRightSegment().setBodyParts(BodyParts.HeadL);
-        sectionsDefenseList.add(body1.getLeftSegment());body1.getLeftSegment().setBodyParts(BodyParts.BodyR);
-        sectionsDefenseList.add(body1.getRightSegment());body1.getRightSegment().setBodyParts(BodyParts.BodyL);
-        sectionsDefenseList.add(leg1.getLeftSegment());leg1.getLeftSegment().setBodyParts(BodyParts.LegsR);
-        sectionsDefenseList.add(leg1.getRightSegment());leg1.getRightSegment().setBodyParts(BodyParts.LegsL);
-        sectionsDefenseList.add(rightArm1.getLeftSegment());rightArm1.getLeftSegment().setBodyParts(BodyParts.RightArmR);
-        sectionsDefenseList.add(rightArm1.getRightSegment());rightArm1.getRightSegment().setBodyParts(BodyParts.RightArmL);
-        sectionsDefenseList.add(leftArm1.getLeftSegment());leftArm1.getLeftSegment().setBodyParts(BodyParts.LeftArmR);
-        sectionsDefenseList.add(leftArm1.getRightSegment());leftArm1.getRightSegment().setBodyParts(BodyParts.LeftArmL);
-
-
-
-
-
-
+        leftArm1.getLeftSegment().setBodyParts(BodyParts.LeftArmR);
+        sectionsDefenseList.add(leftArm1.getRightSegment());
+        leftArm1.getRightSegment().setBodyParts(BodyParts.LeftArmL);
 
 
     }
@@ -211,16 +217,6 @@ public class Battle extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-
-        /*hexagonAttackList.forEach(i -> {
-            i.getLeftSegment().draw(g2, 0, 0, 1, Color.RED.getRGB(), i.getLeftSegment().isFilled());
-            i.getRightSegment().draw(g2, 0, 0, 1, Color.RED.getRGB(), i.getRightSegment().isFilled());
-        });
-
-        hexagonDefenseList.forEach(i -> {
-            i.getLeftSegment().draw(g2, 0, 0, 1, new Color(12, 119, 31).getRGB(), i.getLeftSegment().isFilled());
-            i.getRightSegment().draw(g2, 0, 0, 1, new Color(12, 119, 31).getRGB(), i.getRightSegment().isFilled());
-        });*/
 
         sectionsAttackList.forEach(i -> i.draw(g2, 0, 0, 1, Color.RED.getRGB(), i.isFilled()));
         sectionsDefenseList.forEach(i -> i.draw(g2, 0, 0, 1, new Color(12, 119, 31).getRGB(), i.isFilled()));
