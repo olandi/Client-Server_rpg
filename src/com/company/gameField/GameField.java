@@ -61,7 +61,13 @@ public class GameField {
     }
 
 
-    //public static Hero getHero()
+    private static HexagonItem getHexagonItemByHero(Hero hero){
+        for (HexagonItem hexagonItem : list){
+            if ("Hero".equals(hexagonItem.getCellContent().getContentType())&&((Hero) hexagonItem.getCellContent())==hero)
+                return hexagonItem;
+        }
+        return null;
+    }
 
     public static void setAllSelectedFalse() {
         list.forEach(i -> i.getCellContent().setSelected(false));
@@ -76,17 +82,11 @@ public class GameField {
     }
 
 
-    public static void moveHero(HexagonItem hero, HexagonItem moveTo) {
-
-        FieldItem buffer = moveTo.getCellContent();
-
-        moveTo.setCellContent(hero.getCellContent());
-        hero.setCellContent(buffer);
-
-        //list.set(list.indexOf(moveTo),hero);//move hero to new place
-        // list.set(list.indexOf(hero),moveTo);//remove hero from old place
-        // System.out.println("done");
-
+    public static void moveHero(Hero hero, HexagonItem moveTo) {
+        //remove hero from old place
+        getHexagonItemByHero(hero).setCellContent(moveTo.getCellContent());
+        //move hero to new place
+        moveTo.setCellContent(hero);
     }
 
 }

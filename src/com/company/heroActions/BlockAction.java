@@ -20,7 +20,7 @@ public class BlockAction implements HeroAction {
 
     @Override
     public void perform() {
-        ServerUtils.blockAction.add(this);
+       // ServerUtils.blockAction.add(this);
         System.out.println(this);
     }
 

@@ -13,8 +13,8 @@ import java.util.*;
 public class ServerUtils {
 
     public static Deque<HeroAction> movementActions = new ArrayDeque<>();
-    public static List<HeroAction> blockAction = new ArrayList<>();
-    public static List<HeroAction> attackAction = new ArrayList<>();
+   // public static List<HeroAction> blockAction = new ArrayList<>();
+  //  public static List<HeroAction> attackAction = new ArrayList<>();
 
     public static Map<Hero, DamageTo> map = new HashMap<>();
 

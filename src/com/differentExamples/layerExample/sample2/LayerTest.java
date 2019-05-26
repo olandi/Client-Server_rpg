@@ -43,12 +43,12 @@ public class LayerTest {
 
             frame.add(jlayer);
 
-            //frame.add(new SecondPanel());
+            //battleFrame.add(new SecondPanel());
 
-            //  frame.setLayout(new BorderLayout());
+            //  battleFrame.setLayout(new BorderLayout());
             frame.setVisible(true);
 
-           // frame.pack();
+           // battleFrame.pack();
         });
     }
 

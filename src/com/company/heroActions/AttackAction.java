@@ -20,7 +20,7 @@ public class AttackAction implements HeroAction {
 
     @Override
     public void perform() {
-        ServerUtils.attackAction.add(this);
+       // ServerUtils.attackAction.add(this);
         System.out.println(this);
     }
 

@@ -20,8 +20,6 @@ public class Main {
 
     public static int timerDuration = 40;
     public static TurnManager turnManager = new TurnManager();
-    static HexagonItem turnItem;
-
 
     static GameFieldGUI gameFieldGUI = new GameFieldGUI();
     public static JFrame frame;
@@ -75,6 +73,7 @@ public class Main {
                                             //БЬЕМ ВРАГА (КуррентХиро = NULL  обнуляется)
                                             //обнуляется только после успешной атаки
                                             System.out.println("hit");
+
                                             Main1.mainn(turnManager.getCurrentHero(),(Hero) fieldItem);
                                             //turnManager.setCurrentHero(null);
 
@@ -82,7 +81,6 @@ public class Main {
                                         }
                                         else {
                                             //ДЕЛАЕМ куррентХеро НЕ АКТИВНЫМ (КуррентХиро = NULL  обнуляется)
-                                            turnItem = null;
                                             turnManager.setCurrentHero(null);
 
                                            fieldItem.setSelected(false);
@@ -100,8 +98,13 @@ public class Main {
                                         frame.repaint();
                                         //тут герой ходит на клетку вперед, кидает в стэк действие хождения на клетку
                                         //отмечает перса как походившего
-                                        ServerUtils.movementActions.add(new MoveHero(turnItem, i));
+                                        ServerUtils.movementActions.add(new MoveHero(
+                                                turnManager.getCurrentHero()
+                                                , i));
+
+                                        System.err.println(turnManager.getCurrentHero()+" "+ i);
                                         turnManager.getCurrentHero().setTurnState(TurnState.TurnIsFinished);
+
                                         turnManager.setCurrentHero(null);
 
 
@@ -118,7 +121,6 @@ public class Main {
                                 if ("Hero".equals(fieldItem.getContentType())&&
                                         ((Hero)fieldItem).getTurnState().equals(TurnState.ReadyForTurn)){
                                     //Делаем этого игрока - КуррентХиро
-                                    turnItem = i;
                                     turnManager.setCurrentHero((Hero) fieldItem);
                                    // fieldItem.turnSelect();
                                     fieldItem.setSelected(true);
@@ -135,7 +137,7 @@ public class Main {
                 }
             });
 
-            //frame.pack();
+            //battleFrame.pack();
             frame.setVisible(true);
         });
     }

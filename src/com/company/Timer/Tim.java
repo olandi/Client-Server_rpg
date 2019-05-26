@@ -64,11 +64,11 @@ public class Tim {
 
 
 
-        System.out.println(ServerUtils.attackAction);
-        System.out.println(ServerUtils.blockAction);
+       // System.out.println(ServerUtils.attackAction);
+     //   System.out.println(ServerUtils.blockAction);
         System.out.println(ServerUtils.map);
-        ServerUtils.attackAction = new ArrayList<>();
-        ServerUtils.blockAction = new ArrayList<>();
+     //   ServerUtils.attackAction = new ArrayList<>();
+     //   ServerUtils.blockAction = new ArrayList<>();
         ServerUtils.resetMap();
 
 
@@ -76,7 +76,7 @@ public class Tim {
 
         Main.turnManager.setCurrentHero(null);
 
-        Main1.frame.dispatchEvent(new WindowEvent(Main1.frame, WindowEvent.WINDOW_CLOSING));
+        Main1.battleFrame.dispatchEvent(new WindowEvent(Main1.battleFrame, WindowEvent.WINDOW_CLOSING));
         //TODO Костыль удалить: если окно боя не открывается, то battle = null и вылелает nullPointerException
        if (Main1.battle!=null) Main1.battle.resetBattleActions();
 

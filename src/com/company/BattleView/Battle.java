@@ -1,7 +1,6 @@
 package com.company.BattleView;
 
 
-import com.company.GameFieldGUI;
 import com.company.Hero.Hero;
 import com.company.Hero.TurnState;
 import com.company.Main;
@@ -21,7 +20,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class Battle extends JPanel {
 
@@ -31,7 +29,9 @@ public class Battle extends JPanel {
     private Deque<HexSection> sectionsAttackList = new ArrayDeque<>();
     private Deque<HexSection> sectionsDefenseList = new ArrayDeque<>();
 
-    private Hexagon go = new Hexagon(new Point(400, 400), 40);
+    private Hexagon go = new Hexagon(new Point(420, 400), 40);
+    private Hexagon cancel = new Hexagon(new Point(300, 400), 40);
+
 
     private List<BodyParts> secAttack = new ArrayList<>();
     private List<BodyParts> secDef = new ArrayList<>();
@@ -110,7 +110,7 @@ public class Battle extends JPanel {
 
                 });
 
-
+                //Если кликаем на ОК
                 if (go.contains(e.getPoint())) {
                     System.out.println(secAttack);
                     System.out.println(secDef);
@@ -119,20 +119,20 @@ public class Battle extends JPanel {
                     System.out.println("hitting hero: " + currentHero);
 
 
-                    ServerUtils.attackAction.add(new AttackAction(currentHero, secAttack));
-                    ServerUtils.blockAction.add(new BlockAction(currentHero, secDef));
+                   // ServerUtils.attackAction.add(new AttackAction(currentHero, secAttack));
+                  //  ServerUtils.blockAction.add(new BlockAction(currentHero, secDef));
                     ServerUtils.map.put(currentHero, new DamageTo(currentHero,targetHero,secAttack,secDef) );
 
 
 
-                    Main1.frame.dispatchEvent(new WindowEvent(Main1.frame, WindowEvent.WINDOW_CLOSING));
+                    Main1.battleFrame.dispatchEvent(new WindowEvent(Main1.battleFrame, WindowEvent.WINDOW_CLOSING));
                     Main.turnManager.getCurrentHero().setSelected(false);
 
-                    System.err.println(Main.turnManager.getCurrentHero());
-                    System.err.println(GameField.getGameField());
+/*                    System.err.println(Main.turnManager.getCurrentHero());
+                    System.err.println(GameField.getGameField());*/
 
                     Main.turnManager.setCurrentHero(null);
-                    //Main1.frame.cl
+                    //Main1.battleFrame.cl
                     Main.frame.repaint();
                 }
 
@@ -229,7 +229,8 @@ public class Battle extends JPanel {
         sectionsAttackList.forEach(i -> i.draw(g2, 0, 0, 1, Color.RED.getRGB(), i.isFilled()));
         sectionsDefenseList.forEach(i -> i.draw(g2, 0, 0, 1, new Color(12, 119, 31).getRGB(), i.isFilled()));
 
-        go.draw(g2, 0, 0, 1, Color.BLACK.getRGB(), true);
+        go.draw(g2, 0, 0, 2, Color.BLACK.getRGB(), false);
+        cancel.draw(g2, 0, 0, 2, Color.BLACK.getRGB(), false);
 
     }
 
