@@ -1,3 +1,4 @@
+/*
 package com.company.BattleView;
 
 import com.company.Hero.Hero;
@@ -13,7 +14,9 @@ public class Main1 {
     public static void mainn(Hero hero, Hero targetHero) {
         EventQueue.invokeLater(() ->
         {
-            battle = new Battle(hero,targetHero);
+            battle = new Battle(*/
+/*hero,targetHero*//*
+);
 
             battleFrame = new JFrame("Battle battleFrame");
             battleFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
@@ -22,9 +25,9 @@ public class Main1 {
 
             battleFrame.setLayout(new BorderLayout());
 
-            battleFrame.add(battle, BorderLayout.CENTER);
+            //battleFrame.add(battle, BorderLayout.CENTER);
 
             battleFrame.setVisible(true);
         });
     }
-}
+}*/

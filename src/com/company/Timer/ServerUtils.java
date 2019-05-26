@@ -1,12 +1,11 @@
 package com.company.Timer;
 
 import com.company.BattleView.Battle;
-import com.company.BattleView.BodyParts;
 import com.company.Hero.Hero;
 import com.company.Hero.TurnState;
 import com.company.gameField.GameField;
 import com.company.heroActions.HeroAction;
-import com.company.serverToDamage.DamageTo;
+import com.company.damageTO.DamageToForServer;
 
 import java.util.*;
 
@@ -16,7 +15,7 @@ public class ServerUtils {
    // public static List<HeroAction> blockAction = new ArrayList<>();
   //  public static List<HeroAction> attackAction = new ArrayList<>();
 
-    public static Map<Hero, DamageTo> map = new HashMap<>();
+    public static Map<Hero, DamageToForServer> map = new HashMap<>();
 
     public static List<Hero> heroes = new ArrayList<>();
 
@@ -34,7 +33,7 @@ public class ServerUtils {
 
 
         }
-        System.out.println("Current hero: " + Battle.currentHero);
+       // System.out.println("Current hero: " + Battle.currentHero);
         return result;
     }
 
@@ -50,6 +49,8 @@ public class ServerUtils {
     public static boolean isOneHeroRemain() {
         return heroes.size() <= 1;
     }
+
+
 
 
     public static void getAndUpdateAllHeroes() {
@@ -71,7 +72,7 @@ public class ServerUtils {
 
         getAndUpdateAllHeroes();
 
-        // heroes.forEach( hero-> map.put(hero,new DamageTo()));
+        // heroes.forEach( hero-> map.put(hero,new DamageToForServer()));
 
 
         //для каждого героя

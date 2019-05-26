@@ -33,22 +33,17 @@ public class LayerTest {
 
             frame.addMouseListener(blueRectangleMouseListener);
 
-             secondPanel = new SecondPanel();
 
             firstPanel = new FirstPanel();
+            secondPanel = new SecondPanel();
 
 
             JLayer<JPanel> jlayer = new JLayer<JPanel>(firstPanel, secondPanel);
-
-
             frame.add(jlayer);
 
-            //battleFrame.add(new SecondPanel());
 
-            //  battleFrame.setLayout(new BorderLayout());
             frame.setVisible(true);
 
-           // battleFrame.pack();
         });
     }
 

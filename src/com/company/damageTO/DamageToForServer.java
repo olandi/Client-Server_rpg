@@ -1,11 +1,11 @@
-package com.company.serverToDamage;
+package com.company.damageTO;
 
 import com.company.BattleView.BodyParts;
 import com.company.Hero.Hero;
 
 import java.util.List;
 
-public class DamageTo {
+public class DamageToForServer {
 
     private Hero fromHero;
     private Hero toHero;
@@ -14,7 +14,7 @@ public class DamageTo {
 
     @Override
     public String toString() {
-        return "DamageTo{" +
+        return "DamageToForServer{" +
                 "fromHero=" + fromHero +
                 ", toHero=" + toHero +
                 ", attack=" + attack +
@@ -22,9 +22,19 @@ public class DamageTo {
                 '}';
     }
 
-    public DamageTo(Hero fromHero, Hero toHero, List<BodyParts> attack, List<BodyParts> defense) {
+    public DamageToForServer(Hero fromHero, Hero toHero) {
         this.fromHero = fromHero;
         this.toHero = toHero;
+    }
+/*
+    public DamageToForServer(Hero fromHero, Hero toHero, List<BodyParts> attack, List<BodyParts> defense) {
+        this.fromHero = fromHero;
+        this.toHero = toHero;
+        this.attack = attack;
+        this.defense = defense;
+    }*/
+
+    public void addDamageAndBlockLists(List<BodyParts> attack, List<BodyParts> defense) {
         this.attack = attack;
         this.defense = defense;
     }

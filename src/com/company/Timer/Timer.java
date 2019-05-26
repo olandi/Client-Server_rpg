@@ -7,9 +7,13 @@ public class Timer extends JPanel {
     JLabel jLabel;
     Tim duration;
     javax.swing.Timer timer;
+    JPanel battleFieldPanel;
 
-    public Timer(int duration) {
-        this.duration = new Tim(duration);
+
+
+    public Timer(int duration, JPanel battleFieldPanel) {
+        this.duration = new Tim(duration,battleFieldPanel);
+        this.battleFieldPanel = battleFieldPanel;
 
         initTimer();
 

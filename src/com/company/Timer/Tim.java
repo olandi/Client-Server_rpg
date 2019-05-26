@@ -1,11 +1,12 @@
 package com.company.Timer;
 
-import com.company.BattleView.Main1;
+
 import com.company.GameFieldGUI;
 import com.company.Hero.Hero;
 import com.company.Main;
 import com.company.gameField.GameField;
 
+import javax.swing.*;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
@@ -13,10 +14,12 @@ public class Tim {
     private int initialValue;
     private int count;
     private int turn = 0;
+    private JPanel battleFieldPanel;
 
-    public Tim(int count) {
+    public Tim(int count, JPanel battleFieldPanel) {
         this.count = count;
         this.initialValue = count;
+        this.battleFieldPanel = battleFieldPanel;
     }
 
     public int dec(){
@@ -66,7 +69,9 @@ public class Tim {
 
        // System.out.println(ServerUtils.attackAction);
      //   System.out.println(ServerUtils.blockAction);
-        System.out.println(ServerUtils.map);
+
+       // System.out.println(ServerUtils.map);
+
      //   ServerUtils.attackAction = new ArrayList<>();
      //   ServerUtils.blockAction = new ArrayList<>();
         ServerUtils.resetMap();
@@ -74,13 +79,13 @@ public class Tim {
 
 
 
-        Main.turnManager.setCurrentHero(null);
+        GameFieldGUI.turnManager.setCurrentHero(null);
 
-        Main1.battleFrame.dispatchEvent(new WindowEvent(Main1.battleFrame, WindowEvent.WINDOW_CLOSING));
+       // Main1.battleFrame.dispatchEvent(new WindowEvent(Main1.battleFrame, WindowEvent.WINDOW_CLOSING));
         //TODO Костыль удалить: если окно боя не открывается, то battle = null и вылелает nullPointerException
-       if (Main1.battle!=null) Main1.battle.resetBattleActions();
+     //  if (Main1.battle!=null) Main1.battle.resetBattleActions();
 
-        Main.frame.repaint();
+        battleFieldPanel.repaint();
     }
 
 

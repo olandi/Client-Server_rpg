@@ -5,26 +5,28 @@ import com.company.Hero.Hero;
 import com.company.Hero.TurnState;
 import com.company.Main;
 import com.company.Timer.ServerUtils;
+import com.company.clientUtils.ClientUtils;
+import com.company.damageTO.DamageForClient;
 import com.company.ex2.BattleHexagon;
 import com.company.ex2.HexSection;
 import com.company.ex2.Hexagon;
 
-import com.company.gameField.GameField;
-import com.company.heroActions.AttackAction;
-import com.company.heroActions.BlockAction;
-
-import com.company.serverToDamage.DamageTo;
+import com.company.damageTO.DamageToForServer;
 
 import javax.swing.*;
+import javax.swing.plaf.LayerUI;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
-public class Battle extends JPanel {
+public class Battle extends LayerUI<JPanel> {
 
+    private boolean isVisibleBattleFrame = false;
     private static final int ACTION_COUNT = 2;
-    private final Hero targetHero;
+   // private final Hero targetHero;
+
+    private MouseListener mouseListener = initBattleMouseListener();
 
     private Deque<HexSection> sectionsAttackList = new ArrayDeque<>();
     private Deque<HexSection> sectionsDefenseList = new ArrayDeque<>();
@@ -35,7 +37,31 @@ public class Battle extends JPanel {
 
     private List<BodyParts> secAttack = new ArrayList<>();
     private List<BodyParts> secDef = new ArrayList<>();
-    public static Hero currentHero;
+
+    private JPanel battleFieldPanel;
+    public Battle(JPanel battleFieldPanel) {
+        super();
+        this.battleFieldPanel = battleFieldPanel;
+        initAttackAndDefense();
+    }
+
+
+
+    public MouseListener getBattleMouseListener(){
+        return mouseListener;
+    }
+    private void disableBattleFrame(){
+        isVisibleBattleFrame = false;
+    }
+
+    public void enableBattleFrame(){
+        isVisibleBattleFrame = true;
+    }
+
+    public boolean isVisibleBattleFrame() {
+        return isVisibleBattleFrame;
+    }
+
 
 
     public void addHeroSelection(HexSection hexSection, List<BodyParts> sectionsList) {
@@ -54,16 +80,12 @@ public class Battle extends JPanel {
 
         sectionsAttackList.forEach(i -> i.setFilled(false));
         sectionsDefenseList.forEach(i -> i.setFilled(false));
-        currentHero = null;
+       // currentHero = null;
     }
 
 
-    public Battle(Hero currentHero, Hero targetHero) {
-        super();
-        initAttackAndDefense();
-        this.currentHero = currentHero;
-        this.targetHero = targetHero;
 
+/*
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -118,28 +140,125 @@ public class Battle extends JPanel {
                     currentHero.setTurnState(TurnState.TurnIsFinished);
                     System.out.println("hitting hero: " + currentHero);
 
-
-                   // ServerUtils.attackAction.add(new AttackAction(currentHero, secAttack));
-                  //  ServerUtils.blockAction.add(new BlockAction(currentHero, secDef));
-                    ServerUtils.map.put(currentHero, new DamageTo(currentHero,targetHero,secAttack,secDef) );
-
-
+                    ServerUtils.map.put(currentHero, new DamageToForServer(currentHero,targetHero,secAttack,secDef) );
 
                     Main1.battleFrame.dispatchEvent(new WindowEvent(Main1.battleFrame, WindowEvent.WINDOW_CLOSING));
                     Main.turnManager.getCurrentHero().setSelected(false);
 
-/*                    System.err.println(Main.turnManager.getCurrentHero());
-                    System.err.println(GameField.getGameField());*/
+                    //System.err.println(Main.turnManager.getCurrentHero());
+                    //System.err.println(GameField.getGameField());
+
 
                     Main.turnManager.setCurrentHero(null);
-                    //Main1.battleFrame.cl
                     Main.frame.repaint();
+                }
+            }
+        });*/
+
+
+    private MouseListener initBattleMouseListener(){
+
+        return new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                // e.getPoint();
+
+                Point clickPoint = e.getPoint();
+                clickPoint.y-=26;
+
+                //если кликаем по атака хексам
+                sectionsAttackList.forEach(i -> {
+                    if (i.contains(clickPoint)) {
+                        System.out.println(i);
+
+                        if (i.isFilled()) {
+                            removeHeroSelection(i, secAttack);
+                            i.turn();
+                        } else {
+                            if (secAttack.size() < ACTION_COUNT) {
+                                addHeroSelection(i, secAttack);
+                                i.turn();
+                            }
+                        }
+                        battleFieldPanel.repaint();
+
+                    }
+
+                });
+
+                //если кликаем по блок хексам
+                sectionsDefenseList.forEach(i -> {
+                    if (i.contains(clickPoint)) {
+                        System.out.println(i);
+
+                        if (i.isFilled()) {
+                            removeHeroSelection(i, secDef);
+                            i.turn();
+                        } else {
+                            if (secDef.size() < ACTION_COUNT) {
+                                addHeroSelection(i, secDef);
+                                i.turn();
+                            }
+                        }
+                        battleFieldPanel.repaint();
+
+                    }
+
+                });
+
+                //Если кликаем на ОК
+                if (go.contains(clickPoint)) {
+
+                    //передать атаки и блоки в метод отправки данных на сервер
+
+
+
+
+                   // currentHero.setTurnState(TurnState.TurnIsFinished);
+                    disableBattleFrame();
+                    ClientUtils.SendDamageToServer(new DamageForClient(secAttack,secDef));
+
+                   // ServerUtils.map.put(currentHero, new DamageToForServer(currentHero,targetHero,secAttack,secDef) );
+
+                    //Main1.battleFrame.dispatchEvent(new WindowEvent(Main1.battleFrame, WindowEvent.WINDOW_CLOSING));
+                   // Main.turnManager.getCurrentHero().setSelected(false);
+
+                   // Main.turnManager.setCurrentHero(null);
+
+                    resetBattleActions();
+                    battleFieldPanel.repaint();
+
+                    removeMouseListeners();
+
+                    battleFieldPanel.addMouseListener(ClientUtils.getMouseListener());
+
+                }
+                //отмена
+                if (cancel.contains(clickPoint)){
+                    //обнулить форму и скрыть ее
+                    resetBattleActions();
+                    disableBattleFrame();
+                    battleFieldPanel.repaint();
+
+                    removeMouseListeners();
+                    battleFieldPanel.addMouseListener(ClientUtils.getMouseListener());
                 }
 
 
+
+
             }
-        });
+        };
     }
+
+
+    public void removeMouseListeners(){
+
+        battleFieldPanel.removeMouseListener(battleFieldPanel.getMouseListeners()[0]);
+
+    }
+
 
     public void initAttackAndDefense() {
         int xOffset = 200;
@@ -220,19 +339,19 @@ public class Battle extends JPanel {
 
     }
 
-
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D) g;
+    public void paint(Graphics g, JComponent c) {
+        super.paint(g, c);
+        Graphics2D g2 = (Graphics2D) g.create();
 
-        sectionsAttackList.forEach(i -> i.draw(g2, 0, 0, 1, Color.RED.getRGB(), i.isFilled()));
-        sectionsDefenseList.forEach(i -> i.draw(g2, 0, 0, 1, new Color(12, 119, 31).getRGB(), i.isFilled()));
+        if (isVisibleBattleFrame){
 
-        go.draw(g2, 0, 0, 2, Color.BLACK.getRGB(), false);
-        cancel.draw(g2, 0, 0, 2, Color.BLACK.getRGB(), false);
+            sectionsAttackList.forEach(i -> i.draw(g2, 0, 0, 1, Color.RED.getRGB(),i.isFilled()));
+            sectionsDefenseList.forEach(i -> i.draw(g2, 0, 0, 1, new Color(12, 119, 31).getRGB(), i.isFilled()));
 
+            go.draw(g2, 0, 0, 2, Color.GREEN.getRGB(), true);
+            cancel.draw(g2, 0, 0, 2, Color.RED.getRGB(), true);
+        }
     }
-
 
 }
