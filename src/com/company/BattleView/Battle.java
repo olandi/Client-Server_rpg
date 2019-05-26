@@ -1,6 +1,7 @@
 package com.company.BattleView;
 
 
+import com.company.GameFieldGUI;
 import com.company.Hero.Hero;
 import com.company.Hero.TurnState;
 import com.company.Main;
@@ -9,6 +10,7 @@ import com.company.ex2.BattleHexagon;
 import com.company.ex2.HexSection;
 import com.company.ex2.Hexagon;
 
+import com.company.gameField.GameField;
 import com.company.heroActions.AttackAction;
 import com.company.heroActions.BlockAction;
 
@@ -124,8 +126,14 @@ public class Battle extends JPanel {
 
 
                     Main1.frame.dispatchEvent(new WindowEvent(Main1.frame, WindowEvent.WINDOW_CLOSING));
+                    Main.turnManager.getCurrentHero().setSelected(false);
+
+                    System.err.println(Main.turnManager.getCurrentHero());
+                    System.err.println(GameField.getGameField());
+
                     Main.turnManager.setCurrentHero(null);
                     //Main1.frame.cl
+                    Main.frame.repaint();
                 }
 
 

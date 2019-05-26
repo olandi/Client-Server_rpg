@@ -144,19 +144,25 @@ public class Main {
                                             Main1.mainn(turnManager.getCurrentHero(),(Hero) fieldItem);
                                             //turnManager.setCurrentHero(null);
 
+
                                         }
                                         else {
                                             //ДЕЛАЕМ куррентХеро НЕ АКТИВНЫМ (КуррентХиро = NULL  обнуляется)
                                             turnItem = null;
                                             turnManager.setCurrentHero(null);
-                                            fieldItem.turnSelect();
+
+                                           fieldItem.setSelected(false);
+                                            /*fieldItem.turnSelect();*/
                                             frame.repaint();
 
                                         }
                                     }
                                     else {
                                         // ПЕРСОНАЖ ХОДИТ НА СВОБОДНУЮ КЛЕТКУ (КуррентХиро = NULL  обнуляется)
-                                        fieldItem.turnSelect();
+
+                                        turnManager.getCurrentHero().setSelected(false);
+
+                                        fieldItem.setSelected(true);/*fieldItem.turnSelect();*/
                                         frame.repaint();
                                         //тут герой ходит на клетку вперед, кидает в стэк действие хождения на клетку
                                         //отмечает перса как походившего
@@ -174,12 +180,14 @@ public class Main {
                                 }
                             }
                             else {
-                                // 6) Если попадаем в игрока
-                                if ("Hero".equals(fieldItem.getContentType())){
+                                // 6) Если попадаем в игрока, который может ходить
+                                if ("Hero".equals(fieldItem.getContentType())&&
+                                        ((Hero)fieldItem).getTurnState().equals(TurnState.ReadyForTurn)){
                                     //Делаем этого игрока - КуррентХиро
                                     turnItem = i;
                                     turnManager.setCurrentHero((Hero) fieldItem);
-                                    fieldItem.turnSelect();
+                                   // fieldItem.turnSelect();
+                                    fieldItem.setSelected(true);
                                     frame.repaint();
 
                                 }

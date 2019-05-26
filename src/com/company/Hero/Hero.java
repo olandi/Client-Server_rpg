@@ -53,7 +53,7 @@ public class Hero extends FieldItem{
         this.turnState = turnState;
     }
 
-    @Override
+/*    @Override
     public String toString() {
         return "Hero{" +
                 "name='" + name + '\'' +
@@ -61,6 +61,18 @@ public class Hero extends FieldItem{
                 ", damage=" + damage +
                 ", turnState=" + turnState +
                 ", view='" + view + '\'' +
+                '}';
+    }*/
+
+    @Override
+    public String toString() {
+        return "Hero{" +
+                "name='" + name + '\'' +
+                ", health=" + health +
+                ", damage=" + damage +
+                ", turnState=" + turnState +
+                ", view=" + view +
+                ", isSelected=" + isSelected +
                 '}';
     }
 

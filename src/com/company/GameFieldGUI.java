@@ -4,6 +4,7 @@ import com.company.GuiUtils.ImageLoader;
 import com.company.Hero.EmptyCell;
 import com.company.Hero.FieldItem;
 import com.company.Hero.Hero;
+import com.company.Hero.TurnState;
 import com.company.combatLog.CombatLog;
 import com.company.ex2.Hexagon;
 import com.company.gameField.GameField;
@@ -36,13 +37,22 @@ public class GameFieldGUI extends JPanel {
             FieldItem fi = u.getCellContent();
 
 
-            if (!fi.isSelected())
+
+
+            if (!fi.isSelected()) {
+
                 h.draw(g2, 0, 0, 1, 30, false);
+
+                if ("Hero".equals(fi.getContentType())&& ((Hero)fi).getTurnState().equals(TurnState.TurnIsFinished)){
+                    h.draw(g2, 0, 0, 2, Color.blue.getRGB(), false);
+                }
+
+            }
             else
-                h.draw(g2, 0, 0, 1, Color.green.getRGB(), false);
+                h.draw(g2, 0, 0, 2, Color.green.getRGB(), false);
 
            // if (!EmptyCell.EMPTY_CELL.equals(fi)) {
-            //TODO Переделать хардкод
+            //TODO Переделать хардкод HERO
             if (fi.getContentType().equals("Hero")) {
 
                 g.drawImage(ImageLoader.loadImage(

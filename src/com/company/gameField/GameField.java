@@ -61,6 +61,8 @@ public class GameField {
     }
 
 
+    //public static Hero getHero()
+
     public static void setAllSelectedFalse() {
         list.forEach(i -> i.getCellContent().setSelected(false));
     }

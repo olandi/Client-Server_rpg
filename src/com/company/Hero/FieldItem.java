@@ -1,7 +1,7 @@
 package com.company.Hero;
 
 public abstract class FieldItem {
-    private boolean isSelected = false;
+    protected boolean isSelected = false;
 
 
     public void setSelected(boolean selected) {
