@@ -38,12 +38,8 @@ public class Main {
             frame.setSize(800, 800);
             frame.setResizable(true);
 
-
-            //frame.add(BorderLayout)
-
             frame.setLayout(new BorderLayout());
             frame.add(new Timer(timerDuration), BorderLayout.NORTH);
-
 
             frame.add(gameFieldGUI, BorderLayout.CENTER);
 
@@ -52,9 +48,6 @@ public class Main {
             gameFieldGUI.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    //super.mouseClicked(e);
-
-                    //e.getPoint();
 
                     GameFieldGUI.list.forEach(i -> {
                         Hexagon hexagon = i.getHexagon();
@@ -67,65 +60,6 @@ public class Main {
                                     hexagon.getCenter() + " -- " +
                                             fieldItem);
 
-                        /*
-                        //2 вариант
-
-                            //Если нет активного игрока(выделенного)
-                            if (turnManager.getCurrentHero() != null) {
-
-                                //Если кликнули не на игрока //  текущий игрок может ходить
-                                if (!"Hero".equals(fieldItem.getContentType())
-                                        //&& turnManager.getCurrentHero().getTurnState().equals(TurnState.ReadyForTurn)
-                                ) {
-
-                                    //move
-                                    fieldItem.turnSelect();
-                                    frame.repaint();
-                                    //тут герой ходит на клетку вперед, кидает в стэк действие хождения на клетку
-                                    //отмечает перса как походившего
-                                    ServerUtils.movementActions.add(new MoveHero(turnItem, i));
-                                    turnManager.getCurrentHero().setTurnState(TurnState.TurnIsFinished);
-                                    turnManager.setCurrentHero(null);
-
-
-                                } else {
-                                    //если кликнули в игрока и этот игрок является активным
-                                    if ("Hero".equals(fieldItem.getContentType()) &&
-                                            ((Hero) fieldItem).equals(turnManager.getCurrentHero())) {
-
-
-                                        //remove selection
-                                        turnItem = null;
-                                        turnManager.setCurrentHero(null);
-                                        fieldItem.turnSelect();
-                                        frame.repaint();
-
-
-                                    } else {
-                                        //hit
-                                        System.out.println("hit");
-
-                                        Main1.mainn(turnManager.getCurrentHero(),(Hero) fieldItem);
-                                    }
-                                }
-                            } else {
-                                //если кликнули в игрока и он может ходить
-                                if ("Hero".equals(fieldItem.getContentType())
-                                        && (((Hero) fieldItem).getTurnState().equals(TurnState.ReadyForTurn))) {
-
-                                    //select, made current
-                                    turnItem = i;
-                                    turnManager.setCurrentHero((Hero) fieldItem);
-                                    fieldItem.turnSelect();
-                                    frame.repaint();
-
-
-                                } else {
-                                    //doNothing
-                                }
-
-                            }
-*/
                             //2) Если существует куррентХеро
                             if (turnManager.getCurrentHero() != null){
 
@@ -195,18 +129,6 @@ public class Main {
                                     //НИЧЕГО НЕ ДЕЛАЕМ
                                 }
                             }
-
-
-
-
-
-
-
-
-
-
-
-
 
                         }// end if (hexagon.contains(e.getPoint()))
                     });

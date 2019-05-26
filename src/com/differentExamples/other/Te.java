@@ -1,4 +1,4 @@
-package com.company.other;
+package com.differentExamples.other;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;

@@ -8,11 +8,6 @@ public abstract class FieldItem {
         isSelected = selected;
     }
 
-    public  boolean turnSelect(){
-        isSelected = !isSelected;
-        return isSelected;
-    }
-
     public boolean isSelected() {
         return isSelected;
     }

@@ -22,8 +22,15 @@ public class Timer extends JPanel {
             if (!ServerUtils.isReadyToMoveHeroExist()) {
                // this.duration.setCount(1);
                // jLabel.setText(Integer.toString(this.duration.getCount()));
-                jLabel.setText(0+"");
+                //jLabel.setText(0+"");
+
+                timer.stop();
+                jLabel.setText("Идет анимация боя...");
+
+
                 this.duration.reset();
+                //timer.restart();
+                timer.start();
             }
 
             if (ServerUtils.isOneHeroRemain()){timer.stop(); jLabel.setText("Game over");}

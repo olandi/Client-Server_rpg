@@ -35,6 +35,7 @@ public class Tim {
     }
 
     public void reset(){
+        count = initialValue;
         turn++;
         while (ServerUtils.movementActions.size()>0){
             ServerUtils.movementActions.poll().perform();
@@ -53,7 +54,7 @@ public class Tim {
 
         GameField.setAllSelectedFalse();
         GameField.setAllHeroMovable();
-        count = initialValue;
+
 
         //System.out.println(GameField.getGameField());
         //System.out.println(GameFieldGUI.list);

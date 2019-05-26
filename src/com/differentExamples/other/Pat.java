@@ -1,4 +1,4 @@
-package com.company.other;
+package com.differentExamples.other;
 
 public class Pat {
 

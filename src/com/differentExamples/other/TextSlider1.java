@@ -1,4 +1,4 @@
-package com.company.other;
+package com.differentExamples.other;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
