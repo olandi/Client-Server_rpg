@@ -4,6 +4,7 @@ package com.company.Timer;
 import com.company.GameFieldGUI;
 import com.company.Hero.Hero;
 import com.company.Main;
+import com.company.clientUtils.ClientUtils;
 import com.company.gameField.GameField;
 
 import javax.swing.*;
@@ -84,6 +85,8 @@ public class Tim {
        // Main1.battleFrame.dispatchEvent(new WindowEvent(Main1.battleFrame, WindowEvent.WINDOW_CLOSING));
         //TODO Костыль удалить: если окно боя не открывается, то battle = null и вылелает nullPointerException
      //  if (Main1.battle!=null) Main1.battle.resetBattleActions();
+
+        ClientUtils.getBattle().resetBattleMenu();
 
         battleFieldPanel.repaint();
     }

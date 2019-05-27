@@ -54,4 +54,8 @@ public class DamageToForServer {
     public List<BodyParts> getDefense() {
         return defense;
     }
+
+    public void setDefense(List<BodyParts> defense) {
+        this.defense = defense;
+    }
 }

@@ -1,5 +1,6 @@
 package com.company.clientUtils;
 
+import com.company.BattleView.Battle;
 import com.company.GameFieldGUI;
 import com.company.Hero.Hero;
 import com.company.Hero.TurnState;
@@ -15,6 +16,15 @@ public class ClientUtils {
     private static Hero hero;
     private static Hero enemy;
     private static MouseListener mouseListener;
+    private static Battle battle;
+
+    public static Battle getBattle() {
+        return battle;
+    }
+
+    public static void setBattle(Battle battle) {
+        ClientUtils.battle = battle;
+    }
 
     public static MouseListener getMouseListener() {
         return mouseListener;

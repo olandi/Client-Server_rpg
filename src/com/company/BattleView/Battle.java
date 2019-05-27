@@ -1,7 +1,9 @@
 package com.company.BattleView;
 
 
+import com.company.GuiUtils.ImageLoader;
 import com.company.Hero.Hero;
+import com.company.Hero.HeroImages;
 import com.company.Hero.TurnState;
 import com.company.Main;
 import com.company.Timer.ServerUtils;
@@ -24,7 +26,7 @@ public class Battle extends LayerUI<JPanel> {
 
     private boolean isVisibleBattleFrame = false;
     private static final int ACTION_COUNT = 2;
-   // private final Hero targetHero;
+    // private final Hero targetHero;
 
     private MouseListener mouseListener = initBattleMouseListener();
 
@@ -39,29 +41,32 @@ public class Battle extends LayerUI<JPanel> {
     private List<BodyParts> secDef = new ArrayList<>();
 
     private JPanel battleFieldPanel;
+
     public Battle(JPanel battleFieldPanel) {
         super();
         this.battleFieldPanel = battleFieldPanel;
         initAttackAndDefense();
+
+        //TODO
+        ClientUtils.setBattle(this);
     }
 
 
-
-    public MouseListener getBattleMouseListener(){
+    public MouseListener getBattleMouseListener() {
         return mouseListener;
     }
-    private void disableBattleFrame(){
+
+    private void disableBattleFrame() {
         isVisibleBattleFrame = false;
     }
 
-    public void enableBattleFrame(){
+    public void enableBattleFrame() {
         isVisibleBattleFrame = true;
     }
 
     public boolean isVisibleBattleFrame() {
         return isVisibleBattleFrame;
     }
-
 
 
     public void addHeroSelection(HexSection hexSection, List<BodyParts> sectionsList) {
@@ -80,83 +85,11 @@ public class Battle extends LayerUI<JPanel> {
 
         sectionsAttackList.forEach(i -> i.setFilled(false));
         sectionsDefenseList.forEach(i -> i.setFilled(false));
-       // currentHero = null;
+        // currentHero = null;
     }
 
 
-
-/*
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                // e.getPoint();
-
-                //если кликаем по атака хексам
-                sectionsAttackList.forEach(i -> {
-                    if (i.contains(e.getPoint())) {
-                        System.out.println(i);
-
-                        if (i.isFilled()) {
-                            removeHeroSelection(i, secAttack);
-                            i.turn();
-                        } else {
-                            if (secAttack.size() < ACTION_COUNT) {
-                                addHeroSelection(i, secAttack);
-                                i.turn();
-                            }
-                        }
-                        repaint();
-
-                    }
-
-                });
-
-                //если кликаем по блок хексам
-                sectionsDefenseList.forEach(i -> {
-                    if (i.contains(e.getPoint())) {
-                        System.out.println(i);
-
-                        if (i.isFilled()) {
-                            removeHeroSelection(i, secDef);
-                            i.turn();
-                        } else {
-                            if (secDef.size() < ACTION_COUNT) {
-                                addHeroSelection(i, secDef);
-                                i.turn();
-                            }
-                        }
-                        repaint();
-
-                    }
-
-                });
-
-                //Если кликаем на ОК
-                if (go.contains(e.getPoint())) {
-                    System.out.println(secAttack);
-                    System.out.println(secDef);
-
-                    currentHero.setTurnState(TurnState.TurnIsFinished);
-                    System.out.println("hitting hero: " + currentHero);
-
-                    ServerUtils.map.put(currentHero, new DamageToForServer(currentHero,targetHero,secAttack,secDef) );
-
-                    Main1.battleFrame.dispatchEvent(new WindowEvent(Main1.battleFrame, WindowEvent.WINDOW_CLOSING));
-                    Main.turnManager.getCurrentHero().setSelected(false);
-
-                    //System.err.println(Main.turnManager.getCurrentHero());
-                    //System.err.println(GameField.getGameField());
-
-
-                    Main.turnManager.setCurrentHero(null);
-                    Main.frame.repaint();
-                }
-            }
-        });*/
-
-
-    private MouseListener initBattleMouseListener(){
+    private MouseListener initBattleMouseListener() {
 
         return new MouseAdapter() {
             @Override
@@ -165,7 +98,7 @@ public class Battle extends LayerUI<JPanel> {
                 // e.getPoint();
 
                 Point clickPoint = e.getPoint();
-                clickPoint.y-=26;
+                clickPoint.y -= 26;
 
                 //если кликаем по атака хексам
                 sectionsAttackList.forEach(i -> {
@@ -213,47 +146,46 @@ public class Battle extends LayerUI<JPanel> {
                     //передать атаки и блоки в метод отправки данных на сервер
 
 
+                    // currentHero.setTurnState(TurnState.TurnIsFinished);
 
+                    ClientUtils.SendDamageToServer(new DamageForClient(secAttack, secDef));
 
-                   // currentHero.setTurnState(TurnState.TurnIsFinished);
-                    disableBattleFrame();
-                    ClientUtils.SendDamageToServer(new DamageForClient(secAttack,secDef));
-
-                   // ServerUtils.map.put(currentHero, new DamageToForServer(currentHero,targetHero,secAttack,secDef) );
+                    // ServerUtils.map.put(currentHero, new DamageToForServer(currentHero,targetHero,secAttack,secDef) );
 
                     //Main1.battleFrame.dispatchEvent(new WindowEvent(Main1.battleFrame, WindowEvent.WINDOW_CLOSING));
-                   // Main.turnManager.getCurrentHero().setSelected(false);
+                    // Main.turnManager.getCurrentHero().setSelected(false);
 
-                   // Main.turnManager.setCurrentHero(null);
+                    // Main.turnManager.setCurrentHero(null);
 
-                    resetBattleActions();
+                    /*resetBattleActions();
                     battleFieldPanel.repaint();
-
                     removeMouseListeners();
-
-                    battleFieldPanel.addMouseListener(ClientUtils.getMouseListener());
+                    battleFieldPanel.addMouseListener(ClientUtils.getMouseListener());*/
+                    resetBattleMenu();
 
                 }
                 //отмена
-                if (cancel.contains(clickPoint)){
+                if (cancel.contains(clickPoint)) {
                     //обнулить форму и скрыть ее
-                    resetBattleActions();
-                    disableBattleFrame();
-                    battleFieldPanel.repaint();
 
-                    removeMouseListeners();
-                    battleFieldPanel.addMouseListener(ClientUtils.getMouseListener());
+                    resetBattleMenu();
+
                 }
-
-
-
 
             }
         };
     }
 
 
-    public void removeMouseListeners(){
+    public void resetBattleMenu(){
+        disableBattleFrame();
+        resetBattleActions();
+        battleFieldPanel.repaint();
+        removeMouseListeners();
+        battleFieldPanel.addMouseListener(ClientUtils.getMouseListener());
+    }
+
+    public void removeMouseListeners() {
 
         battleFieldPanel.removeMouseListener(battleFieldPanel.getMouseListeners()[0]);
 
@@ -344,13 +276,59 @@ public class Battle extends LayerUI<JPanel> {
         super.paint(g, c);
         Graphics2D g2 = (Graphics2D) g.create();
 
-        if (isVisibleBattleFrame){
+        int w = c.getWidth();
+        int h = c.getHeight();
 
-            sectionsAttackList.forEach(i -> i.draw(g2, 0, 0, 1, Color.RED.getRGB(),i.isFilled()));
-            sectionsDefenseList.forEach(i -> i.draw(g2, 0, 0, 1, new Color(12, 119, 31).getRGB(), i.isFilled()));
+        if (isVisibleBattleFrame) {
 
-            go.draw(g2, 0, 0, 2, Color.GREEN.getRGB(), true);
-            cancel.draw(g2, 0, 0, 2, Color.RED.getRGB(), true);
+
+            // Gray it out.
+            Composite urComposite = g2.getComposite();
+            g2.setComposite(AlphaComposite.getInstance(
+                    AlphaComposite.SRC_OVER, .5f * /*fade*/1f));
+            g2.fillRect(0, 0, w, h);
+            g2.setComposite(urComposite);
+
+
+            //sectionsAttackList.forEach(i -> i.draw(g2, 0, 0, 1, Color.RED.getRGB(),i.isFilled()));
+            //sectionsDefenseList.forEach(i -> i.draw(g2, 0, 0, 1, new Color(12, 119, 31).getRGB(), i.isFilled()));
+
+
+
+            sectionsAttackList.forEach(i -> {i.draw(g2, 0, 0, 1,
+                    i.isFilled() ?
+                            new Color(127, 0, 0).getRGB():
+                            Color.RED.getRGB()
+                    , true);
+
+            });
+
+
+            sectionsDefenseList.forEach(i -> i.draw(g2, 0, 0, 1,
+                    i.isFilled() ?
+                    new Color(12, 119, 31).getRGB() :
+                            Color.green.getRGB()
+
+                    , true));
+
+
+            //TODO сделать нормальный контур
+            sectionsAttackList.forEach(i -> i.draw(g2, 0, 0, 1, Color.BLACK.getRGB(),false));
+            sectionsDefenseList.forEach(i -> i.draw(g2, 0, 0, 1, Color.BLACK.getRGB(), false));
+
+            go.draw(g2, 0, 0, 2, Color.PINK.getRGB(), true);
+            g.drawImage(ImageLoader.loadImage(
+                    HeroImages.OK_PATH),
+                    go.getCenter().x - 35,
+                    go.getCenter().y - 35,
+                    null);
+
+            cancel.draw(g2, 0, 0, 2, Color.PINK.getRGB(), true);
+            g.drawImage(ImageLoader.loadImage(
+                    HeroImages.CANCEL_PATH),
+                    cancel.getCenter().x - 28,
+                    cancel.getCenter().y - 30,
+                    null);
         }
     }
 

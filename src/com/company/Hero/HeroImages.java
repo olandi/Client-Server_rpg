@@ -11,6 +11,9 @@ public class HeroImages {
 
 
 
+    public static final URL OK_PATH = HeroImages.class.getClassLoader().getResource("image/a/ok.png");
+    public static final URL CANCEL_PATH = HeroImages.class.getClassLoader().getResource("image/a/cancel.png");
+
     // public static final String ARCHER_PATH = "image/archer.jpg";
 
 
