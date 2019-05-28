@@ -6,25 +6,31 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Sumilation {
-    public static final int KNIGHT_HEALTH = 50;
-    public static final int BERSERK_HEALTH = 50;
-    public static final int KNIGHT_DAMAGE = 10;
-    public static final int BERSERK_DAMAGE = 10;
+    public static final double KNIGHT_HEALTH = 50;
+    public static final double BERSERK_HEALTH = 50;
+    public static final double KNIGHT_DAMAGE = 10;
+    public static final double BERSERK_DAMAGE = 8.35d;
+
+    public static final int LOOPS = 10000;
 
 
     private String fightOneRound(Character firstCharacter, Character secondCharacter) {
+
+       // System.out.println(firstCharacter);
+       // System.out.println(secondCharacter);
 
         firstCharacter.Attack();
         firstCharacter.Defence();
         secondCharacter.Attack();
         secondCharacter.Defence();
 
+
+
         firstCharacter.hit(secondCharacter);
         secondCharacter.hit(firstCharacter);
 
         System.out.println(firstCharacter);
         System.out.println(secondCharacter);
-
 
         firstCharacter.resetAttackAndDef();
         secondCharacter.resetAttackAndDef();
@@ -35,9 +41,10 @@ public class Sumilation {
     public Character runSimulation(Character firstCharacter, Character secondCharacter) {
         //пока есть хотя бы один живой
 
-        System.out.println(firstCharacter);
-        System.out.println(secondCharacter);
+
         do {
+             System.out.println(firstCharacter);
+             System.out.println(secondCharacter);
             fightOneRound(firstCharacter, secondCharacter);
         } while (firstCharacter.getHealth() > 0 && secondCharacter.getHealth() > 0);
 
@@ -74,7 +81,7 @@ public class Sumilation {
         int bersCount = 0;
 
         String winner ="";
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < LOOPS; i++) {
             Character character = sumilation.runSimulation(knight, berserk);
 
 
@@ -96,14 +103,14 @@ public class Sumilation {
 }
 
 abstract class Character {
-    private int health;
-    private int damage;
+    private double health;
+    private double damage;
 
     protected List<Integer> attack = new ArrayList<>();
     protected List<Integer> defense = new ArrayList<>();
 
 
-    public Character(int health, int damage) {
+    public Character(double health, double damage) {
         this.health = health;
         this.damage = damage;
     }
@@ -119,15 +126,15 @@ abstract class Character {
 
     }
 
-    public void setHealth(int health) {
+    public void setHealth(double health) {
         this.health = health;
     }
 
-    public int getHealth() {
+    public double getHealth() {
         return health;
     }
 
-    public int getDamage() {
+    public double getDamage() {
         return damage;
     }
 
@@ -182,7 +189,7 @@ abstract class Character {
 
 class Knight extends Character {
 
-    public Knight(int health, int damage) {
+    public Knight(double health, double damage) {
         super(health, damage);
     }
 
@@ -208,7 +215,7 @@ class Knight extends Character {
 
 class Berserk extends Character {
 
-    public Berserk(int health, int damage) {
+    public Berserk(double health, double damage) {
         super(health, damage);
     }
 
