@@ -1,9 +1,8 @@
 package com.myDrafts.differentExamples.MyClientServerExample;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import com.company.model.Hero.Hero;
+
+import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
@@ -19,17 +18,13 @@ public class Client {
     private void runClient() {
 
         try {
-            String string = "Player №" + ThreadLocalRandom.current().nextInt(1, 5000);
+            String string = "Player" + ThreadLocalRandom.current().nextInt(1, 5000);
+            Hero hero = new Hero(string);
+
             socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
 
-         /* byte[] out = string.getBytes(Charset.forName("UTF-8"));
-            socket.getOutputStream().write(out);
-            socket.getOutputStream().flush();*/
-
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            out.println(string);
-
-
+            ObjectOutputStream o = new ObjectOutputStream(socket.getOutputStream());
+            o.writeObject(hero);
 
         } catch (IOException e) {
             System.out.println("connect error");

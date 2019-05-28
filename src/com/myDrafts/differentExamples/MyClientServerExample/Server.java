@@ -1,5 +1,6 @@
 package com.myDrafts.differentExamples.MyClientServerExample;
 
+import com.company.model.Hero.Hero;
 import com.myDrafts.differentExamples.chat.Connection;
 import com.myDrafts.differentExamples.chat.ConsoleHelper;
 import com.myDrafts.differentExamples.chat.Message;
@@ -18,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Server {
     private static int SERVER_PORT = 5555;
 
-    private static Map<String, /*Connection*/String> connectionMap = new ConcurrentHashMap<>();
+    private static Map<String, /*Connection*/Hero> connectionMap = new ConcurrentHashMap<>();
 
 
     public static void main(String[] args) {
@@ -63,12 +64,16 @@ public class Server {
 
             ConsoleHelper.writeMessage("Установленно соединение с адресом " + socket.getRemoteSocketAddress());
 
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+            try (
+                   // BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    ObjectInputStream i = new ObjectInputStream(socket.getInputStream())
+            ) {
+
 
                 while (true) {
-                    String s;
-                    if ((s = in.readLine()) != null) {
-                        connectionMap.put(s, s);
+                    Hero h;
+                    if ((h = (Hero) i.readObject()) != null) {
+                        connectionMap.put(h.getName(), h);
                         System.out.println(connectionMap);
                         break;
                     }
@@ -80,10 +85,10 @@ public class Server {
             } catch (IOException e) {
                 e.printStackTrace();
                 ConsoleHelper.writeMessage("Ошибка при обмене данными с удаленным адресом");
-           /* } catch (ClassNotFoundException e) {
+            } catch (ClassNotFoundException e) {
                 ConsoleHelper.writeMessage("Ошибка при обмене данными с удаленным адресом");
                 e.printStackTrace();
-            }*/
+            }
 
             /*if (userName != null) {
                 //После того как все исключения обработаны, удаляем запись из connectionMap
@@ -92,7 +97,7 @@ public class Server {
             }
             ConsoleHelper.writeMessage("Соединение с удаленным адресом закрыто");*/
 
-            }
+
         }
 
 

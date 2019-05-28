@@ -1,8 +1,9 @@
 package com.company.model.Hero;
 
+import java.io.Serializable;
 import java.net.URL;
 
-public class Hero extends FieldItem{
+public class Hero extends FieldItem implements Serializable {
     private String name;
     private int health;
     private int damage;
