@@ -1,10 +1,8 @@
 package com.company;
 
-import com.company.BattleView.Battle;
-import com.company.Timer.Timer;
-import com.company.clientUtils.ClientUtils;
-import com.company.controllerUtils.ControllerUtils;
-import com.company.turnManager.TurnManager;
+import com.company.client.SwingView.*;
+import com.company.controller.Controller;
+import com.company.server.ServerUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,10 +12,12 @@ public class Main {
     private static final int TIMER_DURATION = 40;
 
 
-    public JFrame frame;
-    private JPanel battleFieldPanel = new JPanel();
-    private Battle battle = new Battle(battleFieldPanel);
-    private GameFieldGUI gameFieldGUI = new GameFieldGUI(battleFieldPanel, battle);
+    private JFrame frame;
+    private MainPanel mainGamePanel;
+    private HittingPanel hittingPanel;
+    private BattleFieldPanel battleFieldPanel;
+    private TimerPanel timerPanel;
+    private CombatLogPanel combatLogPanel;
 
 
     public static void main(String[] args) {
@@ -26,35 +26,49 @@ public class Main {
         );
     }
 
-    private void initFrame(){
-        frame = new JFrame("W");
+    private void initFrame() {
+        initFrameComponents();
+
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(800, 800);
         frame.setResizable(true);
 
         frame.setLayout(new BorderLayout());
 
-        frame.add(battleFieldPanel);
+        frame.add(mainGamePanel);
 
-        battleFieldPanel.setLayout(new BorderLayout());
+        mainGamePanel.setLayout(new BorderLayout());
 
-        battleFieldPanel.add(new Timer(TIMER_DURATION, battleFieldPanel), BorderLayout.NORTH);
-
-
-        JLayer<JPanel> jlayer = new JLayer<JPanel>(gameFieldGUI, battle);
-        battleFieldPanel.add(jlayer);
-
-/*
-        battleFieldPanel.add(gameFieldGUI, BorderLayout.CENTER);
-        battleFieldPanel.add(battle, BorderLayout.CENTER);*/
+        mainGamePanel.add(timerPanel, BorderLayout.NORTH);
 
 
+        JLayer<JPanel> jlayer = new JLayer<JPanel>(battleFieldPanel, hittingPanel);
+        mainGamePanel.add(jlayer, BorderLayout.CENTER);
 
 
-        battleFieldPanel.add(GameFieldGUI.combatLog.getMiddlePanel(),BorderLayout.SOUTH);
+        mainGamePanel.add(combatLogPanel.getMiddlePanel(), BorderLayout.SOUTH);
 
-        battleFieldPanel.addMouseListener(gameFieldGUI.getMouseListener());
+        mainGamePanel.addMouseListener(battleFieldPanel.getMouseListener());
 
         frame.setVisible(true);
     }
+
+
+    private void initFrameComponents() {
+        frame = new JFrame("W");
+        mainGamePanel = new MainPanel();
+        battleFieldPanel = new BattleFieldPanel(mainGamePanel);
+        hittingPanel = new HittingPanel(mainGamePanel);
+        timerPanel = new TimerPanel(ServerUtils.getTimer(TIMER_DURATION));
+        combatLogPanel = new CombatLogPanel();
+
+
+        Controller.setMainGamePanel(mainGamePanel);
+        Controller.setBattleFieldPanel(battleFieldPanel);
+        Controller.setHittingPanel(hittingPanel);
+        Controller.setTimerPanel(timerPanel);
+        Controller.setCombatLogPanel(combatLogPanel);
+
+    }
+
 }
