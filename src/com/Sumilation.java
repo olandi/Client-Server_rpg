@@ -9,7 +9,8 @@ public class Sumilation {
     public static final double KNIGHT_HEALTH = 50;
     public static final double BERSERK_HEALTH = 50;
     public static final double KNIGHT_DAMAGE = 10;
-    public static final double BERSERK_DAMAGE = 8.35d;
+    public static final double BERSERK_DAMAGE = 8.334d;
+
 
     public static final int LOOPS = 10000;
 
