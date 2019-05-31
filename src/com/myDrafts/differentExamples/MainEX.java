@@ -1,6 +1,6 @@
 package com.myDrafts.differentExamples;
 
-import com.company.client.model.Hexagon;
+import com.singlePlayer.company.client.model.Hexagon;
 
 import java.awt.*;
 import javax.swing.*;
