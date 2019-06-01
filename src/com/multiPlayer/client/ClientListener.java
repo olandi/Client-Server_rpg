@@ -10,7 +10,7 @@ import static com.multiPlayer.other.ServerConstants.SERVER_ADDRESS;
 import static com.multiPlayer.other.ServerConstants.SERVER_PORT;
 
 
-class ClientListener extends Thread {
+public class ClientListener extends Thread {
 
     private MainLayoutController controller;
 
@@ -32,12 +32,7 @@ class ClientListener extends Thread {
 
             clientHandshake();
 
-
-            //todo как то это должно быть по-другому
-            controller.updatePlayerLabels();
-            controller.getMainLayoutView().switchToBattle();
-
-
+            controller.switchToPickBattleView();
 
             clientMainLoop();
 

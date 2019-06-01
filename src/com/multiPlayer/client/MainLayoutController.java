@@ -1,6 +1,9 @@
 package com.multiPlayer.client;
 
 
+import com.multiPlayer.client.View.LoginView;
+import com.multiPlayer.client.View.MainLayoutView;
+import com.multiPlayer.client.View.PickBattleView;
 import com.multiPlayer.connection.Connection;
 
 import java.io.IOException;
@@ -14,9 +17,6 @@ public class MainLayoutController {
 
     private MainLayoutModel mainLayoutModel = new MainLayoutModel();
 
-    public MainLayoutModel getMainLayoutModel() {
-        return mainLayoutModel;
-    }
 
     public MainLayoutView getMainLayoutView() {
         return mainLayoutView;
@@ -33,7 +33,16 @@ public class MainLayoutController {
     }
 
 
-    public void updatePlayerLabels() {
+
+
+    public void switchToPickBattleView(){
+        updatePlayerLabels();
+        mainLayoutView.switchToBattle();
+    }
+
+
+
+    private void updatePlayerLabels() {
         pickBattleView.updatePlayerLabel(mainLayoutModel.getPlayer());
         pickBattleView.updateServerLabel(mainLayoutModel.getConnection().getSocket().getRemoteSocketAddress().toString());
     }
@@ -55,5 +64,4 @@ public class MainLayoutController {
     }
 
 
-//todo: добавить методы для работы с моделью, чтоб убрать геттер.
 }

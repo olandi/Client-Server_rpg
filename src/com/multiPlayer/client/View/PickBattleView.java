@@ -1,5 +1,6 @@
-package com.multiPlayer.client;
+package com.multiPlayer.client.View;
 
+import com.multiPlayer.client.MainLayoutController;
 import com.multiPlayer.connection.Message;
 import com.multiPlayer.connection.MessageType;
 

@@ -1,4 +1,7 @@
-package com.multiPlayer.client;
+package com.multiPlayer.client.View;
+
+import com.multiPlayer.client.ClientListener;
+import com.multiPlayer.client.MainLayoutController;
 
 import javax.swing.*;
 import java.awt.*;
