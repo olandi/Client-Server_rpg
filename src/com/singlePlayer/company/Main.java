@@ -1,7 +1,7 @@
 package com.singlePlayer.company;
 
-import com.singlePlayer.company.client.SwingView.*;
-import com.singlePlayer.company.controller.Controller;
+import com.singlePlayer.company.client.swing.View.*;
+import com.singlePlayer.company.client.swing.Controller;
 import com.singlePlayer.company.server.ServerUtils;
 
 import javax.swing.*;
@@ -9,66 +9,36 @@ import java.awt.*;
 
 public class Main {
 
-    private static final int TIMER_DURATION = 40;
-
-
-    private JFrame frame;
-    private MainPanel mainGamePanel;
-    private HittingPanel hittingPanel;
-    private BattleFieldPanel battleFieldPanel;
-    private TimerPanel timerPanel;
-    private CombatLogPanel combatLogPanel;
-
-
     public static void main(String[] args) {
-        EventQueue.invokeLater(() ->
-                new Main().initFrame()
+        EventQueue.invokeLater(() -> {
+                    Controller controller = new Controller();
+                    controller.setBattleFieldPanelMouseListener();
+
+                    Main.createAndShowGUI(controller.getMainGamePanel());
+
+
+                }
         );
     }
 
-    private void initFrame() {
-        initFrameComponents();
 
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    public static void createAndShowGUI(JPanel panel) {
+        //Create and set up the window.
+        JFrame frame = new JFrame("CardLayoutDemo");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 800);
-        frame.setResizable(true);
 
-        frame.setLayout(new BorderLayout());
-
-        frame.add(mainGamePanel);
-
-        mainGamePanel.setLayout(new BorderLayout());
-
-        mainGamePanel.add(timerPanel, BorderLayout.NORTH);
+        //Create and set up the content pane.
+        //  MainLayoutView demo = new MainLayoutView(controller);
+        // demo.addComponentToPane(frame.getContentPane());
 
 
-        JLayer<JPanel> jlayer = new JLayer<JPanel>(battleFieldPanel, hittingPanel);
-        mainGamePanel.add(jlayer, BorderLayout.CENTER);
+        frame.add(panel, BorderLayout.CENTER);
 
-
-        mainGamePanel.add(combatLogPanel.getMiddlePanel(), BorderLayout.SOUTH);
-
-        mainGamePanel.addMouseListener(battleFieldPanel.getMouseListener());
-
+        //Display the window.
+        // frame.pack();
         frame.setVisible(true);
     }
 
-
-    private void initFrameComponents() {
-        frame = new JFrame("W");
-        mainGamePanel = new MainPanel();
-        battleFieldPanel = new BattleFieldPanel(mainGamePanel);
-        hittingPanel = new HittingPanel(mainGamePanel);
-        timerPanel = new TimerPanel(ServerUtils.getTimer(TIMER_DURATION));
-        combatLogPanel = new CombatLogPanel();
-
-
-        Controller.setMainGamePanel(mainGamePanel);
-        Controller.setBattleFieldPanel(battleFieldPanel);
-        Controller.setHittingPanel(hittingPanel);
-        Controller.setTimerPanel(timerPanel);
-        Controller.setCombatLogPanel(combatLogPanel);
-
-    }
 
 }

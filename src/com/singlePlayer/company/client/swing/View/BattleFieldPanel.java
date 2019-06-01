@@ -1,16 +1,17 @@
-package com.singlePlayer.company.client.SwingView;
+package com.singlePlayer.company.client.swing.View;
 
+import com.singlePlayer.company.client.swing.Controller;
 import com.singlePlayer.company.client.utils.ImageLoader;
 import com.singlePlayer.company.model.Hero.FieldItem;
 import com.singlePlayer.company.model.Hero.Hero;
 import com.singlePlayer.company.model.Hero.TurnState;
 import com.singlePlayer.company.server.ServerUtils;
-import com.singlePlayer.company.client.utils.ClientUtils;
+
 import com.singlePlayer.company.client.model.Hexagon;
 import com.singlePlayer.company.model.gameField.GameField;
 import com.singlePlayer.company.model.gameField.HexagonItem;
 import com.singlePlayer.company.model.heroActions.MoveHero;
-import com.singlePlayer.company.model.TurnManager;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,24 +24,17 @@ public class BattleFieldPanel extends JPanel {
 
     public static List<HexagonItem> list = GameField.getGameField();
 
-    public static TurnManager turnManager = new TurnManager();
-    private static ClientUtils clientUtils = new ClientUtils();
-
     private MouseListener mouseListener;
-    private MainPanel mainGamePanel;
 
-    public BattleFieldPanel(MainPanel mainGamePanel) {
-        this.mainGamePanel = mainGamePanel;
+    private Controller controller;
+
+    public BattleFieldPanel(Controller controller) {
+        this.controller = controller;
         initMouseListener();
-
-        //TODO is it good design?
-        mainGamePanel.BattleFieldMouseListener = mouseListener;
     }
 
 
-    public static TurnManager getTurnManager() {
-        return turnManager;
-    }
+
 
     public MouseListener getMouseListener() {
         return mouseListener;
@@ -69,16 +63,16 @@ public class BattleFieldPanel extends JPanel {
                                         fieldItem);
 
                         //2) Если существует куррентХеро
-                        if (turnManager.getCurrentHero() != null) {
+                        if (controller.getCurrentHero() != null) {
 
                             //3) Если куррентХеро может ходить
-                            if (turnManager.getCurrentHero().getTurnState().equals(TurnState.ReadyForTurn)) {
+                            if (controller.getCurrentHero().getTurnState().equals(TurnState.ReadyForTurn)) {
 
                                 //4) Если попадаем в Героя
                                 if ("Hero".equals(fieldItem.getContentType())) {
 
                                     //5) Если попадаем не в себя
-                                    if (!turnManager.getCurrentHero().equals(fieldItem)) {
+                                    if (!controller.getCurrentHero().equals(fieldItem)) {
 
                                         //БЬЕМ ВРАГА (КуррентХиро = NULL  обнуляется)
                                         //обнуляется только после успешной атаки
@@ -87,20 +81,19 @@ public class BattleFieldPanel extends JPanel {
                                         /**-------------*/
 
                                         //становится видимой панель атаки
-                                        clientUtils.setHero(turnManager.getCurrentHero());
-                                        clientUtils.setEnemy((Hero) fieldItem);
+                                        controller.setCurrentHero(controller.getCurrentHero());
+                                        //clientUtils.setHero(turnManager.getCurrentHero());
+                                        controller.setEnemy((Hero) fieldItem);
+                                       // clientUtils.setEnemy((Hero) fieldItem);
 
-                                        mainGamePanel.openHittingPanel();
+                                        controller.openHittingPanel();
 
                                        // mainGamePanel.removeCurrentMouseListener(mouseListener); // del own
                                        // mainGamePanel.removeCurrentMouseListener();
-                                        mainGamePanel.removeAllMouseListeners();
 
-                                        mainGamePanel.repaint();
+                                        controller.setHittingPanelMouseListener();
 
-                                        mainGamePanel.addMouseListener(mainGamePanel.HittingPanelMouseListener);
-
-
+                                        controller.repaintAllView();
 
                                         /**------------*/
 
@@ -110,35 +103,35 @@ public class BattleFieldPanel extends JPanel {
 
                                     } else {
                                         //ДЕЛАЕМ куррентХеро НЕ АКТИВНЫМ (КуррентХиро = NULL  обнуляется)
-                                        turnManager.setCurrentHero(null);
+                                        controller.setCurrentHero(null);
 
                                         fieldItem.setSelected(false);
                                         /*fieldItem.turnSelect();*/
-                                        mainGamePanel.repaint();
+                                        controller.repaintAllView();
 
                                     }
                                 } else {
                                     // ПЕРСОНАЖ ХОДИТ НА СВОБОДНУЮ КЛЕТКУ (КуррентХиро = NULL  обнуляется)
 
-                                    turnManager.getCurrentHero().setSelected(false);
+                                    controller.getCurrentHero().setSelected(false);
 
                                     fieldItem.setSelected(true);/*fieldItem.turnSelect();*/
-                                    mainGamePanel.repaint();
+                                    controller.repaintAllView();
                                     //тут герой ходит на клетку вперед, кидает в стэк действие хождения на клетку
                                     //отмечает перса как походившего
                                     ServerUtils.movementActions.add(new MoveHero(
-                                            turnManager.getCurrentHero()
+                                            controller.getCurrentHero()
                                             , i));
 
-                                    System.err.println(turnManager.getCurrentHero() + " " + i);
-                                    turnManager.getCurrentHero().setTurnState(TurnState.TurnIsFinished);
+                                    System.err.println(controller.getCurrentHero() + " " + i);
+                                    controller.getCurrentHero().setTurnState(TurnState.TurnIsFinished);
 
-                                    turnManager.setCurrentHero(null);
+                                    controller.setCurrentHero(null);
 
 
                                 }
                             } else {
-                                turnManager.setCurrentHero(null);
+                                controller.setCurrentHero(null);
                                 //!!! ТЕОРЕТИЧЕСКИ УСЛОВИЕ НИКОГДА НЕ БУДЕТ ДОСТИГНУТО(????????)
                                 //на практике нет)
                             }
@@ -147,10 +140,10 @@ public class BattleFieldPanel extends JPanel {
                             if ("Hero".equals(fieldItem.getContentType()) &&
                                     ((Hero) fieldItem).getTurnState().equals(TurnState.ReadyForTurn)) {
                                 //Делаем этого игрока - КуррентХиро
-                                turnManager.setCurrentHero((Hero) fieldItem);
+                                controller.setCurrentHero((Hero) fieldItem);
                                 // fieldItem.turnSelect();
                                 fieldItem.setSelected(true);
-                                mainGamePanel.repaint();
+                                controller.repaintAllView();
 
                             } else {
                                 //НИЧЕГО НЕ ДЕЛАЕМ

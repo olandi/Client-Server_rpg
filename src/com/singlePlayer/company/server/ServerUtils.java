@@ -1,6 +1,6 @@
 package com.singlePlayer.company.server;
 
-import com.singlePlayer.company.controller.Controller;
+import com.singlePlayer.company.client.swing.Controller;
 import com.singlePlayer.company.model.BodyParts;
 import com.singlePlayer.company.model.Hero.Hero;
 import com.singlePlayer.company.model.Hero.TurnState;
@@ -18,11 +18,8 @@ public class ServerUtils {
 
     public static List<Hero> heroes = new ArrayList<>();
 
+    public final static int ROUND_DURATION = 40;
 
-
-    public static Tim getTimer(int duration){
-        return new Tim(duration);
-    }
 
 
     public static boolean isReadyToMoveHeroExist() {
@@ -134,7 +131,7 @@ public class ServerUtils {
                                     map.get(hero).getToHero().getHealth() -
                                             hero.getDamage());
 
-                            Controller.getCombatLogPanel().appendText("Hero: " + map.get(hero).getToHero().getName() + " received 20 damage\n");
+                           //todo Controller.getCombatLogPanel().appendText("Hero: " + map.get(hero).getToHero().getName() + " received 20 damage\n");
 
 
                         }
@@ -150,7 +147,7 @@ public class ServerUtils {
                                     map.get(hero).getToHero().getHealth() -
                                             hero.getDamage());
 
-                            Controller.getCombatLogPanel().appendText("Hero: " + map.get(hero).getToHero().getName() + " received 20 damage\n");
+                         //todo   Controller.getCombatLogPanel().appendText("Hero: " + map.get(hero).getToHero().getName() + " received 20 damage\n");
 
                         }
                     }

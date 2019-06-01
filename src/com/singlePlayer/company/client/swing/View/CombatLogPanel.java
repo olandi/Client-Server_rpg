@@ -1,4 +1,6 @@
-package com.singlePlayer.company.client.SwingView;
+package com.singlePlayer.company.client.swing.View;
+
+import com.singlePlayer.company.client.swing.Controller;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -20,9 +22,11 @@ public class CombatLogPanel extends JPanel {
 
 
 
+  private Controller controller;
 
+  public CombatLogPanel(Controller controller) {
 
-  public CombatLogPanel() {
+    this.controller = controller;
 
     middlePanel=new JPanel();
     middlePanel.setBorder(new TitledBorder(new EtchedBorder(), "Combat Log"));

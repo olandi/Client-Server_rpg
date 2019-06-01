@@ -1,3 +1,4 @@
+/*
 package com.singlePlayer.company.model;
 
 import com.singlePlayer.company.model.Hero.Hero;
@@ -21,3 +22,4 @@ public class TurnManager {
                 '}';
     }
 }
+*/

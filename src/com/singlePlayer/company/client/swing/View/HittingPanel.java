@@ -1,11 +1,12 @@
-package com.singlePlayer.company.client.SwingView;
+package com.singlePlayer.company.client.swing.View;
 
 
 
+import com.singlePlayer.company.client.swing.Controller;
 import com.singlePlayer.company.model.BodyParts;
 import com.singlePlayer.company.client.utils.ImageLoader;
 import com.singlePlayer.company.client.model.HeroImages;
-import com.singlePlayer.company.client.utils.ClientUtils;
+
 import com.singlePlayer.company.model.damageTO.DamageForClient;
 import com.singlePlayer.company.client.model.BattleHexagon;
 import com.singlePlayer.company.client.model.HexSection;
@@ -31,19 +32,16 @@ public class HittingPanel extends LayerUI<JPanel> {
     private Hexagon go = new Hexagon(new Point(420, 400), 40);
     private Hexagon cancel = new Hexagon(new Point(300, 400), 40);
 
-
     private List<BodyParts> secAttack = new ArrayList<>();
     private List<BodyParts> secDef = new ArrayList<>();
 
-    private MainPanel mainGamePanel;
+    private Controller controller;
 
-    public HittingPanel(MainPanel mainGamePanel) {
-        this.mainGamePanel = mainGamePanel;
+    public HittingPanel(Controller controller) {
+        this.controller = controller;
         initAttackAndDefense();
         initBattleMouseListener();
 
-        //TODO is it good design?
-        mainGamePanel.HittingPanelMouseListener = mouseListener;
     }
 
 
@@ -97,7 +95,7 @@ public class HittingPanel extends LayerUI<JPanel> {
                                 i.turn();
                             }
                         }
-                        mainGamePanel.repaint();
+                        controller.repaintAllView();
 
                     }
 
@@ -117,7 +115,7 @@ public class HittingPanel extends LayerUI<JPanel> {
                                 i.turn();
                             }
                         }
-                        mainGamePanel.repaint();
+                        controller.repaintAllView();
 
                     }
 
@@ -129,7 +127,7 @@ public class HittingPanel extends LayerUI<JPanel> {
                     //передать атаки и блоки в метод отправки данных на сервер
 
 
-                    ClientUtils.SendDamageToServer(new DamageForClient(secAttack, secDef));
+                    controller.SendDamageToServer(new DamageForClient(secAttack, secDef));
                     resetBattleMenu();
 
                 }
@@ -144,16 +142,13 @@ public class HittingPanel extends LayerUI<JPanel> {
 
 
     public void resetBattleMenu() {
-        mainGamePanel.closeHittingPanel();
+        controller.closeHittingPanel();
         resetBattleActions();
-        mainGamePanel.repaint();
+        controller.repaintAllView();
         //mainGamePanel.removeCurrentMouseListener(mouseListener);
        // mainGamePanel.removeCurrentMouseListener();
-        mainGamePanel.removeAllMouseListeners();
 
-        mainGamePanel.addMouseListener(mainGamePanel.BattleFieldMouseListener);
-
-        System.out.println("we");
+        controller.setBattleFieldPanelMouseListener();
     }
 
 
@@ -246,7 +241,7 @@ public class HittingPanel extends LayerUI<JPanel> {
         int w = c.getWidth();
         int h = c.getHeight();
 
-        if (mainGamePanel.isVisibleBattleFrame()) {
+        if (controller.isVisibleBattleFrame()) {
 
 
             // Gray it out.

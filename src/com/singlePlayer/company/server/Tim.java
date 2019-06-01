@@ -1,19 +1,18 @@
 package com.singlePlayer.company.server;
 
 
-import com.singlePlayer.company.client.SwingView.BattleFieldPanel;
-import com.singlePlayer.company.controller.Controller;
+import com.singlePlayer.company.client.swing.View.BattleFieldPanel;
+import com.singlePlayer.company.client.swing.Controller;
 import com.singlePlayer.company.model.Hero.Hero;
 import com.singlePlayer.company.model.gameField.GameField;
 
 public class Tim {
-    private int initialValue;
-    private int count;
+    private int count= ServerUtils.ROUND_DURATION;
     private int round = 0;
+    private Controller controller;
 
-    public Tim(int count) {
-        this.count = count;
-        this.initialValue = count;
+    public Tim(Controller controller) {
+        this.controller = controller;
     }
 
     public void dec() {
@@ -30,7 +29,7 @@ public class Tim {
     }
 
     public void reset() {
-        count = initialValue;
+        count = ServerUtils.ROUND_DURATION;
         round++;
         while (ServerUtils.movementActions.size() > 0) {
             ServerUtils.movementActions.poll().perform();
@@ -38,10 +37,10 @@ public class Tim {
 
         ServerUtils.computeDamage();
 
-        Controller.getCombatLogPanel().appendText("Round " + round + "\n");
+        controller.getCombatLogPanel().appendText("Round " + round + "\n");
 
         for (Hero hero : ServerUtils.heroes) {
-            Controller.getCombatLogPanel().appendText("Hero: " + hero.getName() + " (" + hero.getHealth() + ") HP" + "\n");
+            controller.getCombatLogPanel().appendText("Hero: " + hero.getName() + " (" + hero.getHealth() + ") HP" + "\n");
         }
 
         ServerUtils.checkAliveHero();
@@ -51,9 +50,9 @@ public class Tim {
 
         ServerUtils.resetMap();
 
-        BattleFieldPanel.turnManager.setCurrentHero(null);
+        controller.setCurrentHero(null);
 
         //В этом методе идет перерисовка фреймов в том числе
-        Controller.getHittingPanel().resetBattleMenu();
+        controller.resetBattleMenu();
     }
 }

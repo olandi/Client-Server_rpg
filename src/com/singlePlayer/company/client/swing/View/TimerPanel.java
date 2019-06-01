@@ -1,4 +1,4 @@
-package com.singlePlayer.company.client.SwingView;
+package com.singlePlayer.company.client.swing.View;
 
 import com.singlePlayer.company.server.ServerUtils;
 import com.singlePlayer.company.server.Tim;

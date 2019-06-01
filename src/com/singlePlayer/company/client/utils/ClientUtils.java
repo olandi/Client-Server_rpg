@@ -1,6 +1,7 @@
+/*
 package com.singlePlayer.company.client.utils;
 
-import com.singlePlayer.company.client.SwingView.BattleFieldPanel;
+import com.singlePlayer.company.client.swing.View.BattleFieldPanel;
 import com.singlePlayer.company.model.Hero.Hero;
 import com.singlePlayer.company.model.Hero.TurnState;
 import com.singlePlayer.company.server.ServerUtils;
@@ -57,3 +58,4 @@ public class ClientUtils {
 
 
 }
+*/
