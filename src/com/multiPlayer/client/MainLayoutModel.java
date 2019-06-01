@@ -1,6 +1,6 @@
 package com.multiPlayer.client;
 
-import com.multiPlayer.client.p.Connection;
+import com.multiPlayer.connection.Connection;
 
 public class MainLayoutModel {
     private Connection connection;

@@ -1,8 +1,8 @@
 package com.multiPlayer.server;
 
-import com.multiPlayer.client.p.Connection;
-import com.multiPlayer.client.p.Message;
-import com.multiPlayer.client.p.MessageType;
+import com.multiPlayer.connection.Connection;
+import com.multiPlayer.connection.Message;
+import com.multiPlayer.connection.MessageType;
 
 import static com.multiPlayer.other.ServerConstants.SERVER_PORT;
 
@@ -12,6 +12,7 @@ import com.myDrafts.differentExamples.chat.ConsoleHelper;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -19,7 +20,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Server {
 
 
-    private static Map<String, /*Connection*/Hero> connectionMap = new ConcurrentHashMap<>();
+    private static Map<String, Connection> onlinePlayers = new ConcurrentHashMap<>();
+    private static Map<String, Connection> waitingForBattle = new ConcurrentHashMap<>();
 
 
     public void RunServer() {
@@ -60,65 +62,85 @@ public class Server {
 
             ConsoleHelper.writeMessage("Установленно соединение с адресом " + socket.getRemoteSocketAddress());
 
-            try (Connection connection = new Connection(socket);
+            String playerName = null;
 
-            ) {
+            try (Connection connection = new Connection(socket)) {
 
 
-                while (true) {
-                    Message message;
-                    if ((message = connection.receive()) != null) {
 
-                        if (message.getType() == MessageType.PLAYER_NAME) {
-                            connection.send(new Message(MessageType.PLAYER_NAME_ACCEPTED));
-                        }
-                        System.out.println(message);
-                        // break;
-                    }
-                }
+                playerName = serverHandshake(connection);
+                serverMainLoop(connection, playerName);
+
+
 
 
             } catch (IOException e) {
                 e.printStackTrace();
                 ConsoleHelper.writeMessage("Ошибка при обмене данными с удаленным адресом");
+                // ConsoleHelper.writeMessage("Disconnect from server");
             } catch (ClassNotFoundException e) {
                 ConsoleHelper.writeMessage("Ошибка при обмене данными с удаленным адресом");
                 e.printStackTrace();
             }
 
-            /*if (userName != null) {
+            if (playerName != null) {
                 //После того как все исключения обработаны, удаляем запись из connectionMap
-                connectionMap.remove(userName);
+                onlinePlayers.remove(playerName);
                 //и отправлялем сообщение остальным пользователям
             }
-            ConsoleHelper.writeMessage("Соединение с удаленным адресом закрыто");*/
+            ConsoleHelper.writeMessage("Соединение с удаленным адресом закрыто");
 
 
         }
 
+        private void serverMainLoop(Connection connection, String userName) throws IOException, ClassNotFoundException {
+            while (true) {
+                Message message;
+                if ((message = connection.receive()) != null) {
+
+                    /**печать всех сообщений*/
+                     System.out.println("received: "+message);
 
 
-/*        private String serverHandshake(Connection connection) throws IOException, ClassNotFoundException {
+
+                    if (message.getType() == MessageType.JOIN_TO_BATTLE_REQUEST) {
+
+                        //должен проверять достаточно ли игроков для старта боя
+                        waitingForBattle.put(userName,connection);
+                        connection.send(new Message(MessageType.JOIN_TO_BATTLE_RESPONSE));
+
+                    }
+
+                }
+            }
+
+        }
+
+        private String serverHandshake(Connection connection) throws IOException, ClassNotFoundException {
             while (true) {
                 // Сформировать и отправить команду запроса имени пользователя
-                connection.send(new Message(MessageType.NAME_REQUEST));
+                connection.send(new Message(MessageType.PLAYER_NAME_REQUEST));
                 // Получить ответ клиента
                 Message message = connection.receive();
 
+                /**печать всех сообщений*/
+                if (message!=null) System.out.println("received: "+message);
+
+
                 // Проверить, что получена команда с именем пользователя
-                if (message.getType() == MessageType.USER_NAME) {
+                if (message.getType() == MessageType.PLAYER_NAME) {
 
                     //Достать из ответа имя, проверить, что оно не пустое
                     //if (message.getData() != null && !message.getData().isEmpty()) {
                     if (!message.getData().isEmpty()) {
 
                         // и пользователь с таким именем еще не подключен (используй connectionMap)
-                        if (connectionMap.get(message.getData()) == null) {
+                        if (onlinePlayers.get(message.getData()) == null) {
 
                             // Добавить нового пользователя и соединение с ним в connectionMap
-                            connectionMap.put(message.getData(), connection);
+                            onlinePlayers.put(message.getData(), connection);
                             // Отправить клиенту команду информирующую, что его имя принято
-                            connection.send(new Message(MessageType.NAME_ACCEPTED));
+                            connection.send(new Message(MessageType.PLAYER_NAME_ACCEPTED));
 
                             // Вернуть принятое имя в качестве возвращаемого значения
                             return message.getData();
@@ -126,7 +148,7 @@ public class Server {
                     }
                 }
             }
-        }*/
+        }
 
 /*        private void sendListOfUsers(Connection connection, String userName) {
             for (Map.Entry<String, Connection> pair : connectionMap.entrySet()) {
@@ -143,21 +165,5 @@ public class Server {
 
     }
 
-/*        private void serverMainLoop(Connection connection, String userName) throws IOException, ClassNotFoundException {
-            while (true) {
-
-                Message message = connection.receive();
-                // Если принятое сообщение – это текст (тип TEXT)
-                if (message.getType() == MessageType.TEXT) {
-
-                    String s = userName + ": " + message.getData();
-
-                    Message formattedMessage = new Message(MessageType.TEXT, s);
-
-                } else {
-                    ConsoleHelper.writeMessage("Error");
-                }
-            }
-        }*/
 }
 

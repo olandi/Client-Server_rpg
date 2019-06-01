@@ -1,7 +1,11 @@
 package com.multiPlayer.client;
 
+import com.multiPlayer.connection.Message;
+import com.multiPlayer.connection.MessageType;
+
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class PickBattleView {
 
@@ -52,6 +56,16 @@ public class PickBattleView {
 
         playerLabel.setFont(new Font(playerLabel.getName(), Font.PLAIN, 20));
         serverLabel.setFont(new Font(serverLabel.getName(), Font.PLAIN, 20));
+
+        button.addActionListener(actionEvent ->{
+            try {
+                controller.getConnection().send(new Message(MessageType.JOIN_TO_BATTLE_REQUEST));
+                System.out.println("send: JOIN_TO_BATTLE_REQUEST");
+            }
+            catch (IOException e){
+                System.out.println("косяк при попытке отправить запрос на создание боя");
+                e.printStackTrace();}
+        });
 
     }
 

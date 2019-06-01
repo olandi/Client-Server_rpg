@@ -1,16 +1,14 @@
 package com.multiPlayer.client;
 
-import com.multiPlayer.client.p.Connection;
-import com.multiPlayer.client.p.Message;
-import com.multiPlayer.client.p.MessageType;
-import com.singlePlayer.company.model.Hero.Hero;
+import com.multiPlayer.connection.Message;
+import com.multiPlayer.connection.MessageType;
 
 import java.io.IOException;
 import java.net.Socket;
 
 import static com.multiPlayer.other.ServerConstants.SERVER_ADDRESS;
 import static com.multiPlayer.other.ServerConstants.SERVER_PORT;
-import static com.multiPlayer.client.p.MessageType.PLAYER_NAME;
+
 
 class ClientListener extends Thread {
 
@@ -21,6 +19,7 @@ class ClientListener extends Thread {
         this.controller = controller;
     }
 
+
     @Override
     public void run() {
 
@@ -28,19 +27,17 @@ class ClientListener extends Thread {
 
         try {
             socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
-
-            //Todo: придумать как работать с коннекшенем, мб синглетон
-            controller.getMainLayoutModel().setConnection(new Connection(socket));
-            String clientName = controller.getMainLayoutModel().getPlayer();
+            controller.createConnection(socket);
 
 
-            Hero hero = new Hero(clientName);
-            Message message = new Message(PLAYER_NAME, hero.toString());
+            clientHandshake();
 
 
-            controller.getMainLayoutModel().getConnection().send(message);
+            //todo как то это должно быть по-другому
             controller.updatePlayerLabels();
             controller.getMainLayoutView().switchToBattle();
+
+
 
             clientMainLoop();
 
@@ -52,21 +49,45 @@ class ClientListener extends Thread {
         }
     }
 
-    protected void clientMainLoop() throws IOException, ClassNotFoundException {
+    public void clientMainLoop() throws IOException, ClassNotFoundException {
+        System.out.println("Client main Loop");
         while (true) {
-            Message message = controller.getMainLayoutModel().getConnection().receive();
 
-            if (message != null && message.getType() == MessageType.PLAYER_NAME_ACCEPTED) {
+            Message message;
+            if ((message = controller.getConnection().receive()) != null) {
 
-                System.out.println("Соединение с сервером установлено");
-                    /*
-                    JOptionPane.showMessageDialog(
-                            loginFrame,
-                            "Соединение с сервером установлено",
-                            "Title",
-                            JOptionPane.INFORMATION_MESSAGE);*/
+                /**печать всех сообщений*/
+                System.out.println("received: "+message);
+
+                if (message.getType()==MessageType.JOIN_TO_BATTLE_RESPONSE){
+                    System.out.println("JOIN_TO_BATTLE_RESPONSE");
+                }
+
             }
         }
+    }
+
+    public void clientHandshake() throws IOException, ClassNotFoundException {
+        while (true) {
+            Message message = controller.getConnection().receive();
+
+            /**печать всех сообщений*/
+            if (message!=null) System.out.println("received: "+message);
+
+
+            if (message.getType() == MessageType.PLAYER_NAME_REQUEST) {
+                String userName = controller.getPlayer();
+                controller.getConnection().send(new Message(MessageType.PLAYER_NAME, userName));
+
+            } else if (message.getType() == MessageType.PLAYER_NAME_ACCEPTED) {
+                // notifyConnectionStatusChanged(true);
+
+                return;
+            } else {
+                throw new IOException("Unexpected MessageType");
+            }
+        }
+
     }
 
 

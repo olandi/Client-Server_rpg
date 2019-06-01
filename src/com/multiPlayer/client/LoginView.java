@@ -43,8 +43,7 @@ public class LoginView {
 
         button.addActionListener(actionEvent -> {
 
-            String clientName = login.getText();
-            controller.getMainLayoutModel().setPlayer(clientName);
+            controller.createPlayer(login.getText());
 
             new ClientListener(controller).start();
 
@@ -68,15 +67,7 @@ public class LoginView {
         loginPanel.add(button);
         loginPanel.add(new Box.Filler(minSize, prefSize, maxSize));
 
-
-        //  loginFrame.getContentPane().add(loginPanel, BorderLayout.CENTER);
-        //  loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //  loginFrame.setVisible(true);
-
     }
 
 
 }
-/*
-
- */

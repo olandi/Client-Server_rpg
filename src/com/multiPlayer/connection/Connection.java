@@ -1,4 +1,4 @@
-package com.multiPlayer.client.p;
+package com.multiPlayer.connection;
 
 import java.io.Closeable;
 import java.io.IOException;
