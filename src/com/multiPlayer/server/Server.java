@@ -1,5 +1,8 @@
 package com.multiPlayer.server;
 
+import com.multiPlayer.client.p.Connection;
+import com.multiPlayer.client.p.Message;
+import com.multiPlayer.client.p.MessageType;
 import com.singlePlayer.company.model.Hero.Hero;
 import com.myDrafts.differentExamples.chat.ConsoleHelper;
 
@@ -58,23 +61,23 @@ public class Server {
 
             ConsoleHelper.writeMessage("Установленно соединение с адресом " + socket.getRemoteSocketAddress());
 
-            try (
-                   // BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    ObjectInputStream i = new ObjectInputStream(socket.getInputStream())
+            try (Connection connection = new Connection(socket);
+
             ) {
 
 
                 while (true) {
-                    Hero h;
-                    if ((h = (Hero) i.readObject()) != null) {
-                        connectionMap.put(h.getName(), h);
-                        System.out.println(connectionMap);
-                        break;
+                   Message message;
+                    if ((message = connection.receive()) != null) {
+
+                       if (message.getType()== MessageType.PLAYER_NAME) {
+                           connection.send(new Message(MessageType.PLAYER_NAME_ACCEPTED));
+                       }
+                        System.out.println(message);
+                       // break;
                     }
                 }
-                // userName = serverHandshake(connection);
-                // sendListOfUsers(connection, userName);
-                //  serverMainLoop(connection, userName);
+
 
             } catch (IOException e) {
                 e.printStackTrace();

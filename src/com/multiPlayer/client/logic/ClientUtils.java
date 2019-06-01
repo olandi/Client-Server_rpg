@@ -6,7 +6,7 @@ import java.io.*;
 import java.net.Socket;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Client {
+public class ClientUtils {
     private final static int SERVER_PORT = 5555;
     private final static String SERVER_ADDRESS = "localhost";
 
@@ -17,7 +17,6 @@ public class Client {
 
         try {
 
-         //   Hero hero = new Hero(string);
 
             socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
 

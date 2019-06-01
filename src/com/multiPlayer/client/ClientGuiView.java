@@ -5,26 +5,37 @@ import java.awt.*;
 
 public class ClientGuiView {
 
-    private final ClientGuiController controller;
+    private final MainLayoutController controller;
 
-    private JFrame frame = new JFrame("Клиент");
-    private JLabel playerLabel = new JLabel("",SwingConstants.CENTER);;
-     JButton button = new JButton("go");
+    //private JFrame frame = new JFrame("Клиент");
+
+    private JPanel goBattlePanel = new JPanel(new BorderLayout());
+    private JLabel playerLabel = new JLabel("", SwingConstants.CENTER);
+    private JLabel serverLabel = new JLabel("", SwingConstants.CENTER);
+    private JButton button = new JButton("check");
 
 
-    public ClientGuiView(ClientGuiController controller) {
+    public ClientGuiView(MainLayoutController controller) {
         this.controller = controller;
         initView();
     }
 
-    public void updatePlayerLabel(String newLabel){
+    public JPanel getGoBattlePanel() {
+        return goBattlePanel;
+    }
+
+    public void updatePlayerLabel(String newLabel) {
         playerLabel.setText(newLabel);
+    }
+
+    public void updateServerLabel(String newLabel) {
+        serverLabel.setText(newLabel);
     }
 
     public void showInfo() {
 
         JOptionPane.showMessageDialog(
-                frame,
+                goBattlePanel,
                 "Соединение с сервером установлено",
                 "Title",
                 JOptionPane.INFORMATION_MESSAGE);
@@ -33,16 +44,14 @@ public class ClientGuiView {
 
     private void initView() {
 
-        frame.setSize(400,400);
+        // frame.setSize(400,400);
 
-        frame.add(playerLabel, BorderLayout.CENTER);
-        frame.getContentPane().add(button, BorderLayout.SOUTH);
+        goBattlePanel.add(serverLabel, BorderLayout.NORTH);
+        goBattlePanel.add(playerLabel, BorderLayout.CENTER);
+        goBattlePanel.add(button, BorderLayout.SOUTH);
 
         playerLabel.setFont(new Font(playerLabel.getName(), Font.PLAIN, 20));
-
-        //frame.pack();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
+        serverLabel.setFont(new Font(serverLabel.getName(), Font.PLAIN, 20));
 
     }
 
