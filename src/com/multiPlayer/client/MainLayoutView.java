@@ -24,8 +24,8 @@ public class MainLayoutView {
 
     private void initComponentToPane() {
 
-        JPanel loginPanel = controller.getLoginGui().getLoginPanel();
-        JPanel goBattlePanel = controller.getClientGuiView().getGoBattlePanel();
+        JPanel loginPanel = controller.getLoginView().getLoginPanel();
+        JPanel goBattlePanel = controller.getPickBattleView().getGoBattlePanel();
 
 
         cards = new JPanel(new CardLayout());

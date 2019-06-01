@@ -1,23 +1,11 @@
 package com.multiPlayer.client;
 
-import com.multiPlayer.client.p.Connection;
-import com.multiPlayer.client.p.Message;
-
-import com.multiPlayer.client.p.MessageType;
-import com.singlePlayer.company.model.Hero.Hero;
-
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
-import java.net.Socket;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static com.multiPlayer.ServerConstants.SERVER_ADDRESS;
-import static com.multiPlayer.ServerConstants.SERVER_PORT;
-import static com.multiPlayer.client.p.MessageType.PLAYER_NAME;
 
-
-public class LoginGui {
+public class LoginView {
 
     private JTextField login;
     private JButton button;
@@ -25,7 +13,7 @@ public class LoginGui {
     private JPanel loginPanel;
     private MainLayoutController controller;
 
-    public LoginGui(MainLayoutController controller) {
+    public LoginView(MainLayoutController controller) {
         initLoginGui();
         this.controller = controller;
     }

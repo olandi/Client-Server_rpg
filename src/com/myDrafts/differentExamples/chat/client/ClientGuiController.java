@@ -5,7 +5,7 @@ public class ClientGuiController extends Client {
     // Создай и проинициализируй поле, отвечающее за модель ClientGuiModel model.
     private ClientGuiModel model = new ClientGuiModel();
 
-    // Создай и проинициализируй поле, отвечающее за представление ClientGuiView view.
+    // Создай и проинициализируй поле, отвечающее за представление PickBattleView view.
     // Подумай, что нужно передать в конструктор при инициализации объекта
     private ClientGuiView view = new ClientGuiView(this);
 

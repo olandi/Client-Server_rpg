@@ -3,7 +3,7 @@ package com.multiPlayer.client;
 import javax.swing.*;
 import java.awt.*;
 
-public class ClientGuiView {
+public class PickBattleView {
 
     private final MainLayoutController controller;
 
@@ -15,7 +15,7 @@ public class ClientGuiView {
     private JButton button = new JButton("check");
 
 
-    public ClientGuiView(MainLayoutController controller) {
+    public PickBattleView(MainLayoutController controller) {
         this.controller = controller;
         initView();
     }

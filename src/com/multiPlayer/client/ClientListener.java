@@ -8,8 +8,8 @@ import com.singlePlayer.company.model.Hero.Hero;
 import java.io.IOException;
 import java.net.Socket;
 
-import static com.multiPlayer.ServerConstants.SERVER_ADDRESS;
-import static com.multiPlayer.ServerConstants.SERVER_PORT;
+import static com.multiPlayer.other.ServerConstants.SERVER_ADDRESS;
+import static com.multiPlayer.other.ServerConstants.SERVER_PORT;
 import static com.multiPlayer.client.p.MessageType.PLAYER_NAME;
 
 class ClientListener extends Thread {

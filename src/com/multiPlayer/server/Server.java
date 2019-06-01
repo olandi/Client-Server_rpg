@@ -3,27 +3,26 @@ package com.multiPlayer.server;
 import com.multiPlayer.client.p.Connection;
 import com.multiPlayer.client.p.Message;
 import com.multiPlayer.client.p.MessageType;
+
+import static com.multiPlayer.other.ServerConstants.SERVER_PORT;
+
 import com.singlePlayer.company.model.Hero.Hero;
 import com.myDrafts.differentExamples.chat.ConsoleHelper;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+
 public class Server {
-    private static int SERVER_PORT = 5555;
+
 
     private static Map<String, /*Connection*/Hero> connectionMap = new ConcurrentHashMap<>();
 
 
-    public static void main(String[] args) {
-        new Server().RunServer();
-    }
-
-    private void RunServer() {
+    public void RunServer() {
 
         try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT)) {
 
@@ -67,14 +66,14 @@ public class Server {
 
 
                 while (true) {
-                   Message message;
+                    Message message;
                     if ((message = connection.receive()) != null) {
 
-                       if (message.getType()== MessageType.PLAYER_NAME) {
-                           connection.send(new Message(MessageType.PLAYER_NAME_ACCEPTED));
-                       }
+                        if (message.getType() == MessageType.PLAYER_NAME) {
+                            connection.send(new Message(MessageType.PLAYER_NAME_ACCEPTED));
+                        }
                         System.out.println(message);
-                       // break;
+                        // break;
                     }
                 }
 
