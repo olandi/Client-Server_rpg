@@ -1,57 +1,143 @@
 package com.singlePlayer.company.server;
 
-import com.singlePlayer.company.client.swing.Controller;
+import com.singlePlayer.company.client.model.HeroImages;
+import com.singlePlayer.company.client.model.Hexagon;
+import com.singlePlayer.company.client.model.HexagonItem;
 import com.singlePlayer.company.model.BodyParts;
 import com.singlePlayer.company.model.Hero.Hero;
 import com.singlePlayer.company.model.Hero.TurnState;
-import com.singlePlayer.company.model.gameField.GameField;
-import com.singlePlayer.company.model.heroActions.HeroAction;
-import com.singlePlayer.company.model.damageTO.DamageToForServer;
+import com.singlePlayer.company.model.heroActions.HeroBattleAction;
+import com.singlePlayer.company.model.heroActions.HeroMovementAction;
 
 import java.util.*;
 
 public class ServerUtils {
+    public static final int ROUND_DURATION = 40;
+    private List<HexagonItem> battleField;
+    private Map<Hero, Integer> heroes;
 
-    public static Deque<HeroAction> movementActions = new ArrayDeque<>();
-
-    public static Map<Hero, DamageToForServer> map = new HashMap<>();
-
-    public static List<Hero> heroes = new ArrayList<>();
-
-    public final static int ROUND_DURATION = 40;
+    private Map<Hero, HeroMovementAction> movementActions = new HashMap<>();
+    private Map<Hero, HeroBattleAction> heroHeroBattleActions = new HashMap<>();
 
 
 
-    public static boolean isReadyToMoveHeroExist() {
-        getAndUpdateAllHeroes();
+    public Map<Hero, Integer> getHeroes() {
+        return heroes;
+    }
+
+    public List<HexagonItem> getBattleField() {
+        return battleField;
+    }
+
+     {
+        battleField = new ArrayList<>();
+        heroes = new HashMap<>();
+
+        Hero pirate = new Hero("Pirate");
+        pirate.setView(HeroImages.PIRATE_PATH);
+
+        Hero knight = new Hero("Knight");
+        knight.setView(HeroImages.KNIGHT_PATH);
+
+        heroes.put(pirate, 18);
+        heroes.put(knight, 29);
+
+
+        for (int i = 0; i < 48; i++) {
+
+            int x = i % 8;
+            int y = i / 8;
+
+            int xx = (y % 2 == 0) ? 40 + 80 * x : 80 + 80 * x;
+            int yy = 40 + 70 * y;
+
+            int fieldOffset = 30;
+
+            battleField.add(new HexagonItem(new Hexagon(xx + fieldOffset, yy + fieldOffset, 40), i));
+        }
+
+
+
+    }
+
+    //kill hero
+    public void removeHero(Hero hero) {
+        heroes.remove(hero);
+    }
+
+    public Hero getHeroByIndex(int index){
+        for (Map.Entry<Hero, Integer> entry: heroes.entrySet()){
+            if (entry.getValue()==index) return entry.getKey();
+        }
+        return null;
+    }
+
+
+
+    private HexagonItem getHexagonItemByHero(Hero hero) {
+        return battleField.get(heroes.get(hero));
+    }
+
+    public void setAllSelectedFalse() {
+        battleField.forEach(i -> i.setSelected(false));
+    }
+
+    public void setAllHeroMovable() {
+        heroes.forEach((hero, index) -> hero.setTurnState(TurnState.ReadyForTurn));
+    }
+
+
+    public void moveHero(Hero hero, int index) {
+        //update hero index
+        heroes.computeIfPresent(hero, (key, value) -> index);
+    }
+
+
+    public Map<Hero, HeroMovementAction> getMovementActions() {
+        return movementActions;
+    }
+
+    public Map<Hero, HeroBattleAction> getHeroHeroBattleActions() {
+        return heroHeroBattleActions;
+    }
+
+    public void performAllMovements(){
+        movementActions.forEach((hero,value )->moveHero(hero,value.getTileIndex()));
+
+        movementActions.clear();
+    }
+
+    public boolean isReadyToMoveHeroExist() {
         boolean result = false;
-        for (Hero hero : heroes) {
 
+        for (Hero hero : heroes.keySet()) {
             // System.out.println("Hero: " + hero + " " + hero.getTurnState());
             result |= hero.getTurnState().equals(TurnState.ReadyForTurn);
         }
         return result;
     }
 
-    public static void checkAliveHero() {
-        for (Hero hero : heroes) {
-            if (hero.getHealth() < 0) GameField.removeHero(hero);
+    public void checkAliveHero() {
+        Set<Hero> h = new HashSet<>(heroes.keySet());
+
+        for (Hero hero : h) {
+            if (hero.getHealth() < 0) removeHero(hero);
         }
     }
 
 
-    public static boolean isOneHeroRemain() {
+    public boolean isOneHeroRemain() {
         return heroes.size() <= 1;
     }
 
 
-    private static List<BodyParts> getDefenseListFromHero(Hero hero) {
-        if (map.get(hero) == null) return Collections.emptyList();
-        return map.get(hero).getDefense();
+    private List<BodyParts> getDefenseListFromHero(Hero hero) {
+        if (heroHeroBattleActions.get(hero) == null) return Collections.emptyList();
+        return heroHeroBattleActions.get(hero).getDefense();
     }
 
 
-    private static List<BodyParts> improveDefenseOfHero(Hero hero) {
+    private List<BodyParts> improveDefenseOfHero(Hero hero) {
         List<BodyParts> result = new ArrayList<>(getDefenseListFromHero(hero));
         List<BodyParts> list = new ArrayList<>(getDefenseListFromHero(hero));
 
@@ -95,59 +181,43 @@ public class ServerUtils {
     }
 
 
-    public static void getAndUpdateAllHeroes() {
-        heroes = new ArrayList<>();
-        GameField.getGameField().forEach(i -> {
-                    if ("Hero".equals(i.getCellContent().getContentType())) {
-                        heroes.add((Hero) i.getCellContent());
-                    }
-                }
-        );
-    }
-
-    public static void resetMap() {
-        map.clear();
-    }
-
-    public static void computeDamage() {
-
-        getAndUpdateAllHeroes();
+    public void computeDamage() {
 
         //для каждого героя
-        heroes.forEach(hero -> {
+        heroes.forEach((hero,index) -> {
 
             //дополнительная защита
-            if (map.get(hero)!=null && map.get(hero).getDefense()!=null)
-              //  heroes.forEach(hero1 -> {map.get(hero1).setDefense(improveDefenseOfHero(hero1));});
+            if (heroHeroBattleActions.get(hero)!=null && heroHeroBattleActions.get(hero).getDefense()!=null)
+              //  heroes.forEach(hero1 -> {heroHeroBattleActions.get(hero1).setDefense(improveDefenseOfHero(hero1));});
 
             //для каждой атаки героя
-            if (map.get(hero) != null) map.get(hero).getAttack().forEach(attack -> {
+            if (heroHeroBattleActions.get(hero) != null) heroHeroBattleActions.get(hero).getAttack().forEach(attack -> {
 
                         //если в списке защиты врага нет этой атаки
 
                         //исли цель не сделала ход, не поставила блоки
-                        if (map.get(map.get(hero).getToHero()) == null) {
-                            map.get(hero).getToHero().setHealth(
-                                    map.get(hero).getToHero().getHealth() -
+                        if (heroHeroBattleActions.get(heroHeroBattleActions.get(hero).getTarget()) == null) {
+                            heroHeroBattleActions.get(hero).getTarget().setHealth(
+                                    heroHeroBattleActions.get(hero).getTarget().getHealth() -
                                             hero.getDamage());
 
-                           //todo Controller.getCombatLogPanel().appendText("Hero: " + map.get(hero).getToHero().getName() + " received 20 damage\n");
+                           //todo Controller.getCombatLogPanel().appendText("Hero: " + heroHeroBattleActions.get(hero).getToHero().getName() + " received 20 damage\n");
 
 
                         }
 
                         if (
-                                map.get(map.get(hero).getToHero()) != null
-                                        && !map.get(map.get(hero).getToHero()).getDefense()
+                                heroHeroBattleActions.get(heroHeroBattleActions.get(hero).getTarget()) != null
+                                        && !heroHeroBattleActions.get(heroHeroBattleActions.get(hero).getTarget()).getDefense()
                                         .contains(attack)) {
 
                             System.out.println("Hero " + hero + " hits");
 
-                            map.get(hero).getToHero().setHealth(
-                                    map.get(hero).getToHero().getHealth() -
+                            heroHeroBattleActions.get(hero).getTarget().setHealth(
+                                    heroHeroBattleActions.get(hero).getTarget().getHealth() -
                                             hero.getDamage());
 
-                         //todo   Controller.getCombatLogPanel().appendText("Hero: " + map.get(hero).getToHero().getName() + " received 20 damage\n");
+                         //todo   Controller.getCombatLogPanel().appendText("Hero: " + heroHeroBattleActions.get(hero).getToHero().getName() + " received 20 damage\n");
 
                         }
                     }
@@ -159,6 +229,8 @@ public class ServerUtils {
         });
 
 
+
+        heroHeroBattleActions.clear();
     }
 
 

@@ -21,6 +21,7 @@ public class BattleHexagon extends Hexagon {
                 new int[]{points[4].x, points[5].x, points[0].x, points[1].x},
                 new int[]{points[4].y, points[5].y, points[0].y, points[1].y});
     }
+
     public HexSection getLeftSegment() {
         return leftSegment;
     }
@@ -28,6 +29,7 @@ public class BattleHexagon extends Hexagon {
     public HexSection getRightSegment() {
         return rightSegment;
     }
+
     @Override
     protected void updatePoints() {
         super.updatePoints();

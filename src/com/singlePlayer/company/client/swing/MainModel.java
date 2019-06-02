@@ -1,6 +1,9 @@
 package com.singlePlayer.company.client.swing;
 
+
 import com.singlePlayer.company.model.Hero.Hero;
+import com.singlePlayer.company.server.ServerUtils;
+
 
 public class MainModel {
 
@@ -8,8 +11,14 @@ public class MainModel {
     private Hero enemy;
 
     private boolean isHittingPanelVisible = false;
+    private ServerUtils serverUtils = new ServerUtils();
 
 
+
+
+    public ServerUtils getServerUtils() {
+        return serverUtils;
+    }
 
     public boolean isHittingPanelVisible() {
         return isHittingPanelVisible;
@@ -24,7 +33,7 @@ public class MainModel {
     }
 
     public void setCurrentHero(Hero currentHero) {
-        this.currentHero = currentHero;
+       this.currentHero = currentHero;
     }
 
     public Hero getEnemy() {

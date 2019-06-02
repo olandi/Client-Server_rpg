@@ -1,5 +1,6 @@
 package com.singlePlayer.company.client.swing.View;
 
+import com.singlePlayer.company.client.swing.Controller;
 import com.singlePlayer.company.server.ServerUtils;
 import com.singlePlayer.company.server.Tim;
 
@@ -10,10 +11,11 @@ public class TimerPanel extends JPanel {
     private JLabel jLabel;
     private Tim tim;
     private Timer timer;
+    Controller controller;
 
-
-    public TimerPanel(Tim tim) {
+    public TimerPanel(Tim tim, Controller controller) {
         this.tim = tim;
+        this.controller = controller;
 
         initTimer();
 
@@ -23,14 +25,14 @@ public class TimerPanel extends JPanel {
 
             jLabel.setText(Integer.toString(tim.getCount()));
 
-            if (!ServerUtils.isReadyToMoveHeroExist()) {
+            if (!controller.getServerUtils().isReadyToMoveHeroExist()) {
                 timer.stop();
                 jLabel.setText("Идет анимация боя...");
                 tim.reset();
                 timer.start();
             }
 
-            if (ServerUtils.isOneHeroRemain()) {
+            if (controller.getServerUtils().isOneHeroRemain()) {
                 timer.stop();
                 jLabel.setText("Game over");
             }

@@ -7,10 +7,10 @@ import com.singlePlayer.company.model.BodyParts;
 import com.singlePlayer.company.client.utils.ImageLoader;
 import com.singlePlayer.company.client.model.HeroImages;
 
-import com.singlePlayer.company.model.damageTO.DamageForClient;
 import com.singlePlayer.company.client.model.BattleHexagon;
 import com.singlePlayer.company.client.model.HexSection;
 import com.singlePlayer.company.client.model.Hexagon;
+import com.singlePlayer.company.model.heroActions.HeroBattleAction;
 
 import javax.swing.*;
 import javax.swing.plaf.LayerUI;
@@ -125,9 +125,8 @@ public class HittingPanel extends LayerUI<JPanel> {
                 if (go.contains(clickPoint)) {
 
                     //передать атаки и блоки в метод отправки данных на сервер
+                    controller.sendBattleActionToServer(new HeroBattleAction(controller.getEnemy(),secAttack,secDef));
 
-
-                    controller.SendDamageToServer(new DamageForClient(secAttack, secDef));
                     resetBattleMenu();
 
                 }
@@ -145,8 +144,6 @@ public class HittingPanel extends LayerUI<JPanel> {
         controller.closeHittingPanel();
         resetBattleActions();
         controller.repaintAllView();
-        //mainGamePanel.removeCurrentMouseListener(mouseListener);
-       // mainGamePanel.removeCurrentMouseListener();
 
         controller.setBattleFieldPanelMouseListener();
     }

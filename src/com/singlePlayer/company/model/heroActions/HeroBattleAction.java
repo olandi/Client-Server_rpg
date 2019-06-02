@@ -1,20 +1,26 @@
-package com.singlePlayer.company.model.damageTO;
+package com.singlePlayer.company.model.heroActions;
 
 import com.singlePlayer.company.model.BodyParts;
+import com.singlePlayer.company.model.Hero.Hero;
 
 import java.util.List;
 
-public class DamageForClient {
+public class HeroBattleAction {
 
+    private Hero target;
     private List<BodyParts> attack;
     private List<BodyParts> defense;
 
-    public DamageForClient(List<BodyParts> attack, List<BodyParts> defense) {
+    public HeroBattleAction(Hero target, List<BodyParts> attack, List<BodyParts> defense) {
+        this.target = target;
         this.attack = attack;
         this.defense = defense;
     }
 
 
+    public Hero getTarget() {
+        return target;
+    }
 
     public List<BodyParts> getAttack() {
         return attack;
@@ -26,8 +32,9 @@ public class DamageForClient {
 
     @Override
     public String toString() {
-        return "DamageForClient{" +
-                "attack=" + attack +
+        return "HeroBattleAction{" +
+                "target=" + target +
+                ", attack=" + attack +
                 ", defense=" + defense +
                 '}';
     }

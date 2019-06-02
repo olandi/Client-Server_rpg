@@ -1,9 +1,10 @@
 package com.singlePlayer.company.model.Hero;
 
+
 import java.io.Serializable;
 import java.net.URL;
 
-public class Hero extends FieldItem implements Serializable {
+public class Hero  implements Serializable {
     private String name;
     private int health;
     private int damage;
@@ -73,12 +74,7 @@ public class Hero extends FieldItem implements Serializable {
                 ", damage=" + damage +
                 ", turnState=" + turnState +
                 ", view=" + view +
-                ", isSelected=" + isSelected +
                 '}';
     }
 
-    @Override
-    public String getContentType() {
-        return "Hero";
-    }
 }

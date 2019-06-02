@@ -1,10 +1,8 @@
 package com.singlePlayer.company.server;
 
 
-import com.singlePlayer.company.client.swing.View.BattleFieldPanel;
 import com.singlePlayer.company.client.swing.Controller;
 import com.singlePlayer.company.model.Hero.Hero;
-import com.singlePlayer.company.model.gameField.GameField;
 
 public class Tim {
     private int count= ServerUtils.ROUND_DURATION;
@@ -31,24 +29,27 @@ public class Tim {
     public void reset() {
         count = ServerUtils.ROUND_DURATION;
         round++;
-        while (ServerUtils.movementActions.size() > 0) {
-            ServerUtils.movementActions.poll().perform();
-        }
 
-        ServerUtils.computeDamage();
+        controller.getServerUtils().performAllMovements();
+
+/*        while (ServerUtils.movementActions.size() > 0) {
+            ServerUtils.movementActions.poll().perform();
+        }*/
+
+        controller.getServerUtils().computeDamage();
 
         controller.getCombatLogPanel().appendText("Round " + round + "\n");
 
-        for (Hero hero : ServerUtils.heroes) {
+        for (Hero hero : controller.getServerUtils().getHeroes().keySet()) {
             controller.getCombatLogPanel().appendText("Hero: " + hero.getName() + " (" + hero.getHealth() + ") HP" + "\n");
         }
 
-        ServerUtils.checkAliveHero();
+        controller.getServerUtils().checkAliveHero();
 
-        GameField.setAllSelectedFalse();
-        GameField.setAllHeroMovable();
+        controller.getServerUtils().setAllSelectedFalse();
+        controller.getServerUtils().setAllHeroMovable();
 
-        ServerUtils.resetMap();
+
 
         controller.setCurrentHero(null);
 

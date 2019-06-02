@@ -2,15 +2,12 @@ package com.singlePlayer.company.client.swing.View;
 
 import com.singlePlayer.company.client.swing.Controller;
 import com.singlePlayer.company.client.utils.ImageLoader;
-import com.singlePlayer.company.model.Hero.FieldItem;
 import com.singlePlayer.company.model.Hero.Hero;
 import com.singlePlayer.company.model.Hero.TurnState;
-import com.singlePlayer.company.server.ServerUtils;
 
 import com.singlePlayer.company.client.model.Hexagon;
-import com.singlePlayer.company.model.gameField.GameField;
-import com.singlePlayer.company.model.gameField.HexagonItem;
-import com.singlePlayer.company.model.heroActions.MoveHero;
+import com.singlePlayer.company.client.model.HexagonItem;
+import com.singlePlayer.company.model.heroActions.HeroMovementAction;
 
 
 import javax.swing.*;
@@ -19,10 +16,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
+import java.util.Map;
 
 public class BattleFieldPanel extends JPanel {
 
-    public static List<HexagonItem> list = GameField.getGameField();
+    private List<HexagonItem> battleField;
+    private Map<Hero, Integer> heroes;
 
     private MouseListener mouseListener;
 
@@ -30,105 +29,79 @@ public class BattleFieldPanel extends JPanel {
 
     public BattleFieldPanel(Controller controller) {
         this.controller = controller;
+
+        battleField = controller.getBattleField();
+        heroes = controller.getHeroes();
+
         initMouseListener();
+
     }
-
-
-
 
     public MouseListener getMouseListener() {
         return mouseListener;
     }
 
-    public void initMouseListener() {
+
+    private void initMouseListener() {
 
         mouseListener = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-                BattleFieldPanel.list.forEach(i -> {
+                battleField.forEach(i -> {
                     Hexagon hexagon = i.getHexagon();
-                    FieldItem fieldItem = i.getCellContent();
 
                     //Todo:26 Косяк с некорректными координатами
                     Point clickPoint = e.getPoint();
                     clickPoint.y -= 26;
 
-
                     //если вообще попадаем в хексагон
                     if (hexagon.contains(clickPoint)) {
 
-                        System.out.println(
-                                hexagon.getCenter() + " -- " +
-                                        fieldItem);
+                        System.out.println("Hexagon with center at " + hexagon.getCenter());
 
-                        //2) Если существует куррентХеро
+                        //2) Если существует куррентХеро (Если персонаж уже выделен)
                         if (controller.getCurrentHero() != null) {
 
                             //3) Если куррентХеро может ходить
                             if (controller.getCurrentHero().getTurnState().equals(TurnState.ReadyForTurn)) {
 
-                                //4) Если попадаем в Героя
-                                if ("Hero".equals(fieldItem.getContentType())) {
+                                  if (heroes.containsValue(i.getIndex())){
+                                      Hero targetHero = controller.getServerUtils().getHeroByIndex(i.getIndex());
 
-                                    //5) Если попадаем не в себя
-                                    if (!controller.getCurrentHero().equals(fieldItem)) {
+                                      //5) Если попадаем не в себя
+                                    if (!controller.getCurrentHero().equals(targetHero)) {
 
                                         //БЬЕМ ВРАГА (КуррентХиро = NULL  обнуляется)
                                         //обнуляется только после успешной атаки
                                         System.out.println("hit");
 
-                                        /**-------------*/
-
                                         //становится видимой панель атаки
                                         controller.setCurrentHero(controller.getCurrentHero());
-                                        //clientUtils.setHero(turnManager.getCurrentHero());
-                                        controller.setEnemy((Hero) fieldItem);
-                                       // clientUtils.setEnemy((Hero) fieldItem);
+                                        controller.setEnemy(targetHero);
 
                                         controller.openHittingPanel();
-
-                                       // mainGamePanel.removeCurrentMouseListener(mouseListener); // del own
-                                       // mainGamePanel.removeCurrentMouseListener();
-
                                         controller.setHittingPanelMouseListener();
-
                                         controller.repaintAllView();
 
-                                        /**------------*/
-
-                                        //Main1.mainn(turnManager.getCurrentHero(),(Hero) fieldItem);
-                                        //turnManager.setCurrentHero(null);
 
 
                                     } else {
                                         //ДЕЛАЕМ куррентХеро НЕ АКТИВНЫМ (КуррентХиро = NULL  обнуляется)
                                         controller.setCurrentHero(null);
 
-                                        fieldItem.setSelected(false);
-                                        /*fieldItem.turnSelect();*/
+                                        i.setSelected(false);
                                         controller.repaintAllView();
 
                                     }
                                 } else {
                                     // ПЕРСОНАЖ ХОДИТ НА СВОБОДНУЮ КЛЕТКУ (КуррентХиро = NULL  обнуляется)
-
-                                    controller.getCurrentHero().setSelected(false);
-
-                                    fieldItem.setSelected(true);/*fieldItem.turnSelect();*/
+                                    battleField.get(heroes.get(controller.getCurrentHero())).setSelected(false);
+                                    i.setSelected(true);
                                     controller.repaintAllView();
                                     //тут герой ходит на клетку вперед, кидает в стэк действие хождения на клетку
                                     //отмечает перса как походившего
-                                    ServerUtils.movementActions.add(new MoveHero(
-                                            controller.getCurrentHero()
-                                            , i));
-
-                                    System.err.println(controller.getCurrentHero() + " " + i);
-                                    controller.getCurrentHero().setTurnState(TurnState.TurnIsFinished);
-
-                                    controller.setCurrentHero(null);
-
-
+                                    controller.sendMovementActionToServer(new HeroMovementAction(i.getIndex()));
                                 }
                             } else {
                                 controller.setCurrentHero(null);
@@ -137,14 +110,14 @@ public class BattleFieldPanel extends JPanel {
                             }
                         } else {
                             // 6) Если попадаем в игрока, который может ходить
-                            if ("Hero".equals(fieldItem.getContentType()) &&
-                                    ((Hero) fieldItem).getTurnState().equals(TurnState.ReadyForTurn)) {
+                           if (heroes.containsValue(i.getIndex())&&(
+                                   controller.getServerUtils().getHeroByIndex(i.getIndex()).getTurnState().equals(TurnState.ReadyForTurn)
+                                   )){
                                 //Делаем этого игрока - КуррентХиро
-                                controller.setCurrentHero((Hero) fieldItem);
-                                // fieldItem.turnSelect();
-                                fieldItem.setSelected(true);
+                                controller.setCurrentHero(controller.getServerUtils().getHeroByIndex(i.getIndex()));
+                                // hexagonContent.turnSelect();
+                                i.setSelected(true);
                                 controller.repaintAllView();
-
                             } else {
                                 //НИЧЕГО НЕ ДЕЛАЕМ
                             }
@@ -157,43 +130,37 @@ public class BattleFieldPanel extends JPanel {
     }
 
 
-
-
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        // this.setSize(800, 600);
 
-        list.forEach(u -> {
+
+        battleField.forEach(u -> {
 
             Hexagon h = u.getHexagon();
-            FieldItem fi = u.getCellContent();
 
-            if (!fi.isSelected()) {
-
-                if ("Hero".equals(fi.getContentType())
-                        && ((Hero) fi).getTurnState().equals(TurnState.TurnIsFinished)) {
-
-                    h.draw(g2, 0, 0, 2, Color.blue.getRGB(), false);
-                } else
-                    h.draw(g2, 0, 0, 1, 30, false);
-
-            } else
+            if (!u.isSelected())
+                h.draw(g2, 0, 0, 1, 30, false);
+            else
                 h.draw(g2, 0, 0, 2, Color.green.getRGB(), false);
-
-
-            //TODO Переделать хардкод HERO
-            if (fi.getContentType().equals("Hero")) {
-
-                g.drawImage(ImageLoader.loadImage(
-                        ((Hero) fi).getView()),
-                        h.getCenter().x - 35,
-                        h.getCenter().y - 35,
-                        null);
-            }
         });
 
+
+        heroes.forEach((hero, index) -> {
+
+            Hexagon h = battleField.get(index).getHexagon();
+
+            if (hero.getTurnState().equals(TurnState.TurnIsFinished)) {
+                h.draw(g2, 0, 0, 2, Color.blue.getRGB(), false);
+            }
+
+            g.drawImage(ImageLoader.loadImage(
+                    hero.getView()),
+                    h.getCenter().x - 35,
+                    h.getCenter().y - 35,
+                    null);
+        });
     }
 }
 
