@@ -53,9 +53,9 @@ public class BattleFieldPanel extends JPanel {
                 battleField.forEach(i -> {
                     Hexagon hexagon = i.getHexagon();
 
-                    //Todo:26 Косяк с некорректными координатами
+                    //Todo: Косяк с некорректными координатами. У каждой панели своя система координат.
+                    //гексагоны рисуются в BattleFieldPanel, а MouseListener устанавливается в MainPanel
                     Point clickPoint = e.getPoint();
-
                     clickPoint.y -= 40;
 
                     //если вообще попадаем в хексагон

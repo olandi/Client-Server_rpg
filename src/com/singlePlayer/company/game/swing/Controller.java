@@ -145,7 +145,8 @@ public class Controller {
 
     private int round = 0;
     private Timer timer;
-    private int roundDuration = 10+1;//ServerUtils.ROUND_DURATION;
+    private int roundDuration = /*10+1;*/
+            ServerUtils.ROUND_DURATION+1;
 
     public void runServerMainLoop() {
 

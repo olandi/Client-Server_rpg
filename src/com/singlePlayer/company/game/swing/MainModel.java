@@ -4,6 +4,8 @@ package com.singlePlayer.company.game.swing;
 import com.singlePlayer.company.game.Hero.Hero;
 import com.singlePlayer.company.game.ServerUtils;
 
+import java.awt.*;
+
 
 public class MainModel {
 
