@@ -1,25 +1,24 @@
-package com.singlePlayer.company.server;
+package com.singlePlayer.company.game;
 
-import com.singlePlayer.company.client.model.HeroImages;
-import com.singlePlayer.company.client.model.Hexagon;
-import com.singlePlayer.company.client.model.HexagonItem;
-import com.singlePlayer.company.model.BodyParts;
-import com.singlePlayer.company.model.Hero.Hero;
-import com.singlePlayer.company.model.Hero.TurnState;
-import com.singlePlayer.company.model.heroActions.HeroBattleAction;
-import com.singlePlayer.company.model.heroActions.HeroMovementAction;
+import com.singlePlayer.company.game.swing.model.HeroImages;
+import com.singlePlayer.company.game.swing.model.Hexagon;
+import com.singlePlayer.company.game.swing.model.HexagonItem;
+import com.singlePlayer.company.game.Hero.BodyParts;
+import com.singlePlayer.company.game.Hero.Hero;
+import com.singlePlayer.company.game.Hero.TurnState;
+import com.singlePlayer.company.game.Hero.heroActions.HeroBattleAction;
+import com.singlePlayer.company.game.Hero.heroActions.HeroMovementAction;
 
 import java.util.*;
 
 public class ServerUtils {
     public static final int ROUND_DURATION = 40;
+
     private List<HexagonItem> battleField;
     private Map<Hero, Integer> heroes;
 
     private Map<Hero, HeroMovementAction> movementActions = new HashMap<>();
     private Map<Hero, HeroBattleAction> heroHeroBattleActions = new HashMap<>();
-
-
 
     public Map<Hero, Integer> getHeroes() {
         return heroes;

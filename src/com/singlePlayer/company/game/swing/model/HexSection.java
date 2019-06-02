@@ -1,6 +1,6 @@
-package com.singlePlayer.company.client.model;
+package com.singlePlayer.company.game.swing.model;
 
-import com.singlePlayer.company.model.BodyParts;
+import com.singlePlayer.company.game.Hero.BodyParts;
 
 import java.awt.*;
 

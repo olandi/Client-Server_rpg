@@ -1,4 +1,4 @@
-package com.singlePlayer.company.client.utils;
+package com.singlePlayer.company.game.utils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

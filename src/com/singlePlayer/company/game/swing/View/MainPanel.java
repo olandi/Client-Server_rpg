@@ -1,7 +1,7 @@
 
-package com.singlePlayer.company.client.swing.View;
+package com.singlePlayer.company.game.swing.View;
 
-import com.singlePlayer.company.client.swing.Controller;
+import com.singlePlayer.company.game.swing.Controller;
 
 import javax.swing.*;
 import java.awt.*;

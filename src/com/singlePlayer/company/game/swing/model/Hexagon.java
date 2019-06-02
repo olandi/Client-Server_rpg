@@ -1,4 +1,4 @@
-package com.singlePlayer.company.client.model;
+package com.singlePlayer.company.game.swing.model;
 
 import java.awt.*;
 import java.util.Arrays;

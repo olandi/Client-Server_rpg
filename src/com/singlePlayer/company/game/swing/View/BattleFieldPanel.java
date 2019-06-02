@@ -1,13 +1,13 @@
-package com.singlePlayer.company.client.swing.View;
+package com.singlePlayer.company.game.swing.View;
 
-import com.singlePlayer.company.client.swing.Controller;
-import com.singlePlayer.company.client.utils.ImageLoader;
-import com.singlePlayer.company.model.Hero.Hero;
-import com.singlePlayer.company.model.Hero.TurnState;
+import com.singlePlayer.company.game.swing.Controller;
+import com.singlePlayer.company.game.utils.ImageLoader;
+import com.singlePlayer.company.game.Hero.Hero;
+import com.singlePlayer.company.game.Hero.TurnState;
 
-import com.singlePlayer.company.client.model.Hexagon;
-import com.singlePlayer.company.client.model.HexagonItem;
-import com.singlePlayer.company.model.heroActions.HeroMovementAction;
+import com.singlePlayer.company.game.swing.model.Hexagon;
+import com.singlePlayer.company.game.swing.model.HexagonItem;
+import com.singlePlayer.company.game.Hero.heroActions.HeroMovementAction;
 
 
 import javax.swing.*;

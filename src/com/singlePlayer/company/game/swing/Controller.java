@@ -1,13 +1,13 @@
-package com.singlePlayer.company.client.swing;
+package com.singlePlayer.company.game.swing;
 
-import com.singlePlayer.company.client.model.HexagonItem;
-import com.singlePlayer.company.client.swing.View.*;
-import com.singlePlayer.company.model.Hero.Hero;
-import com.singlePlayer.company.model.Hero.TurnState;
-import com.singlePlayer.company.model.heroActions.HeroBattleAction;
-import com.singlePlayer.company.model.heroActions.HeroMovementAction;
-import com.singlePlayer.company.server.ServerUtils;
-import com.singlePlayer.company.server.Tim;
+import com.singlePlayer.company.game.swing.model.HexagonItem;
+import com.singlePlayer.company.game.swing.View.*;
+import com.singlePlayer.company.game.Hero.Hero;
+import com.singlePlayer.company.game.Hero.TurnState;
+import com.singlePlayer.company.game.Hero.heroActions.HeroBattleAction;
+import com.singlePlayer.company.game.Hero.heroActions.HeroMovementAction;
+import com.singlePlayer.company.game.ServerUtils;
+
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -24,7 +24,7 @@ public class Controller {
     private CombatLogPanel combatLogPanel = new CombatLogPanel(this);
     private BattleFieldPanel battleFieldPanel = new BattleFieldPanel(this);
     private HittingPanel hittingPanel = new HittingPanel(this);
-    private TimerPanel timerPanel = new TimerPanel(new Tim(this),this);
+    private TimerPanel timerPanel = new TimerPanel(this);
 
 
     //по идее должен быть последним
@@ -143,6 +143,92 @@ public class Controller {
 
     public boolean isVisibleBattleFrame() {
         return model.isHittingPanelVisible();
+    }
+
+    public void specifyTimerValueOnGui(String string){
+        timerPanel.getjLabel().setText(string);
+    }
+
+
+
+
+
+
+    private int round = 0;
+    private Timer timer;
+    private int roundDuration = 10;//ServerUtils.ROUND_DURATION;
+
+    public void runServerMainLoop() {
+
+
+        class Tim {
+            private int count = roundDuration;
+
+            private void dec() {
+                if (count != 0) count--;
+                else reset();
+            }
+
+            private int getCount() {
+                return count;
+            }
+
+            private void reset() {
+                count = roundDuration;
+            }
+        }
+
+
+
+        Tim tim = new Tim();
+
+        timer = new Timer(1000, i -> {
+
+            specifyTimerValueOnGui(Integer.toString(tim.getCount()));
+
+            tim.dec();
+
+            if (!getServerUtils().isReadyToMoveHeroExist()) {
+                timer.stop();
+                specifyTimerValueOnGui("Идет анимация боя...");
+
+                tim.reset();
+                resetServerTurn();
+
+                timer.start();
+            }
+
+            if (getServerUtils().isOneHeroRemain()) {
+                timer.stop();
+                specifyTimerValueOnGui("Game over");
+            }
+
+        });
+        timer.start();
+    }
+
+
+
+
+    private void resetServerTurn() {
+        round++;
+
+        getServerUtils().performAllMovements();
+
+        getServerUtils().computeDamage();
+
+        getCombatLogPanel().appendText("Round " + round + "\n");
+
+        for (Hero hero : getServerUtils().getHeroes().keySet()) {
+            getCombatLogPanel().appendText("Hero: " + hero.getName() + " (" + hero.getHealth() + ") HP" + "\n");
+        }
+
+        getServerUtils().checkAliveHero();
+        getServerUtils().setAllSelectedFalse();
+        getServerUtils().setAllHeroMovable();
+        setCurrentHero(null);
+        //В этом методе идет перерисовка фреймов в том числе
+        resetBattleMenu();
     }
 
 

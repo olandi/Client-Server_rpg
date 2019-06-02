@@ -53,7 +53,7 @@ public class KnockKnockServer {
         
             String inputLine, outputLine;
             
-            // Initiate conversation with client
+            // Initiate conversation with game
             KnockKnockProtocol kkp = new KnockKnockProtocol();
             outputLine = kkp.processInput(null);
             out.println(outputLine);

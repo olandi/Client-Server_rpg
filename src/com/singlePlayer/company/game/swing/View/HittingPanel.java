@@ -1,16 +1,16 @@
-package com.singlePlayer.company.client.swing.View;
+package com.singlePlayer.company.game.swing.View;
 
 
 
-import com.singlePlayer.company.client.swing.Controller;
-import com.singlePlayer.company.model.BodyParts;
-import com.singlePlayer.company.client.utils.ImageLoader;
-import com.singlePlayer.company.client.model.HeroImages;
+import com.singlePlayer.company.game.swing.Controller;
+import com.singlePlayer.company.game.Hero.BodyParts;
+import com.singlePlayer.company.game.utils.ImageLoader;
+import com.singlePlayer.company.game.swing.model.HeroImages;
 
-import com.singlePlayer.company.client.model.BattleHexagon;
-import com.singlePlayer.company.client.model.HexSection;
-import com.singlePlayer.company.client.model.Hexagon;
-import com.singlePlayer.company.model.heroActions.HeroBattleAction;
+import com.singlePlayer.company.game.swing.model.BattleHexagon;
+import com.singlePlayer.company.game.swing.model.HexSection;
+import com.singlePlayer.company.game.swing.model.Hexagon;
+import com.singlePlayer.company.game.Hero.heroActions.HeroBattleAction;
 
 import javax.swing.*;
 import javax.swing.plaf.LayerUI;

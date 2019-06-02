@@ -1,4 +1,4 @@
-package com.singlePlayer.company.model.heroActions;
+package com.singlePlayer.company.game.Hero.heroActions;
 
 
 public class HeroMovementAction {

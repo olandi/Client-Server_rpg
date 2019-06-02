@@ -1,4 +1,4 @@
-package com.singlePlayer.company.model.Hero;
+package com.singlePlayer.company.game.Hero;
 
 
 import java.io.Serializable;

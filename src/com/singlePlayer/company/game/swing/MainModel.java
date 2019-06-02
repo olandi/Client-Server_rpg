@@ -1,19 +1,17 @@
-package com.singlePlayer.company.client.swing;
+package com.singlePlayer.company.game.swing;
 
 
-import com.singlePlayer.company.model.Hero.Hero;
-import com.singlePlayer.company.server.ServerUtils;
+import com.singlePlayer.company.game.Hero.Hero;
+import com.singlePlayer.company.game.ServerUtils;
 
 
 public class MainModel {
 
     private Hero currentHero;
     private Hero enemy;
-
     private boolean isHittingPanelVisible = false;
+
     private ServerUtils serverUtils = new ServerUtils();
-
-
 
 
     public ServerUtils getServerUtils() {

@@ -1,7 +1,7 @@
-package com.singlePlayer.company.model.heroActions;
+package com.singlePlayer.company.game.Hero.heroActions;
 
-import com.singlePlayer.company.model.BodyParts;
-import com.singlePlayer.company.model.Hero.Hero;
+import com.singlePlayer.company.game.Hero.BodyParts;
+import com.singlePlayer.company.game.Hero.Hero;
 
 import java.util.List;
 

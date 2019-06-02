@@ -1,8 +1,6 @@
 package com.singlePlayer.company;
 
-import com.singlePlayer.company.client.swing.View.*;
-import com.singlePlayer.company.client.swing.Controller;
-import com.singlePlayer.company.server.ServerUtils;
+import com.singlePlayer.company.game.swing.Controller;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,10 +11,8 @@ public class Main {
         EventQueue.invokeLater(() -> {
                     Controller controller = new Controller();
                     controller.setBattleFieldPanelMouseListener();
-
                     Main.createAndShowGUI(controller.getMainGamePanel());
-
-
+                    controller.runServerMainLoop();
                 }
         );
     }
