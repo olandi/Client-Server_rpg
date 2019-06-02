@@ -174,7 +174,7 @@ public class Controller {
             tim.dec();
             specifyTimerValueOnGui(Integer.toString(tim.getCount()));
 
-            System.out.println(tim.count);
+           // System.out.println(tim.count);
 
             if (!getServerUtils().isReadyToMoveHeroExist() || tim.count < 0) {
                 timer.stop();

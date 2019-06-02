@@ -3,25 +3,12 @@ package com.singlePlayer.company.game.swing.model;
 import java.net.URL;
 
 public class HeroImages {
-   // public static final String PIRATE_PATH = ".//src//com//company//image//pirate.png";
-  //  public static final String KNIGHT_PATH = ".//src//com//company//image//knight.png";
 
     public static final URL PIRATE_PATH = HeroImages.class.getClassLoader().getResource("image/pirate.png");
     public static final URL KNIGHT_PATH = HeroImages.class.getClassLoader().getResource("image/knight.png");
 
-
-
     public static final URL OK_PATH = HeroImages.class.getClassLoader().getResource("image/a/ok.png");
     public static final URL CANCEL_PATH = HeroImages.class.getClassLoader().getResource("image/a/cancel.png");
-
-    // public static final String ARCHER_PATH = "image/archer.jpg";
-
-
-
-  //public static final String PIRATE_PATH = "d:/pirate.png";
- //public static final String KNIGHT_PATH = "d:/knight.png";
-    // public static final String ARCHER_PATH = "image/archer.jpg";
-
 }
 /*
 Пример 1. используем конструкцию getClass().getResource("/images/logo.png").

@@ -135,7 +135,7 @@ public class ServerUtils {
         return heroHeroBattleActions.get(hero).getDefense();
     }
 
-
+/*
     private List<BodyParts> improveDefenseOfHero(Hero hero) {
         List<BodyParts> result = new ArrayList<>(getDefenseListFromHero(hero));
         List<BodyParts> list = new ArrayList<>(getDefenseListFromHero(hero));
@@ -178,7 +178,7 @@ public class ServerUtils {
 
         return result;
     }
-
+*/
 
     public void computeDamage() {
 

@@ -48,12 +48,15 @@ public class BattleFieldPanel extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
 
+                System.out.println(e.getPoint());
+
                 battleField.forEach(i -> {
                     Hexagon hexagon = i.getHexagon();
 
                     //Todo:26 Косяк с некорректными координатами
                     Point clickPoint = e.getPoint();
-                    clickPoint.y -= 26;
+
+                    clickPoint.y -= 40;
 
                     //если вообще попадаем в хексагон
                     if (hexagon.contains(clickPoint)) {

@@ -19,6 +19,8 @@ public class Hexagon extends Polygon {
     private int rotation = 90;
 
     public Hexagon(Point center, int radius) {
+        this(center,radius,90);
+
         npoints = SIDES;
         xpoints = new int[SIDES];
         ypoints = new int[SIDES];
@@ -29,9 +31,27 @@ public class Hexagon extends Polygon {
         updatePoints();
     }
 
+    public Hexagon(Point center, int radius, int rotation){
+        this.rotation = rotation;
+        npoints = SIDES;
+        xpoints = new int[SIDES];
+        ypoints = new int[SIDES];
+
+        this.center = center;
+        this.radius = radius;
+
+        updatePoints();
+    }
+
+
     public Hexagon(int x, int y, int radius) {
         this(new Point(x, y), radius);
     }
+    public Hexagon(int x, int y, int radius, int rotation) {
+        this(new Point(x, y), radius,rotation);
+    }
+
+
 
     public int getRadius() {
         return radius;
@@ -39,7 +59,6 @@ public class Hexagon extends Polygon {
 
     public void setRadius(int radius) {
         this.radius = radius;
-
         updatePoints();
     }
 
@@ -53,13 +72,11 @@ public class Hexagon extends Polygon {
 
     public void setRotation(int rotation) {
         this.rotation = rotation;
-
         updatePoints();
     }
 
     public void setCenter(Point center) {
         this.center = center;
-
         updatePoints();
     }
 

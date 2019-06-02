@@ -3,19 +3,23 @@ package com.singlePlayer.company.game.swing.model;
 import com.singlePlayer.company.game.Hero.BodyParts;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class HexSection extends Polygon {
-    // private int[] xpoints;
-    //  private int[] ypoints;
-    private static final int SIDES = 4;
-    private BodyParts bodyParts = null;
 
-    public BodyParts getBodyParts() {
-        return bodyParts;
+    private static final int SIDES = 4;
+    private boolean isFilled = false;
+    private BodyParts bodyPart;
+
+    private HexSection(BodyParts bodyPart, int[] xpoints, int[] ypoints) {
+        super(xpoints, ypoints, SIDES);
+        this.bodyPart = bodyPart;
     }
 
-    public void setBodyParts(BodyParts bodyParts) {
-        this.bodyParts = bodyParts;
+    public BodyParts getBodyPart() {
+        return bodyPart;
     }
 
     public boolean isFilled() {
@@ -30,13 +34,8 @@ public class HexSection extends Polygon {
         isFilled = filled;
     }
 
-    private boolean isFilled = false;
 
-    public HexSection(int[] xpoints, int[] ypoints) {
-        super(xpoints, ypoints, SIDES);
-    }
-
-
+    //просто рисует полу-гексагон опр. цветом
     public void draw(Graphics2D g, int x, int y, int lineThickness, int colorValue, boolean filled) {
         // Store before changing.
         Stroke tmpS = g.getStroke();
@@ -45,10 +44,14 @@ public class HexSection extends Polygon {
         g.setColor(new Color(colorValue));
         g.setStroke(new BasicStroke(lineThickness, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER));
 
-        if (filled)
+        if (filled) {
             g.fillPolygon(xpoints, ypoints, npoints);
-        else
+        } else
             g.drawPolygon(xpoints, ypoints, npoints);
+
+        //контур
+        g.setColor(Color.BLACK);
+        g.drawPolygon(xpoints, ypoints, npoints);
 
         // Set values to previous when done.
         g.setColor(tmpC);
@@ -57,8 +60,36 @@ public class HexSection extends Polygon {
 
     @Override
     public String toString() {
-        return "HexSection: " + getClass().getName() + "@" + Integer.toHexString(hashCode()) + " {" +
-                "bodyParts=" + bodyParts +
-                '}';
+        return "HexSection: " + getClass().getName() + "@" + Integer.toHexString(hashCode());
     }
+
+
+    public static List<HexSection> createTwoHexSections(BodyParts bodyPart, Point center, int radius, int rotation) {
+        // List<HexSection> result = new ArrayList<>();
+        Hexagon h = new Hexagon(center, radius, rotation);
+        Point[] points = h.getPoints();
+
+        /*
+        result.add(
+                new HexSection( bodyPart,
+                new int[]{points[1].x, points[2].x, points[3].x, points[4].x},
+                new int[]{points[1].y, points[2].y, points[3].y, points[4].y}));
+
+        result.add(
+                new HexSection(bodyPart,
+                new int[]{points[4].x, points[5].x, points[0].x, points[1].x},
+                new int[]{points[4].y, points[5].y, points[0].y, points[1].y}));*/
+        // return result;
+
+        return Arrays.asList(
+                new HexSection(bodyPart,
+                        new int[]{points[1].x, points[2].x, points[3].x, points[4].x},
+                        new int[]{points[1].y, points[2].y, points[3].y, points[4].y}),
+                new HexSection(bodyPart,
+                        new int[]{points[4].x, points[5].x, points[0].x, points[1].x},
+                        new int[]{points[4].y, points[5].y, points[0].y, points[1].y})
+        );
+    }
+
+
 }
