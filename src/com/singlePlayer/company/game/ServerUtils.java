@@ -28,7 +28,7 @@ public class ServerUtils {
         return battleField;
     }
 
-     {
+    {
         battleField = new ArrayList<>();
         heroes = new HashMap<>();
 
@@ -56,7 +56,6 @@ public class ServerUtils {
         }
 
 
-
     }
 
     //kill hero
@@ -64,13 +63,12 @@ public class ServerUtils {
         heroes.remove(hero);
     }
 
-    public Hero getHeroByIndex(int index){
-        for (Map.Entry<Hero, Integer> entry: heroes.entrySet()){
-            if (entry.getValue()==index) return entry.getKey();
+    public Hero getHeroByIndex(int index) {
+        for (Map.Entry<Hero, Integer> entry : heroes.entrySet()) {
+            if (entry.getValue() == index) return entry.getKey();
         }
         return null;
     }
-
 
 
     private HexagonItem getHexagonItemByHero(Hero hero) {
@@ -100,8 +98,8 @@ public class ServerUtils {
         return heroHeroBattleActions;
     }
 
-    public void performAllMovements(){
-        movementActions.forEach((hero,value )->moveHero(hero,value.getTileIndex()));
+    public void performAllMovements() {
+        movementActions.forEach((hero, value) -> moveHero(hero, value.getTileIndex()));
 
         movementActions.clear();
     }
@@ -135,102 +133,48 @@ public class ServerUtils {
         return heroHeroBattleActions.get(hero).getDefense();
     }
 
-/*
-    private List<BodyParts> improveDefenseOfHero(Hero hero) {
-        List<BodyParts> result = new ArrayList<>(getDefenseListFromHero(hero));
-        List<BodyParts> list = new ArrayList<>(getDefenseListFromHero(hero));
-
-        for (BodyParts bodyParts : list) {
-            switch (bodyParts) {
-                case BodyL:
-                    result.add(BodyParts.BodyR);
-                    break;
-                case BodyR:
-                    result.add(BodyParts.BodyL);
-                    break;
-                case HeadL:
-                    result.add(BodyParts.HeadR);
-                    break;
-                case HeadR:
-                    result.add(BodyParts.HeadL);
-                    break;
-                case LegsL:
-                    result.add(BodyParts.LegsR);
-                    break;
-                case LegsR:
-                    result.add(BodyParts.LegsL);
-                    break;
-                case LeftArmL:
-                    result.add(BodyParts.LeftArmR);
-                    break;
-                case LeftArmR:
-                    result.add(BodyParts.LeftArmL);
-                    break;
-                case RightArmL:
-                    result.add(BodyParts.RightArmR);
-                    break;
-                case RightArmR:
-                    result.add(BodyParts.RightArmL);
-                    break;
-            }
-        }
-
-
-        return result;
-    }
-*/
 
     public void computeDamage() {
 
         //для каждого героя
-        heroes.forEach((hero,index) -> {
+        heroes.forEach((hero, index) -> {
 
-            //дополнительная защита
-            if (heroHeroBattleActions.get(hero)!=null && heroHeroBattleActions.get(hero).getDefense()!=null)
-              //  heroes.forEach(hero1 -> {heroHeroBattleActions.get(hero1).setDefense(improveDefenseOfHero(hero1));});
+                //для каждой атаки героя
+                if (heroHeroBattleActions.get(hero) != null)
+                    heroHeroBattleActions.get(hero).getAttack().forEach(attack -> {
 
-            //для каждой атаки героя
-            if (heroHeroBattleActions.get(hero) != null) heroHeroBattleActions.get(hero).getAttack().forEach(attack -> {
+                                //если в списке защиты врага нет этой атаки
 
-                        //если в списке защиты врага нет этой атаки
+                                //исли цель не сделала ход, не поставила блоки
+                                if (heroHeroBattleActions.get(heroHeroBattleActions.get(hero).getTarget()) == null) {
+                                    heroHeroBattleActions.get(hero).getTarget().setHealth(
+                                            heroHeroBattleActions.get(hero).getTarget().getHealth() -
+                                                    hero.getDamage());
 
-                        //исли цель не сделала ход, не поставила блоки
-                        if (heroHeroBattleActions.get(heroHeroBattleActions.get(hero).getTarget()) == null) {
-                            heroHeroBattleActions.get(hero).getTarget().setHealth(
-                                    heroHeroBattleActions.get(hero).getTarget().getHealth() -
-                                            hero.getDamage());
-
-                           //todo Controller.getCombatLogPanel().appendText("Hero: " + heroHeroBattleActions.get(hero).getToHero().getName() + " received 20 damage\n");
+                                    //todo Controller.getCombatLogPanel().appendText("Hero: " + heroHeroBattleActions.get(hero).getToHero().getName() + " received 20 damage\n");
 
 
-                        }
+                                }
 
-                        if (
-                                heroHeroBattleActions.get(heroHeroBattleActions.get(hero).getTarget()) != null
-                                        && !heroHeroBattleActions.get(heroHeroBattleActions.get(hero).getTarget()).getDefense()
-                                        .contains(attack)) {
+                                if (
+                                        heroHeroBattleActions.get(heroHeroBattleActions.get(hero).getTarget()) != null
+                                                && !heroHeroBattleActions.get(heroHeroBattleActions.get(hero).getTarget()).getDefense()
+                                                .contains(attack)) {
 
-                            System.out.println("Hero " + hero + " hits");
+                                    System.out.println("Hero " + hero + " hits");
 
-                            heroHeroBattleActions.get(hero).getTarget().setHealth(
-                                    heroHeroBattleActions.get(hero).getTarget().getHealth() -
-                                            hero.getDamage());
+                                    heroHeroBattleActions.get(hero).getTarget().setHealth(
+                                            heroHeroBattleActions.get(hero).getTarget().getHealth() -
+                                                    hero.getDamage());
 
-                         //todo   Controller.getCombatLogPanel().appendText("Hero: " + heroHeroBattleActions.get(hero).getToHero().getName() + " received 20 damage\n");
+                                    //todo   Controller.getCombatLogPanel().appendText("Hero: " + heroHeroBattleActions.get(hero).getToHero().getName() + " received 20 damage\n");
 
-                        }
-                    }
-
-
-            );
-
-
+                                }
+                            }
+                    );
         });
-
-
 
         heroHeroBattleActions.clear();
     }
-
 
 }

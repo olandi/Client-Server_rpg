@@ -75,7 +75,7 @@ public class HittingPanel extends LayerUI<JPanel> {
                 // e.getPoint();
 
                 Point clickPoint = e.getPoint();
-                clickPoint.y -= 26;
+                clickPoint.y -= 40;
 
                 //если кликаем по атака хексам
                 sectionsAttackList.forEach(i -> {

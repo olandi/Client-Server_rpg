@@ -15,9 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 public class Controller {
-//TODO: Есть такая проблема, что некоторые панельные классы унаследованы от jpanel(возвр. ссылку на себя),
-// а некоторые не унаследованы, но возвращают ссылку на сконструированный обьект jpanel. В результате получается путаница, об.
-    // Исследовать необходимость наследоваться от jpanel и стандартизировать проеки
 
     private MainModel model = new MainModel();
 
@@ -41,7 +38,7 @@ public class Controller {
     }
 
     public JPanel getMainGamePanel() {
-        return mainGamePanel.getMainPanel();
+        return mainGamePanel;
     }
 
     public CombatLogPanel getCombatLogPanel() {

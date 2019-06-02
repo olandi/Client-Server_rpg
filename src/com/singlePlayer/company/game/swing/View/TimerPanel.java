@@ -21,5 +21,4 @@ public class TimerPanel extends JPanel {
     public JLabel getjLabel() {
         return jLabel;
     }
-
 }

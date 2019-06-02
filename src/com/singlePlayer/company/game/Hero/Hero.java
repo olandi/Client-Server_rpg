@@ -10,7 +10,6 @@ public class Hero  implements Serializable {
     private int damage;
     private TurnState turnState;
 
-    //private String view = "d:/default.png";
     private URL view;
 
     public void setHealth(int health) {
@@ -34,7 +33,6 @@ public class Hero  implements Serializable {
     }
 
 
-
     public String getName() {
         return name;
     }
@@ -54,17 +52,6 @@ public class Hero  implements Serializable {
     public void setTurnState(TurnState turnState){
         this.turnState = turnState;
     }
-
-/*    @Override
-    public String toString() {
-        return "Hero{" +
-                "name='" + name + '\'' +
-                ", health=" + health +
-                ", damage=" + damage +
-                ", turnState=" + turnState +
-                ", view='" + view + '\'' +
-                '}';
-    }*/
 
     @Override
     public String toString() {

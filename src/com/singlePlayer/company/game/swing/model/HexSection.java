@@ -3,7 +3,6 @@ package com.singlePlayer.company.game.swing.model;
 import com.singlePlayer.company.game.Hero.BodyParts;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -65,21 +64,8 @@ public class HexSection extends Polygon {
 
 
     public static List<HexSection> createTwoHexSections(BodyParts bodyPart, Point center, int radius, int rotation) {
-        // List<HexSection> result = new ArrayList<>();
         Hexagon h = new Hexagon(center, radius, rotation);
         Point[] points = h.getPoints();
-
-        /*
-        result.add(
-                new HexSection( bodyPart,
-                new int[]{points[1].x, points[2].x, points[3].x, points[4].x},
-                new int[]{points[1].y, points[2].y, points[3].y, points[4].y}));
-
-        result.add(
-                new HexSection(bodyPart,
-                new int[]{points[4].x, points[5].x, points[0].x, points[1].x},
-                new int[]{points[4].y, points[5].y, points[0].y, points[1].y}));*/
-        // return result;
 
         return Arrays.asList(
                 new HexSection(bodyPart,
@@ -90,6 +76,5 @@ public class HexSection extends Polygon {
                         new int[]{points[4].y, points[5].y, points[0].y, points[1].y})
         );
     }
-
 
 }
