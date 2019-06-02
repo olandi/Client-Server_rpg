@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Controller {
-//TODO: Есть такая проблема, что некоторые панельные классы унаследованы от jpanel, а некоторые не унаследованы,
-// но возвращают ссылку на сконструированный обьект jpanel. В результате получается путаница, об.
+//TODO: Есть такая проблема, что некоторые панельные классы унаследованы от jpanel(возвр. ссылку на себя),
+// а некоторые не унаследованы, но возвращают ссылку на сконструированный обьект jpanel. В результате получается путаница, об.
     // Исследовать необходимость наследоваться от jpanel и стандартизировать проеки
 
     private MainModel model = new MainModel();
@@ -25,16 +25,12 @@ public class Controller {
     private BattleFieldPanel battleFieldPanel = new BattleFieldPanel(this);
     private HittingPanel hittingPanel = new HittingPanel(this);
     private TimerPanel timerPanel = new TimerPanel(this);
-
-
-    //по идее должен быть последним
     private MainPanel mainGamePanel = new MainPanel(this);
 
 
     public ServerUtils getServerUtils(){
         return model.getServerUtils();
     }
-
 
     public List<HexagonItem> getBattleField(){
         return model.getServerUtils().getBattleField();
@@ -101,10 +97,7 @@ public class Controller {
     }
 
     private void performHeroTurn(Hero hero) {
-
         hero.setTurnState(TurnState.TurnIsFinished);
-        //Todo возможны баги
-       // hero.setSelected(false);
         setCurrentHero(null);
     }
 
@@ -125,7 +118,6 @@ public class Controller {
 
 
     private void removeAllMouseListeners() {
-        // if (mainGamePanel!=null)
         Arrays.stream(getMainGamePanel().getMouseListeners())
                 .forEach(mouseListener -> {
                     getMainGamePanel().removeMouseListener(mouseListener);
@@ -145,7 +137,7 @@ public class Controller {
         return model.isHittingPanelVisible();
     }
 
-    public void specifyTimerValueOnGui(String string){
+    private void specifyTimerValueOnGui(String string){
         timerPanel.getjLabel().setText(string);
     }
 
@@ -156,17 +148,15 @@ public class Controller {
 
     private int round = 0;
     private Timer timer;
-    private int roundDuration = 10;//ServerUtils.ROUND_DURATION;
+    private int roundDuration = 10+1;//ServerUtils.ROUND_DURATION;
 
     public void runServerMainLoop() {
-
 
         class Tim {
             private int count = roundDuration;
 
             private void dec() {
-                if (count != 0) count--;
-                else reset();
+                count--;
             }
 
             private int getCount() {
@@ -178,17 +168,15 @@ public class Controller {
             }
         }
 
-
-
         Tim tim = new Tim();
 
         timer = new Timer(1000, i -> {
-
+            tim.dec();
             specifyTimerValueOnGui(Integer.toString(tim.getCount()));
 
-            tim.dec();
+            System.out.println(tim.count);
 
-            if (!getServerUtils().isReadyToMoveHeroExist()) {
+            if (!getServerUtils().isReadyToMoveHeroExist() || tim.count < 0) {
                 timer.stop();
                 specifyTimerValueOnGui("Идет анимация боя...");
 
