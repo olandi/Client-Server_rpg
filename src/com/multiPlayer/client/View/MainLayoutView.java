@@ -24,17 +24,23 @@ public class MainLayoutView {
         cl.show(cards, GO_BATTLE);
     }
 
+    public void switchToFight(){
+        CardLayout cl = (CardLayout) (cards.getLayout());
+        cl.show(cards, FIGHT);
+    }
+
     private void initComponentToPane() {
 
         JPanel loginPanel = controller.getLoginView().getLoginPanel();
         JPanel goBattlePanel = controller.getPickBattleView().getGoBattlePanel();
+        JPanel fight = controller.getBattleFieldController().getMainGamePanel();
 
 
         cards = new JPanel(new CardLayout());
 
         cards.add(loginPanel, LOGIN_PANEL);
         cards.add(goBattlePanel, GO_BATTLE);
-       // cards.add(card2, FIGHT);
+        cards.add(fight, FIGHT);
 
        // contentPane.add(loginPanel, BorderLayout.PAGE_START);
       //  contentPane.add(cards, BorderLayout.CENTER);

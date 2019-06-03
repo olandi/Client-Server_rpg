@@ -1,7 +1,9 @@
 package com.multiPlayer.client;
 
+import com.multiPlayer.client.swing.Controller;
 import com.multiPlayer.connection.Message;
 import com.multiPlayer.connection.MessageType;
+import com.multiPlayer.other.MessageObjects.BattleFieldInstance;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -57,6 +59,20 @@ public class ClientListener extends Thread {
                 if (message.getType()==MessageType.JOIN_TO_BATTLE_RESPONSE){
                     System.out.println("JOIN_TO_BATTLE_RESPONSE");
                 }
+
+                if (message.getType()==MessageType.BATTLE_FIELD_INSTANCE){
+
+                    BattleFieldInstance bfi =  (BattleFieldInstance) message.getData();
+
+                    //controller.setBattleFieldController(new Controller(controller));
+                    controller.getBattleFieldController().getModel().initBattle(bfi.getBattleField(), bfi.getHeroes());
+                    System.out.println("BATTLE_FIELD_INSTANCE");
+
+
+                    controller.getBattleFieldController().setBattleFieldPanelMouseListener();
+                    controller.switchToFightView();
+                }
+
 
             }
         }

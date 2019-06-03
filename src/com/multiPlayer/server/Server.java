@@ -6,11 +6,15 @@ import com.multiPlayer.connection.MessageType;
 
 import static com.multiPlayer.other.ServerConstants.SERVER_PORT;
 
+import com.multiPlayer.other.MessageObjects.BattleFieldInstance;
 import com.myDrafts.differentExamples.chat.ConsoleHelper;
+
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -65,11 +69,8 @@ public class Server {
             try (Connection connection = new Connection(socket)) {
 
 
-
                 playerName = serverHandshake(connection);
                 serverMainLoop(connection, playerName);
-
-
 
 
             } catch (IOException e) {
@@ -84,6 +85,7 @@ public class Server {
             if (playerName != null) {
                 //После того как все исключения обработаны, удаляем запись из connectionMap
                 onlinePlayers.remove(playerName);
+                waitingForBattle.remove(playerName);
                 //и отправлялем сообщение остальным пользователям
             }
             ConsoleHelper.writeMessage("Соединение с удаленным адресом закрыто");
@@ -97,16 +99,42 @@ public class Server {
                 if ((message = connection.receive()) != null) {
 
                     /**печать всех сообщений*/
-                     System.out.println("received: "+message);
-
+                    System.out.println("received: " + message);
 
 
                     if (message.getType() == MessageType.JOIN_TO_BATTLE_REQUEST) {
 
                         //должен проверять достаточно ли игроков для старта боя
-                        waitingForBattle.put(userName,connection);
+                        waitingForBattle.put(userName, connection);
                         connection.send(new Message(MessageType.JOIN_TO_BATTLE_RESPONSE));
 
+                        /*----------------------------------------------------*/
+
+
+                        if (waitingForBattle.size() == 2) {
+
+                            waitingForBattle.forEach((k, v) -> {
+                                try {
+                                    v.send(new Message(MessageType.BATTLE_FIELD_INSTANCE, new BattleFieldInstance(
+                                            new ArrayList<Integer>(),
+                                            //serverUtils.getBattleField(),
+
+                                            ServerUtils.createTwoHeroesForBattle(waitingForBattle.keySet().toArray(new String[0]))
+                                    )));
+                                } catch (IOException error) {
+                                    error.printStackTrace();
+                                }
+                            });
+
+
+                        }
+
+
+
+
+
+
+                        /*----------------------------------------------------*/
                     }
 
                 }
@@ -122,7 +150,7 @@ public class Server {
                 Message message = connection.receive();
 
                 /**печать всех сообщений*/
-                if (message!=null) System.out.println("received: "+message);
+                if (message != null) System.out.println("received: " + message);
 
 
                 // Проверить, что получена команда с именем пользователя
@@ -130,18 +158,18 @@ public class Server {
 
                     //Достать из ответа имя, проверить, что оно не пустое
                     //if (message.getData() != null && !message.getData().isEmpty()) {
-                    if (!message.getData().isEmpty()) {
+                    if (!((String) message.getData()).isEmpty()) {
 
                         // и пользователь с таким именем еще не подключен (используй connectionMap)
                         if (onlinePlayers.get(message.getData()) == null) {
 
                             // Добавить нового пользователя и соединение с ним в connectionMap
-                            onlinePlayers.put(message.getData(), connection);
+                            onlinePlayers.put(((String) message.getData()), connection);
                             // Отправить клиенту команду информирующую, что его имя принято
                             connection.send(new Message(MessageType.PLAYER_NAME_ACCEPTED));
 
                             // Вернуть принятое имя в качестве возвращаемого значения
-                            return message.getData();
+                            return ((String) message.getData());
                         }
                     }
                 }
