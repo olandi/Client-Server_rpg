@@ -6,16 +6,12 @@ import com.multiPlayer.other.MessageObjects.HeroMovementAction;
 import com.multiPlayer.both.ImageLoader;
 import com.multiPlayer.client.swing.Controller;
 import com.multiPlayer.client.swing.model.Hexagon;
-import com.multiPlayer.client.swing.model.HexagonItem;
-
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.List;
-import java.util.Map;
 
 public class BattleFieldPanel extends JPanel {
 
@@ -118,8 +114,6 @@ public class BattleFieldPanel extends JPanel {
             else
                 h.draw(g2, 0, 0, 2, Color.green.getRGB(), false);
         });
-
-        System.out.println(controller.getHeroes()+"---------------------------------------------------");
 
         controller.getHeroes().forEach((hero, index) -> {
 

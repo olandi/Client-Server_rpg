@@ -60,15 +60,20 @@ public class ClientListener extends Thread {
             if ((message = controller.getConnection().receive()) != null) {
 
                 /**печать всех сообщений*/
-                System.out.println("received: "+message);
+                //  System.out.println("received: "+message);
 
-                if (message.getType()==MessageType.JOIN_TO_BATTLE_RESPONSE){
+                if (message.getType() == MessageType.JOIN_TO_BATTLE_RESPONSE) {
+
+                    System.out.println("received: " + message);
+
                     System.out.println("JOIN_TO_BATTLE_RESPONSE");
                 }
 
-                if (message.getType()==MessageType.BATTLE_FIELD_INSTANCE){
+                if (message.getType() == MessageType.BATTLE_FIELD_INSTANCE) {
 
-                    BattleFieldInstance bfi =  (BattleFieldInstance) message.getData();
+                    System.out.println("received: " + message);
+
+                    BattleFieldInstance bfi = (BattleFieldInstance) message.getData();
 
                     //controller.setBattleFieldController(new Controller(controller));
                     controller.getBattleFieldController().getModel().initBattle(bfi.getBattleField(), bfi.getHeroes());
@@ -80,20 +85,22 @@ public class ClientListener extends Thread {
                     controller.switchToFightView();
                 }
 
-                if (message.getType()==MessageType.TIMER){
-                   //long l = ((TimerMessage) message.getData()).getTime();
-                   long l = (long) message.getData();
+                if (message.getType() == MessageType.TIMER) {
+                    //long l = ((TimerMessage) message.getData()).getTime();
+                    long l = (long) message.getData();
                     controller.getBattleFieldController()
-                        .getTimerPanel().getjLabel().setText(TimeUtil.getTime(l));}
+                            .getTimerPanel().getjLabel().setText(TimeUtil.getTime(l));
+                }
 
-                        if (message.getType()==MessageType.UPDATE_BATTLEFIELD){
+                if (message.getType() == MessageType.UPDATE_BATTLEFIELD) {
 
-                            System.out.println("update heroes: "+((UpdateBattleField) message.getData()).getHeroes());
+                    System.out.println("received: "+message);
 
-                            controller.getBattleFieldController().uptateBattleField(
-                               ((UpdateBattleField) message.getData()).getHeroes()
-                            );
-                        }
+
+                    controller.getBattleFieldController().uptateBattleField(
+                            ((UpdateBattleField) message.getData()).getHeroes()
+                    );
+                }
 
 
             }
@@ -105,7 +112,7 @@ public class ClientListener extends Thread {
             Message message = controller.getConnection().receive();
 
             /**печать всех сообщений*/
-            if (message!=null) System.out.println("received: "+message);
+            if (message != null) System.out.println("received: " + message);
 
 
             if (message.getType() == MessageType.PLAYER_NAME_REQUEST) {

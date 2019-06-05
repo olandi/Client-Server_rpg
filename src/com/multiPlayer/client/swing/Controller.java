@@ -123,7 +123,7 @@ public class Controller {
     }
 
     private void performHeroTurn(Hero hero) {
-        hero.setTurnState(TurnState.TurnIsFinished);
+       // hero.setTurnState(TurnState.TurnIsFinished);
         setCurrentHero(null);
     }
 
