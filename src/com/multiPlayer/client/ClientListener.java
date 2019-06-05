@@ -6,6 +6,7 @@ import com.multiPlayer.client.swing.model.util.TimeUtil;
 import com.multiPlayer.connection.Message;
 import com.multiPlayer.connection.MessageType;
 import com.multiPlayer.other.MessageObjects.BattleFieldInstance;
+import com.multiPlayer.other.MessageObjects.UpdateBattleField;
 //import com.multiPlayer.other.MessageObjects.TimerMessage;
 
 import java.io.IOException;
@@ -86,8 +87,11 @@ public class ClientListener extends Thread {
                         .getTimerPanel().getjLabel().setText(TimeUtil.getTime(l));}
 
                         if (message.getType()==MessageType.UPDATE_BATTLEFIELD){
+
+                            System.out.println("update heroes: "+((UpdateBattleField) message.getData()).getHeroes());
+
                             controller.getBattleFieldController().uptateBattleField(
-                                    (Map<Hero,Integer>)   message.getData()
+                               ((UpdateBattleField) message.getData()).getHeroes()
                             );
                         }
 

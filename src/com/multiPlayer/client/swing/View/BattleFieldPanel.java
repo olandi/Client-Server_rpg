@@ -19,8 +19,8 @@ import java.util.Map;
 
 public class BattleFieldPanel extends JPanel {
 
-    private List<HexagonItem> battleField;
-    private Map<Hero, Integer> heroes;
+   // private List<HexagonItem> battleField;
+  //  private Map<Hero, Integer> heroes;
 
     private MouseListener mouseListener;
 
@@ -29,8 +29,8 @@ public class BattleFieldPanel extends JPanel {
     public BattleFieldPanel(Controller controller) {
         this.controller = controller;
 
-        battleField = controller.getBattleField();
-        heroes = controller.getHeroes();
+      //  battleField = controller.getBattleField();
+     //   heroes = controller.getHeroes();
 
         initMouseListener();
 
@@ -47,9 +47,6 @@ public class BattleFieldPanel extends JPanel {
         mouseListener = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
-                battleField = controller.getBattleField();
-                heroes = controller.getHeroes();
 
                 System.out.println(e.getPoint());
 
@@ -72,7 +69,7 @@ public class BattleFieldPanel extends JPanel {
                             System.out.println("in range");
 
                                     //Если попадаем в персонажа, и этот персонаж - не игрока
-                                  if (heroes.containsValue(i.getIndex())){
+                                  if (controller.getHeroes().containsValue(i.getIndex())){
                                       Hero targetHero = controller.getModel().getHeroByIndex(i.getIndex());
 
                                       //5) Если попадаем не в себя
@@ -88,7 +85,7 @@ public class BattleFieldPanel extends JPanel {
                                     }
                                 } else {
                                     // ПЕРСОНАЖ ХОДИТ НА СВОБОДНУЮ КЛЕТКУ (КуррентХиро = NULL  обнуляется)
-                                    battleField.get(heroes.get(controller.getPlayerHero())).setSelected(false);
+                                      controller.getBattleField().get(controller.getHeroes().get(controller.getPlayerHero())).setSelected(false);
                                     i.setSelected(true);
                                     controller.repaintAllView();
 
@@ -122,6 +119,7 @@ public class BattleFieldPanel extends JPanel {
                 h.draw(g2, 0, 0, 2, Color.green.getRGB(), false);
         });
 
+        System.out.println(controller.getHeroes()+"---------------------------------------------------");
 
         controller.getHeroes().forEach((hero, index) -> {
 

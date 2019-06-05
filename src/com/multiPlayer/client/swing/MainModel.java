@@ -53,7 +53,7 @@ public class MainModel {
     }
 
     public void updateData(Map<Hero,Integer> map){
-        heroes = map;
+        this.heroes = map;
 
 
         battleField.forEach(i -> i.setSelected(false));

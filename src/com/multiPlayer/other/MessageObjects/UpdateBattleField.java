@@ -15,4 +15,11 @@ public class UpdateBattleField implements Serializable {
     public Map<Hero, Integer> getHeroes() {
         return heroes;
     }
+
+    @Override
+    public String toString() {
+        return "UpdateBattleField{" +
+                "heroes=" + heroes +
+                '}';
+    }
 }

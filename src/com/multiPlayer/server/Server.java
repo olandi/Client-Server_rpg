@@ -119,6 +119,14 @@ public class Server {
 
                         /*----------------------------------------------------*/
                     }
+
+
+                    if (message.getType() == MessageType.PLAYER_MOVEMENT_MESSAGE){
+                        battleManager.getBattleByConnection(connection).moveHero(connection , (HeroMovementAction) message.getData());
+                    }
+
+
+
                 }
             }
         }

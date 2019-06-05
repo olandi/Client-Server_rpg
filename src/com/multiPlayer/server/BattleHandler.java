@@ -2,6 +2,7 @@ package com.multiPlayer.server;
 
 import com.multiPlayer.both.Hero.Hero;
 import com.multiPlayer.both.battleField.BattleField;
+import com.multiPlayer.client.swing.model.HeroImages;
 import com.multiPlayer.connection.Connection;
 import com.multiPlayer.connection.Message;
 import com.multiPlayer.connection.MessageType;
@@ -34,11 +35,13 @@ public class BattleHandler extends Thread {
         this.playerConnections = playerConnections;
 
         players = playerConnections.keySet().toArray(new String[0]);
+
+
     }
 
     @Override
     public void run() {
-
+        System.out.println("battle handler start");
         //инициализация connectionHero
         playerConnections.forEach((playerName, connection) -> {
             Hero hero = new Hero(playerName);
@@ -51,7 +54,8 @@ public class BattleHandler extends Thread {
         //todo только для 2-x
         heroesForClient.put(heroes.get(0), 18);
         heroesForClient.put(heroes.get(1), 29);
-
+        heroes.get(0).setView(HeroImages.KNIGHT_PATH);
+        heroes.get(1).setView(HeroImages.PIRATE_PATH);
 
         //старт игры
         playerConnections.forEach((k, v) -> {
@@ -66,89 +70,77 @@ public class BattleHandler extends Thread {
             }
         });
 
-            System.out.println(" "+currentThread());
+        System.out.println(" " + currentThread());
 
-            try {
-                //пока есть живые персы
-                while (true) {
-                    long start = System.currentTimeMillis();
-                    long finish = start + 20_700L;
-                    long current = 1;
+        try {
+            //пока есть живые персы
+            while (true) {
 
-                    //пока таймер не дошел до 0 и есть персы, готовые ходить
-                    while (current > 0) {
+                System.out.println("Есть живые");
 
+                long start = System.currentTimeMillis();
+                long finish = start + 10_700L;
+                long current = 1;
 
-                        //слушаем порты
-                        Message message;
-                        //todo тонкое место
-                        if ((message = playerConnections.get(players[0]).receive()) != null) {
+                //пока таймер не дошел до 0
+                while (current > 0) {
 
-                            if (message.getType() == MessageType.PLAYER_MOVEMENT_MESSAGE) {
-                                movementActions.put(
-                                        heroes.stream().filter(i -> i.getName().equals(players[0])).findFirst().get()
-                                        , (HeroMovementAction) message.getData()
-                                );}
-                        }
+                    // System.out.println("time: " + current);
 
-
-                        if ((message = playerConnections.get(players[1]).receive()) != null) {
-
-                            if (message.getType() == MessageType.PLAYER_MOVEMENT_MESSAGE) {
-                                movementActions.put(
-                                        heroes.stream().filter(i -> i.getName().equals(players[1])).findFirst().get()
-                                        , (HeroMovementAction) message.getData()
-                                );}
-                        }
-
-
-                        current = finish - System.currentTimeMillis();
-                        System.out.println(current);
-
-                        for (Connection c : playerConnections.values()) {
-                            c.send(new Message(MessageType.TIMER, /*new TimerMessage(current)*/current));
-                        }
-                        sleep(500);
-                    }
-                    System.out.println("Round over");
-
-
-                    //считаем дамаг
-                    performAllMovements();
+                    current = finish - System.currentTimeMillis();
+                    System.out.println(current);
 
                     for (Connection c : playerConnections.values()) {
-                        c.send(new Message(MessageType.UPDATE_BATTLEFIELD, new UpdateBattleField(heroesForClient)));
+                        c.send(new Message(MessageType.TIMER, /*new TimerMessage(current)*/current));
                     }
+                    sleep(500);
 
+
+                } // end timer
+
+                System.out.println("Round over");
+
+
+                //считаем дамаг
+                performAllMovements();
+
+                System.out.println("sending data: " + heroesForClient);
+
+                //todo: без нью хеш мап - отправлялись одни данные, а получались другие.
+                for (Connection c : playerConnections.values()) {
+                    c.send(new Message(MessageType.UPDATE_BATTLEFIELD, new UpdateBattleField(new HashMap<>(heroesForClient))));
                 }
 
-
-            } catch (ClassNotFoundException | InterruptedException e) {
-                e.printStackTrace();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-                interrupt();
             }
 
 
+        } catch (/*ClassNotFoundException |*/ InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+            interrupt();
+        }
+
+    }
+
+    public void moveHero(Connection connection, HeroMovementAction action) {
 
 
-
-
-
-
+        movementActions.put(connectionHero.get(connection), action);
     }
 
     public void moveHero(Hero hero, int index) {
         //update hero index
-        heroesForClient.computeIfPresent(hero, (key, value) -> index);
+        //heroesForClient.computeIfPresent(hero, (key, value) -> index);
+        heroesForClient.put(hero, index);
+
     }
+
     public void performAllMovements() {
         movementActions.forEach((hero, value) -> moveHero(hero, value.getTileIndex()));
 
         movementActions.clear();
     }
-
 
 
 }
