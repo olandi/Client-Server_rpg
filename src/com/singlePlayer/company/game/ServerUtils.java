@@ -1,5 +1,7 @@
 package com.singlePlayer.company.game;
 
+import com.multiPlayer.both.battleField.BattleField;
+import com.multiPlayer.client.swing.model.util.BattleFildDrawer;
 import com.singlePlayer.company.game.swing.model.HeroImages;
 import com.singlePlayer.company.game.swing.model.Hexagon;
 import com.singlePlayer.company.game.swing.model.HexagonItem;
@@ -53,6 +55,7 @@ public class ServerUtils {
             int fieldOffset = 30;
 
             battleField.add(new HexagonItem(new Hexagon(xx + fieldOffset, yy + fieldOffset, 40), i));
+            //battleField.addAll( BattleFildDrawer.createGuiBattlefield(40,40,new BattleField(9,6),40,10));
         }
 
 

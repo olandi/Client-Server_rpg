@@ -1,4 +1,4 @@
-package com.multiPlayer.both.Hero.heroActions;
+package com.multiPlayer.other.MessageObjects;
 
 
 import com.multiPlayer.connection.MessageAction;

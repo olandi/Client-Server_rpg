@@ -2,7 +2,7 @@ package com.multiPlayer.client.swing.View;
 
 import com.multiPlayer.both.Hero.Hero;
 import com.multiPlayer.both.Hero.TurnState;
-import com.multiPlayer.both.Hero.heroActions.HeroMovementAction;
+import com.multiPlayer.other.MessageObjects.HeroMovementAction;
 import com.multiPlayer.both.ImageLoader;
 import com.multiPlayer.client.swing.Controller;
 import com.multiPlayer.client.swing.model.Hexagon;
@@ -61,52 +61,36 @@ public class BattleFieldPanel extends JPanel {
                     Point clickPoint = e.getPoint();
                     clickPoint.y -= 40;
 
-                    //если вообще попадаем в хексагон
-                    if (hexagon.contains(clickPoint)) {
+                    //предполагается, что игрок не может быть равен null
+                    //если игрок может ходить и вообще попадаем в хексагон
+                    if (controller.getPlayerHero().getTurnState().equals(TurnState.ReadyForTurn)
+                            && hexagon.contains(clickPoint)) {
 
                         System.out.println("Hexagon with center at " + hexagon.getCenter());
 
-                        //2) Если существует куррентХеро (Если персонаж уже выделен)
-                        if (controller.getCurrentHero() != null) {
+                        if (controller.getModel().getHeroRangeSet().contains(i.getIndex())){
+                            System.out.println("in range");
 
-                            //3) Если куррентХеро может ходить
-                            if (controller.getCurrentHero().getTurnState().equals(TurnState.ReadyForTurn)) {
-
+                                    //Если попадаем в персонажа, и этот персонаж - не игрока
                                   if (heroes.containsValue(i.getIndex())){
                                       Hero targetHero = controller.getModel().getHeroByIndex(i.getIndex());
 
                                       //5) Если попадаем не в себя
-                                    if (!controller.getCurrentHero().equals(targetHero)) {
-
-                                        //БЬЕМ ВРАГА (КуррентХиро = NULL  обнуляется)
-                                        //обнуляется только после успешной атаки
-                                        System.out.println("hit");
-
+                                    if (!controller.getPlayerHero().equals(targetHero)) {
                                         //становится видимой панель атаки
-                                        controller.setCurrentHero(controller.getCurrentHero());
-                                        controller.setEnemy(targetHero);
 
+                                        controller.setCurrentHero(controller.getPlayerHero());
+                                        controller.setEnemy(targetHero);
                                         controller.openHittingPanel();
                                         controller.setHittingPanelMouseListener();
-                                        controller.repaintAllView();
-
-
-
-                                    } else {
-                                        //ДЕЛАЕМ куррентХеро НЕ АКТИВНЫМ (КуррентХиро = NULL  обнуляется)
-                                        controller.setCurrentHero(null);
-
-                                        i.setSelected(false);
                                         controller.repaintAllView();
 
                                     }
                                 } else {
                                     // ПЕРСОНАЖ ХОДИТ НА СВОБОДНУЮ КЛЕТКУ (КуррентХиро = NULL  обнуляется)
-                                    battleField.get(heroes.get(controller.getCurrentHero())).setSelected(false);
+                                    battleField.get(heroes.get(controller.getPlayerHero())).setSelected(false);
                                     i.setSelected(true);
                                     controller.repaintAllView();
-                                    //тут герой ходит на клетку вперед, кидает в стэк действие хождения на клетку
-                                    //отмечает перса как походившего
 
                                       try {
                                           controller.sendMovementActionToServer(new HeroMovementAction(i.getIndex()));
@@ -114,30 +98,8 @@ public class BattleFieldPanel extends JPanel {
                                           System.out.println("sendMovementActionToServer error");
                                           error.printStackTrace();
                                       }
-
-
                                 }
-                            } else {
-                                controller.setCurrentHero(null);
-                                //!!! ТЕОРЕТИЧЕСКИ УСЛОВИЕ НИКОГДА НЕ БУДЕТ ДОСТИГНУТО(????????)
-                                //на практике нет)
-                            }
-                        } else {
-                            // 6) Если попадаем в игрока, который может ходить
-                           if (heroes.containsValue(i.getIndex())&&(
-                                   controller.getModel().getHeroByIndex(i.getIndex()).getTurnState().equals(TurnState.ReadyForTurn)
-                                   )){
-                                //Делаем этого игрока - КуррентХиро
-                                controller.setCurrentHero(controller.getModel().getHeroByIndex(i.getIndex()));
-                                // hexagonContent.turnSelect();
-                                i.setSelected(true);
-                                controller.repaintAllView();
-                            } else {
-                                //НИЧЕГО НЕ ДЕЛАЕМ
-                            }
-                        }
-
-                    }// end if (hexagon.contains(e.getPoint()))
+                    }}
                 });
             }
         };

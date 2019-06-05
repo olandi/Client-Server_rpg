@@ -1,12 +1,17 @@
 package com.multiPlayer.client;
 
+import com.multiPlayer.both.Hero.Hero;
 import com.multiPlayer.client.swing.Controller;
+import com.multiPlayer.client.swing.model.util.TimeUtil;
 import com.multiPlayer.connection.Message;
 import com.multiPlayer.connection.MessageType;
 import com.multiPlayer.other.MessageObjects.BattleFieldInstance;
+//import com.multiPlayer.other.MessageObjects.TimerMessage;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Date;
+import java.util.Map;
 
 import static com.multiPlayer.other.ServerConstants.SERVER_ADDRESS;
 import static com.multiPlayer.other.ServerConstants.SERVER_PORT;
@@ -66,12 +71,25 @@ public class ClientListener extends Thread {
 
                     //controller.setBattleFieldController(new Controller(controller));
                     controller.getBattleFieldController().getModel().initBattle(bfi.getBattleField(), bfi.getHeroes());
+                    controller.getBattleFieldController().initPlayerHero();
                     System.out.println("BATTLE_FIELD_INSTANCE");
 
 
                     controller.getBattleFieldController().setBattleFieldPanelMouseListener();
                     controller.switchToFightView();
                 }
+
+                if (message.getType()==MessageType.TIMER){
+                   //long l = ((TimerMessage) message.getData()).getTime();
+                   long l = (long) message.getData();
+                    controller.getBattleFieldController()
+                        .getTimerPanel().getjLabel().setText(TimeUtil.getTime(l));}
+
+                        if (message.getType()==MessageType.UPDATE_BATTLEFIELD){
+                            controller.getBattleFieldController().uptateBattleField(
+                                    (Map<Hero,Integer>)   message.getData()
+                            );
+                        }
 
 
             }

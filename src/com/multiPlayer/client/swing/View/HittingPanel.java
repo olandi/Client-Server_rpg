@@ -1,7 +1,7 @@
 package com.multiPlayer.client.swing.View;
 
 import com.multiPlayer.both.Hero.BodyParts;
-import com.multiPlayer.both.Hero.heroActions.HeroBattleAction;
+import com.multiPlayer.other.MessageObjects.HeroBattleAction;
 import com.multiPlayer.both.ImageLoader;
 import com.multiPlayer.client.swing.Controller;
 import com.multiPlayer.client.swing.model.HeroImages;

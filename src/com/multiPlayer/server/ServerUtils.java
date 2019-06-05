@@ -4,8 +4,8 @@ package com.multiPlayer.server;
 import com.multiPlayer.both.Hero.BodyParts;
 import com.multiPlayer.both.Hero.Hero;
 import com.multiPlayer.both.Hero.TurnState;
-import com.multiPlayer.both.Hero.heroActions.HeroBattleAction;
-import com.multiPlayer.both.Hero.heroActions.HeroMovementAction;
+import com.multiPlayer.other.MessageObjects.HeroBattleAction;
+import com.multiPlayer.other.MessageObjects.HeroMovementAction;
 import com.multiPlayer.client.swing.model.HeroImages;
 import com.multiPlayer.client.swing.model.Hexagon;
 import com.multiPlayer.client.swing.model.HexagonItem;
@@ -63,7 +63,9 @@ public class ServerUtils {
         heroes.put(knight, 29);
 
 
-        for (int i = 0; i < 48; i++) {
+        for (int i = 0; i < 48 + 3; i++) {
+
+         //   if (i == 8 || i == 25 || i == 42) continue;
 
             int x = i % 8;
             int y = i / 8;
@@ -76,6 +78,10 @@ public class ServerUtils {
             battleField.add(new HexagonItem(new Hexagon(xx + fieldOffset, yy + fieldOffset, 40), i));
         }
 
+
+        battleField.add(8, new HexagonItem(new Hexagon(710, 67, 40), 8));
+        battleField.add(25, new HexagonItem(new Hexagon(710, 207, 40), 25));
+        battleField.add(42, new HexagonItem(new Hexagon(710, 347, 40), 42));
 
     }
 

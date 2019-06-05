@@ -2,12 +2,11 @@ package com.multiPlayer.client.swing;
 
 import com.multiPlayer.both.Hero.Hero;
 import com.multiPlayer.both.Hero.TurnState;
-import com.multiPlayer.both.Hero.heroActions.HeroBattleAction;
-import com.multiPlayer.both.Hero.heroActions.HeroMovementAction;
+import com.multiPlayer.other.MessageObjects.HeroBattleAction;
+import com.multiPlayer.other.MessageObjects.HeroMovementAction;
 import com.multiPlayer.client.MainLayoutController;
 import com.multiPlayer.client.swing.View.*;
 import com.multiPlayer.client.swing.model.HexagonItem;
-import com.multiPlayer.connection.Connection;
 import com.multiPlayer.connection.Message;
 
 
@@ -18,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.multiPlayer.connection.MessageType.PLAYER_ACTION_EVENT;
+import static com.multiPlayer.connection.MessageType.PLAYER_BATTLE_MESSAGE;
+import static com.multiPlayer.connection.MessageType.PLAYER_MOVEMENT_MESSAGE;
 
 public class Controller {
     private MainLayoutController controller;
@@ -37,6 +38,18 @@ public class Controller {
     public MainLayoutController getController() {
         return controller;
     }
+
+
+    public void initPlayerHero(){
+        model.initPlayerHero(
+                model.getHeroByName(controller.getPlayer()));
+
+
+
+        //model.getHeroByName(controller.getPlayer())
+
+    }
+
 
     public MainModel getModel() {
         return model;
@@ -79,8 +92,8 @@ public class Controller {
     }
 
 
-    public Hero getCurrentHero() {
-        return model.getCurrentHero();
+    public Hero getPlayerHero() {
+        return model.getPlayersHero();
     }
 
     public Hero getEnemy() {
@@ -97,15 +110,15 @@ public class Controller {
 
     public void sendMovementActionToServer(HeroMovementAction heroMovementAction) throws IOException {
 
-        controller.getConnection().send(new Message(PLAYER_ACTION_EVENT, heroMovementAction));
-        performHeroTurn(getCurrentHero());
+        controller.getConnection().send(new Message(PLAYER_MOVEMENT_MESSAGE, heroMovementAction));
+        performHeroTurn(getPlayerHero());
         model.refresh();
     }
 
 
     public void sendBattleActionToServer(HeroBattleAction heroBattleAction) throws IOException {
-        controller.getConnection().send(new Message(PLAYER_ACTION_EVENT, heroBattleAction));
-        performHeroTurn(getCurrentHero());
+        controller.getConnection().send(new Message(PLAYER_BATTLE_MESSAGE, heroBattleAction));
+        performHeroTurn(getPlayerHero());
         model.refresh();
     }
 
@@ -152,6 +165,11 @@ public class Controller {
 
     private void specifyTimerValueOnGui(String string){
         timerPanel.getjLabel().setText(string);
+    }
+
+    public void uptateBattleField(Map<Hero, Integer> data) {
+        model.updateData(data);
+        mainGamePanel.repaint();
     }
 
 

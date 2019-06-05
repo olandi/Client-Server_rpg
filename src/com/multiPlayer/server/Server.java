@@ -1,5 +1,7 @@
 package com.multiPlayer.server;
 
+import com.multiPlayer.both.Hero.Hero;
+import com.multiPlayer.both.battleField.BattleField;
 import com.multiPlayer.connection.Connection;
 import com.multiPlayer.connection.Message;
 import com.multiPlayer.connection.MessageType;
@@ -7,6 +9,9 @@ import com.multiPlayer.connection.MessageType;
 import static com.multiPlayer.other.ServerConstants.SERVER_PORT;
 
 import com.multiPlayer.other.MessageObjects.BattleFieldInstance;
+import com.multiPlayer.other.MessageObjects.HeroBattleAction;
+import com.multiPlayer.other.MessageObjects.HeroMovementAction;
+
 import com.myDrafts.differentExamples.chat.ConsoleHelper;
 
 
@@ -15,6 +20,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,7 +29,7 @@ public class Server {
 
 
     private static Map<String, Connection> onlinePlayers = new ConcurrentHashMap<>();
-    private static Map<String, Connection> waitingForBattle = new ConcurrentHashMap<>();
+    private static BattleManager battleManager = new BattleManager();
 
 
     public void RunServer() {
@@ -31,6 +37,8 @@ public class Server {
         try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT)) {
 
             ConsoleHelper.writeMessage("The Server is running..");
+
+            battleManager.start();
 
             while (true) {
                 //Listen
@@ -85,7 +93,7 @@ public class Server {
             if (playerName != null) {
                 //После того как все исключения обработаны, удаляем запись из connectionMap
                 onlinePlayers.remove(playerName);
-                waitingForBattle.remove(playerName);
+               // waitingForBattle.remove(playerName);
                 //и отправлялем сообщение остальным пользователям
             }
             ConsoleHelper.writeMessage("Соединение с удаленным адресом закрыто");
@@ -105,41 +113,14 @@ public class Server {
                     if (message.getType() == MessageType.JOIN_TO_BATTLE_REQUEST) {
 
                         //должен проверять достаточно ли игроков для старта боя
-                        waitingForBattle.put(userName, connection);
+                        battleManager.addToBattleQueue(userName, connection);
+                       // waitingForBattle.put(userName, connection);
                         connection.send(new Message(MessageType.JOIN_TO_BATTLE_RESPONSE));
 
                         /*----------------------------------------------------*/
-
-
-                        if (waitingForBattle.size() == 2) {
-
-                            waitingForBattle.forEach((k, v) -> {
-                                try {
-                                    v.send(new Message(MessageType.BATTLE_FIELD_INSTANCE, new BattleFieldInstance(
-                                            new ArrayList<Integer>(),
-                                            //serverUtils.getBattleField(),
-
-                                            ServerUtils.createTwoHeroesForBattle(waitingForBattle.keySet().toArray(new String[0]))
-                                    )));
-                                } catch (IOException error) {
-                                    error.printStackTrace();
-                                }
-                            });
-
-
-                        }
-
-
-
-
-
-
-                        /*----------------------------------------------------*/
                     }
-
                 }
             }
-
         }
 
         private String serverHandshake(Connection connection) throws IOException, ClassNotFoundException {

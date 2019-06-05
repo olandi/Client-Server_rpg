@@ -9,8 +9,19 @@ public class Hero  implements Serializable {
     private int health;
     private int damage;
     private TurnState turnState;
+    private int speed;
+    private int attackRange;
 
     private URL view;
+
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public int getAttackRange() {
+        return attackRange;
+    }
 
     public void setHealth(int health) {
         this.health = health;
@@ -30,6 +41,8 @@ public class Hero  implements Serializable {
         this.turnState = TurnState.ReadyForTurn;
         this.health = 50;
         this.damage = 20;
+        this.speed = 1;
+        this.attackRange = 1;
 
     }
 

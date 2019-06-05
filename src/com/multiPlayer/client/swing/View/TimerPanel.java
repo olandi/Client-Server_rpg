@@ -4,6 +4,10 @@ import com.multiPlayer.client.swing.Controller;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class TimerPanel extends JPanel {
 
@@ -21,4 +25,8 @@ public class TimerPanel extends JPanel {
     public JLabel getjLabel() {
         return jLabel;
     }
+
+
+
+
 }
