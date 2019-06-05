@@ -178,12 +178,13 @@ public class BattleHandler extends Thread {
             try {
                 System.out.println("sending data: " + heroesForClient);
 
-                c.resetObjectOutputStream();
+                c.resetObjectOutputStream1();
+             //   c.resetObjectInputStream();
 
                 c.send(new Message(MessageType.UPDATE_BATTLEFIELD, new UpdateBattleField(
-                      //  new HashMap<>(      // разобраться
+                     //   new HashMap<>(      // разобраться
                                 heroesForClient
-                    //    )                   // разобраться
+                      //  )                   // разобраться
                         ))
                 );
             } catch (IOException e) {

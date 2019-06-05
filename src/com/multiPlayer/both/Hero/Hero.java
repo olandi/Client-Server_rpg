@@ -3,6 +3,7 @@ package com.multiPlayer.both.Hero;
 
 import java.io.Serializable;
 import java.net.URL;
+import java.util.Objects;
 
 public class Hero  implements Serializable {
     private String name;
@@ -78,6 +79,16 @@ public class Hero  implements Serializable {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Hero)) return false;
+        Hero hero = (Hero) o;
+        return Objects.equals(name, hero.name);
+    }
 
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
 }

@@ -46,8 +46,11 @@ public class Connection implements Closeable {
     }
 
 
-    public void resetObjectOutputStream() throws IOException {
+    public void resetObjectOutputStream1() throws IOException {
         out.reset();
+    }
+    public void resetObjectInputStream1() throws IOException {
+        in.reset();
     }
 
     public Socket getSocket() {
