@@ -58,12 +58,14 @@ public class MainModel {
 
         battleField.forEach(i -> i.setSelected(false));
 //        battleField.get(heroes.get(playersHero)).setSelected(true);
-        heroRangeSet = battleFieldArr.getMovementArray(heroes.get(playersHero), playersHero.getSpeed()); //todo перенести инициализацию moveRange
-        heroRangeSet.forEach(i -> {
-            battleField.get(i).setSelected(true);
-        });
 
+        if (heroes.size()>0) {
+            heroRangeSet = battleFieldArr.getMovementArray(heroes.get(playersHero), playersHero.getSpeed()); //todo перенести инициализацию moveRange
+            heroRangeSet.forEach(i -> {
+                battleField.get(i).setSelected(true);
+            });
 
+        }
 
 
     }

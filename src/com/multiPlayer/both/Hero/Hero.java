@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.Objects;
 
-public class Hero  implements Serializable {
+public class Hero implements Serializable {
     private String name;
     private int health;
     private int damage;
@@ -64,8 +64,13 @@ public class Hero  implements Serializable {
         return turnState;
     }
 
-    public void setTurnState(TurnState turnState){
+    public void setTurnState(TurnState turnState) {
         this.turnState = turnState;
+    }
+
+
+    public void takeDamage(int x) {
+        this.health -= x;
     }
 
     @Override

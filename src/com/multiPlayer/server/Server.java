@@ -111,13 +111,10 @@ public class Server {
 
 
                     if (message.getType() == MessageType.JOIN_TO_BATTLE_REQUEST) {
-
                         //должен проверять достаточно ли игроков для старта боя
                         battleManager.addToBattleQueue(userName, connection);
                        // waitingForBattle.put(userName, connection);
                         connection.send(new Message(MessageType.JOIN_TO_BATTLE_RESPONSE));
-
-                        /*----------------------------------------------------*/
                     }
 
 
@@ -125,6 +122,10 @@ public class Server {
                         battleManager.getBattleByConnection(connection).moveHero(connection , (HeroMovementAction) message.getData());
                     }
 
+
+                    if (message.getType() == MessageType.PLAYER_BATTLE_MESSAGE){
+                        battleManager.getBattleByConnection(connection).hitHero(connection, (HeroBattleAction) message.getData());
+                    }
 
 
                 }

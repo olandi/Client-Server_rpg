@@ -40,10 +40,9 @@ public class Controller {
     }
 
 
-    public void initPlayerHero(){
+    public void initPlayerHero() {
         model.initPlayerHero(
                 model.getHeroByName(controller.getPlayer()));
-
 
 
         //model.getHeroByName(controller.getPlayer())
@@ -59,11 +58,11 @@ public class Controller {
         this.controller = controller;
     }
 
-    public List<HexagonItem> getBattleField(){
+    public List<HexagonItem> getBattleField() {
         return model.getBattleField();
     }
 
-    public Map<Hero,Integer> getHeroes(){
+    public Map<Hero, Integer> getHeroes() {
         return model.getHeroes();
     }
 
@@ -110,20 +109,24 @@ public class Controller {
 
     public void sendMovementActionToServer(HeroMovementAction heroMovementAction) throws IOException {
 
-        controller.getConnection().send(new Message(PLAYER_MOVEMENT_MESSAGE, heroMovementAction));
+        Message message = new Message(PLAYER_MOVEMENT_MESSAGE, heroMovementAction);
+        System.out.println("send message to server: " + message);
+        controller.getConnection().send(message);
         performHeroTurn(getPlayerHero());
         model.refresh();
     }
 
 
     public void sendBattleActionToServer(HeroBattleAction heroBattleAction) throws IOException {
-        controller.getConnection().send(new Message(PLAYER_BATTLE_MESSAGE, heroBattleAction));
+        Message message = new Message(PLAYER_BATTLE_MESSAGE, heroBattleAction);
+        System.out.println("send message to server: " + message);
+        controller.getConnection().send(message);
         performHeroTurn(getPlayerHero());
         model.refresh();
     }
 
     private void performHeroTurn(Hero hero) {
-       // hero.setTurnState(TurnState.TurnIsFinished);
+        // hero.setTurnState(TurnState.TurnIsFinished);
         setCurrentHero(null);
     }
 
@@ -163,7 +166,7 @@ public class Controller {
         return model.isHittingPanelVisible();
     }
 
-    private void specifyTimerValueOnGui(String string){
+    private void specifyTimerValueOnGui(String string) {
         timerPanel.getjLabel().setText(string);
     }
 
