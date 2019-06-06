@@ -44,7 +44,7 @@ public class HeroInfoPanel {
 
 
     public void destroyPlayerInfo(){
-        heroInfoPanel = new JPanel();
+        heroInfoPanel.removeAll();
     }
 
     public void initPlayerInfo(){

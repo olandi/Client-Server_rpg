@@ -117,6 +117,14 @@ public class Server {
                         connection.send(new Message(MessageType.JOIN_TO_BATTLE_RESPONSE));
                     }
 
+                    if (message.getType() == MessageType.LEAVE_BATTLE_REQUEST) {
+                        //должен проверять достаточно ли игроков для старта боя
+                        battleManager.removeFromBattleQueue(userName, connection);
+                        // waitingForBattle.put(userName, connection);
+                        connection.send(new Message(MessageType.LEAVE_BATTLE_RESPONSE));
+                    }
+
+
 
                     if (message.getType() == MessageType.PLAYER_MOVEMENT_MESSAGE){
                         battleManager.getBattleByConnection(connection).moveHero(connection , (HeroMovementAction) message.getData());

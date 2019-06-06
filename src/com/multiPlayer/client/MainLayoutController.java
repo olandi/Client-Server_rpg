@@ -19,9 +19,8 @@ public class MainLayoutController {
     private MainLayoutView mainLayoutView = new MainLayoutView(this);
     private MainLayoutModel mainLayoutModel = new MainLayoutModel();
 
-
-    public void setBattleFieldController(Controller battleFieldController) {
-        this.battleFieldController = battleFieldController;
+    public MainLayoutModel getMainLayoutModel() {
+        return mainLayoutModel;
     }
 
     public Controller getBattleFieldController() {

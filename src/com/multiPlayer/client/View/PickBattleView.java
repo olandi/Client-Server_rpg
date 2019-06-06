@@ -71,8 +71,18 @@ public class PickBattleView {
 
         button.addActionListener(actionEvent ->{
             try {
-                controller.getConnection().send(new Message(MessageType.JOIN_TO_BATTLE_REQUEST));
-                System.out.println("send: JOIN_TO_BATTLE_REQUEST");
+                    if (!controller.getMainLayoutModel().isInQueueToArena()) {
+                        controller.getConnection().send(new Message(MessageType.JOIN_TO_BATTLE_REQUEST));
+                        System.out.println("send: JOIN_TO_BATTLE_REQUEST");
+                        button.setText("Leave queue");
+                        controller.getMainLayoutModel().setInQueueToArena(true);
+                    } else {
+                        controller.getConnection().send(new Message(MessageType.LEAVE_BATTLE_REQUEST));
+                        System.out.println("send: LEAVE_BATTLE_REQUEST");
+                        button.setText("Join to 1x1 battle");
+                        controller.getMainLayoutModel().setInQueueToArena(false);
+                    }
+
             }
             catch (IOException e){
                 System.out.println("косяк при попытке отправить запрос на создание боя");

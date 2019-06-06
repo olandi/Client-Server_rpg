@@ -24,6 +24,11 @@ public class BattleManager extends Thread {
         waitingForBattle.put(userName, connection);
     }
 
+    public void removeFromBattleQueue(String userName, Connection connection) {
+        waitingForBattle.remove(userName);
+    }
+
+
     public BattleHandler getBattleByConnection(Connection connection){
         return connectionBattleHandlerMap.get(connection);
     }
@@ -62,4 +67,6 @@ public class BattleManager extends Thread {
         //super.run();
 
     }
+
+
 }

@@ -126,7 +126,7 @@ public class ClientListener extends Thread {
 
                     controller.switchToPickBattleView();
                     controller.getBattleFieldController().getModel().resetAlldata();
-                    //controller.getBattleFieldController().getHeroInfoPanel().destroyPlayerInfo();
+                    controller.getBattleFieldController().getHeroInfoPanel().destroyPlayerInfo();
                 }
             }
         }
