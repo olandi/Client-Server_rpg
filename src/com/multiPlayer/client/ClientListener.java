@@ -1,7 +1,5 @@
 package com.multiPlayer.client;
 
-import com.multiPlayer.both.Hero.Hero;
-import com.multiPlayer.client.swing.Controller;
 import com.multiPlayer.client.swing.model.util.TimeUtil;
 import com.multiPlayer.connection.Message;
 import com.multiPlayer.connection.MessageType;
@@ -12,8 +10,6 @@ import com.multiPlayer.other.MessageObjects.UpdateBattleField;
 import javax.swing.*;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Date;
-import java.util.Map;
 
 import static com.multiPlayer.other.ServerConstants.SERVER_ADDRESS;
 import static com.multiPlayer.other.ServerConstants.SERVER_PORT;
@@ -106,6 +102,13 @@ public class ClientListener extends Thread {
 
                     System.out.println("received: "+message);
 
+                    /*UpdateBattleField ubf =*/
+
+                   if(! "".equals(((UpdateBattleField) message.getData()).getBattleLog())){
+                       controller.getBattleFieldController().getCombatLogPanel().appendText(
+                               ((UpdateBattleField) message.getData()).getBattleLog());
+
+                   }
 
                     controller.getBattleFieldController().uptateBattleField(
                             ((UpdateBattleField) message.getData()).getHeroes()
