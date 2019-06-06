@@ -12,6 +12,13 @@ public class BattleManager extends Thread {
 
     private static Map<Connection, BattleHandler> connectionBattleHandlerMap = new ConcurrentHashMap<>();
 
+    public static Map<String, Connection> getWaitingForBattle() {
+        return waitingForBattle;
+    }
+
+    public static Map<Connection, BattleHandler> getConnectionBattleHandlerMap() {
+        return connectionBattleHandlerMap;
+    }
 
     public void addToBattleQueue(String userName, Connection connection) {
         waitingForBattle.put(userName, connection);

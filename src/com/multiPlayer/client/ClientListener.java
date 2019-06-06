@@ -9,6 +9,7 @@ import com.multiPlayer.other.MessageObjects.BattleFieldInstance;
 import com.multiPlayer.other.MessageObjects.UpdateBattleField;
 //import com.multiPlayer.other.MessageObjects.TimerMessage;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Date;
@@ -95,6 +96,12 @@ public class ClientListener extends Thread {
                             .getTimerPanel().getjLabel().setText(TimeUtil.getTime(l));
                 }
 
+                if (message.getType() == MessageType.ANIMATION) {
+                    System.out.println("received: "+message);
+
+                    controller.getBattleFieldController().getTimerPanel().getjLabel().setText("Анимация боя");}
+
+
                 if (message.getType() == MessageType.UPDATE_BATTLEFIELD) {
 
                     System.out.println("received: "+message);
@@ -105,7 +112,22 @@ public class ClientListener extends Thread {
                     );
                 }
 
+                if (message.getType() == MessageType.FINISH_BATTLE) {
+                    String m = "Victory";
+                    if (!controller.getBattleFieldController().getModel().isHeroPlayerHeroAlive()){
+                        m = "Defeat";
+                    }
 
+                    JOptionPane.showMessageDialog(
+                            controller.getBattleFieldController().getMainGamePanel(),
+                            m,
+                            "Бой закончен",
+                            JOptionPane.INFORMATION_MESSAGE);
+
+                    controller.switchToPickBattleView();
+                    controller.getBattleFieldController().getModel().resetAlldata();
+                    //controller.getBattleFieldController().getHeroInfoPanel().destroyPlayerInfo();
+                }
             }
         }
     }

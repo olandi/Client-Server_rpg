@@ -79,7 +79,7 @@ public class BattleHandler extends Thread {
         System.out.println(" " + currentThread());
 
         try {
-            //пока есть живые персы
+            //пока не останется только один живой перс
             while (!isOneHeroRemain()) {
 
                 System.out.println("Есть живые");
@@ -104,8 +104,10 @@ public class BattleHandler extends Thread {
 
                 } // end timer
 
-                System.out.println("Round over");
+                //костыль для отображения анимации у игроков
+                animation();
 
+                System.out.println("Round over");
 
                 //считаем результаты боя : дамаг и передвижение
                 performAllMovements();
@@ -116,6 +118,13 @@ public class BattleHandler extends Thread {
                 restartPlayersTurn();
                 sendBroadcastData();
             }
+            //окончание боя
+
+            //оповещение всех об окончании боя
+            sendMessageToAllPlayers(new Message(MessageType.FINISH_BATTLE));
+
+            //удаление игроков из текущих игр баттле менеджера
+            playerConnections.forEach((k, v) -> BattleManager.getConnectionBattleHandlerMap().remove(v));
 
 
         } catch (/*ClassNotFoundException |*/ InterruptedException e) {
@@ -150,6 +159,37 @@ public class BattleHandler extends Thread {
         sendBroadcastData();
 
 
+    }
+
+    public void sendMessageToAllPlayers(Message message) {
+                /*
+        Lets come to the problem. for the first time when a client sends String to server, server prints it well,
+        add to it's arraylist, then broadcasts it to all clients and all clients can see that too. But next time
+        when client sends String message, server accepts it, adds to arraylist and broadcasts it, but this time all
+        clients gets old arraylist ( list with only one String which was added first ). I have printed arraylist
+        before broadcasting and it shows modified values, but at client side it shows list with one entry only.
+
+        ----
+
+        This is normal behavior. If you send the same object (your ArrayList) several times to a given ObjectOutputStream,
+        the stream will send the full object the first time, and will only send a reference to this object the next times.
+        This is what allows sending a graph of objects without consuming too much bandwidth, and without going into infinite
+        loops because a references b which also references a.
+
+        To make sure the ArrayList is sent a second time, you need to call reset() on the ObjectOutputStream.
+        https://stackoverflow.com/questions/20543403/in-simple-chat-program-server-sending-arraylist-of-string-but-clients-receiving
+         */
+
+        //todo: без нью хеш мап - сервер отправляет одни данные, а клиент получает другие.
+        for (Connection c : playerConnections.values()) {
+            try {
+                System.out.println("sending data: " + heroesForClient);
+                c.resetObjectOutputStream1();
+                c.send(message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
@@ -215,7 +255,6 @@ public class BattleHandler extends Thread {
     }
 
 
-
     public void hitHero(Connection connection, HeroBattleAction data) {
         heroHeroBattleActions.put(connectionHero.get(connection), data);
         performPlayersTurn(connection);
@@ -266,7 +305,6 @@ public class BattleHandler extends Thread {
                                                 hero.getDamage());*/
 
 
-
                                 System.out.println("damage received_2");
                                 //todo   Controller.getCombatLogPanel().appendText("Hero: " + heroHeroBattleActions.get(hero).getToHero().getName() + " received 20 damage\n");
 
@@ -277,8 +315,9 @@ public class BattleHandler extends Thread {
 
         heroHeroBattleActions.clear();
     }
+
     public boolean isOneHeroRemain() {
-        return heroes.size() <= 1;
+        return heroesForClient.size() <= 1;
     }
 
     public void checkAliveHero() {
@@ -301,4 +340,23 @@ public class BattleHandler extends Thread {
         return null;
     }*/
 
+
+    private void animation() {
+        long start = System.currentTimeMillis();
+        long finish = start + 2_000L;
+        long current = 1;
+        try {
+            while (current > 0) {
+                current = finish - System.currentTimeMillis();
+
+                Message message = new Message(MessageType.ANIMATION);
+                System.out.println("send: "+message);
+                for (Connection c : playerConnections.values()) {
+                    c.send(message);
+                }
+                sleep(700);
+            }
+        } catch (IOException | InterruptedException e) { e.printStackTrace();
+        }
+    }
 }

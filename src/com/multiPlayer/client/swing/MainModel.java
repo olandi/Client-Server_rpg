@@ -47,9 +47,22 @@ public class MainModel {
         });
 
 
-
-
     }
+
+    public void resetAlldata() {
+        imageMap = null;
+
+        enemy = null;
+        isHittingPanelVisible = false;
+        playersHero = null;
+
+        battleField = null;
+        heroes = null;
+
+        heroRangeSet = null;
+        battleFieldArr = null;
+    }
+
 
     public void initPlayerHero(Hero playersHero) {
         this.playersHero = playersHero;
@@ -69,14 +82,14 @@ public class MainModel {
     public void updateData(Map<Hero, Integer> map) {
         this.heroes = map;
 
-        if (map.keySet().stream().anyMatch((hero)-> hero.equals(playersHero))) {
+        if (map.keySet().stream().anyMatch((hero) -> hero.equals(playersHero))) {
             playersHero = map.keySet().stream().filter((hero) -> hero.equals(playersHero)).findFirst().get();
         }
 
         battleField.forEach(i -> i.setSelected(false));
 //        battleField.get(heroes.get(playersHero)).setSelected(true);
 
-        if (map.keySet().stream().anyMatch((hero)-> hero.equals(playersHero))) {
+        if (map.keySet().stream().anyMatch((hero) -> hero.equals(playersHero))) {
             heroRangeSet = battleFieldArr.getMovementArray(heroes.get(playersHero), playersHero.getSpeed()); //todo перенести инициализацию moveRange
             heroRangeSet.forEach(i -> {
                 battleField.get(i).setSelected(true);
@@ -86,10 +99,9 @@ public class MainModel {
 
     }
 
-    public boolean isHeroPlayerHeroAlive(){
-        return heroes.keySet().stream().anyMatch((hero)-> hero.equals(playersHero));
+    public boolean isHeroPlayerHeroAlive() {
+        return heroes.keySet().stream().anyMatch((hero) -> hero.equals(playersHero));
     }
-
 
 
     public HashMap<String, Image> getImageMap() {

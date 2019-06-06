@@ -43,6 +43,9 @@ public class HeroInfoPanel {
     }
 
 
+    public void destroyPlayerInfo(){
+        heroInfoPanel = new JPanel();
+    }
 
     public void initPlayerInfo(){
 
@@ -60,7 +63,7 @@ public class HeroInfoPanel {
         heroHP = new JLabel();
         Font f = new Font("Arial", Font.PLAIN, 30);
         heroHP.setFont(f);
-         heroHP.setPreferredSize(new Dimension(100, 100));
+        heroHP.setPreferredSize(new Dimension(100, 100));
 
 
 
