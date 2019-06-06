@@ -170,6 +170,7 @@ public class Controller {
     public void initBattle(BattleField battleFieldArr, Map<Hero, Integer> heroes){
         model.initBattle(battleFieldArr,heroes);
         initPlayerHero();
+
         heroInfoPanel.initPlayerInfo();
 
         //heroInfoPanel = new HeroInfoPanel(this);
@@ -178,8 +179,6 @@ public class Controller {
     public void initPlayerHero() {
         model.initPlayerHero(
                 model.getHeroByName(controller.getPlayer()));
-
-
         //model.getHeroByName(controller.getPlayer())
 
     }

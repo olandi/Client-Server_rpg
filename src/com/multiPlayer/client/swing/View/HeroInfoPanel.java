@@ -10,7 +10,7 @@ import java.awt.*;
 
 public class HeroInfoPanel {
 
-    private JPanel heroInfoPanel;
+    private JPanel heroInfoPanel = new JPanel();
     private Controller controller;
     private JLabel heroPicture = new JLabel();
     private JLabel heroName;
@@ -40,8 +40,13 @@ public class HeroInfoPanel {
 
     public HeroInfoPanel(Controller controller) {
         this.controller = controller;
+    }
 
-        JPanel mainPanel = new JPanel();
+
+
+    public void initPlayerInfo(){
+
+        JPanel mainPanel = heroInfoPanel;
         BoxLayout a = new BoxLayout(mainPanel, BoxLayout.X_AXIS);
         mainPanel.setLayout(a);
 
@@ -55,12 +60,16 @@ public class HeroInfoPanel {
         heroHP = new JLabel();
         Font f = new Font("Arial", Font.PLAIN, 30);
         heroHP.setFont(f);
-       // heroHP.setPreferredSize(new Dimension(100, 100));
+        // heroHP.setPreferredSize(new Dimension(100, 100));
 
 
 
-       // initPlayerInfo();
-         heroPicture = new JLabel(new ImageIcon(ImageLoader.loadImage(HeroImages.KNIGHT_HEAD_PATH)));
+
+        heroPicture = new JLabel(new ImageIcon(controller.getModel().getImageMap().get(controller.getModel().getPlayersHero().getPortretId())));
+        heroName.setText(controller.getModel().getPlayersHero().getName());
+        heroHP.setText(controller.getModel().getPlayersHero().getHealth() + " HP");
+        // initPlayerInfo();
+        //heroPicture = new JLabel(new ImageIcon(ImageLoader.loadImage(HeroImages.KNIGHT_HEAD_PATH)));
         //  heroName.setText("Player1852");
         //  heroHP.setText("50 HP");
 
@@ -72,20 +81,6 @@ public class HeroInfoPanel {
         mainPanel.add(portretAndNamePanel);
         mainPanel.add(heroHP);
         heroInfoPanel = mainPanel;
-    }
-
-
-    public void initPlayerInfo(){
-        heroPicture = new JLabel(
-                new ImageIcon(
-
-                        controller.getModel().getImageMap().get(
-                                controller.getModel().getPlayersHero().getPortretId()
-                        )
-                )
-        );
-        heroName.setText(controller.getModel().getPlayersHero().getName());
-        heroHP.setText(controller.getModel().getPlayersHero().getHealth() + " HP");
     }
 
     public static void main(String[] args) {
