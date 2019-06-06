@@ -1,6 +1,7 @@
 package com.multiPlayer.client.swing;
 
 import com.multiPlayer.both.Hero.Hero;
+import com.multiPlayer.both.Hero.TurnState;
 import com.multiPlayer.both.ImageLoader;
 import com.multiPlayer.both.battleField.BattleField;
 import com.multiPlayer.client.swing.model.HeroImages;
@@ -72,6 +73,7 @@ public class MainModel {
 
         heroRangeSet = battleFieldArr.getMovementArray(heroes.get(playersHero), playersHero.getSpeed()); //todo перенести инициализацию moveRange
 
+
         heroRangeSet.forEach(i -> {
             battleField.get(i).setSelected(true);
         });
@@ -86,10 +88,14 @@ public class MainModel {
             playersHero = map.keySet().stream().filter((hero) -> hero.equals(playersHero)).findFirst().get();
         }
 
-        battleField.forEach(i -> i.setSelected(false));
+
 //        battleField.get(heroes.get(playersHero)).setSelected(true);
 
-        if (map.keySet().stream().anyMatch((hero) -> hero.equals(playersHero))) {
+        if (map.keySet().stream().anyMatch((hero) -> hero.equals(playersHero))
+                && playersHero.getTurnState().equals(TurnState.ReadyForTurn)
+        ) {
+            battleField.forEach(i -> i.setSelected(false));
+
             heroRangeSet = battleFieldArr.getMovementArray(heroes.get(playersHero), playersHero.getSpeed()); //todo перенести инициализацию moveRange
             heroRangeSet.forEach(i -> {
                 battleField.get(i).setSelected(true);

@@ -82,6 +82,15 @@ public class BattleFieldPanel extends JPanel {
                                 } else {
                                     // ПЕРСОНАЖ ХОДИТ НА СВОБОДНУЮ КЛЕТКУ (КуррентХиро = NULL  обнуляется)
                                       controller.getBattleField().get(controller.getHeroes().get(controller.getPlayerHero())).setSelected(false);
+
+                                      //убираю область действия перса
+                                      //controller.getModel().getHeroRangeSet().forEach(a->a.);
+                                      controller.getBattleField().stream().
+                                              filter(a ->controller.getModel().getHeroRangeSet().contains(a.getIndex()))
+                                              .forEach(aa-> aa.setSelected(false));
+
+
+
                                     i.setSelected(true);
                                     controller.repaintAllView();
 
@@ -132,34 +141,3 @@ public class BattleFieldPanel extends JPanel {
         });
     }
 }
-
-/*/
-
-
-1) Если вообще попадаем в хексагон
-1) то
-     2) Если существует куррентХеро
-     2) то
-          3) Если куррентХеро может ходить
-          3) то
-                4) Если попадаем в Героя
-                4) то
-                      5) Если попадаем не в себя
-                      5) то
-                            БЬЕМ ВРАГА (КуррентХиро = NULL  обнуляется)
-                      5) иначе
-                            ДЕЛАЕМ куррентХеро НЕ АКТИВНЫМ (КуррентХиро = NULL  обнуляется)
-
-                4) иначе
-                        ПЕРСОНАЖ ХОДИТ НА СВОБОДНУЮ КЛЕТКУ (КуррентХиро = NULL  обнуляется)
-          3) иначе
-                   !!! ТЕОРЕТИЧЕСКИ УСЛОВИЕ НИКОГДА НЕ БУДЕТ ДОСТИГНУТО
-     2) иначе
-             6) Если попадаем в игрока
-             6) то
-                  Делаем этого игрока - КуррентХиро
-             6) иначе
-                  НИЧЕГО НЕ ДЕЛАЕМ
-1) иначе
-        НИЧЕГО НЕ ДЕЛАЕМ
- */

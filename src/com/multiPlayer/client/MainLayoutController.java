@@ -44,7 +44,13 @@ public class MainLayoutController {
 
     public void switchToPickBattleView(){
         updatePlayerLabels();
+
+        //ресет кнопки "в бой"
+        mainLayoutModel.setInQueueToArena(false);
+        pickBattleView.resetButton();
+
         mainLayoutView.switchToBattle();
+
     }
 
 

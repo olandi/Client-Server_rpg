@@ -37,6 +37,10 @@ public class PickBattleView {
         serverLabel.setText("Server: " + newLabel);
     }
 
+    public void resetButton(){
+        button.setText("Join to 1x1 battle");
+    }
+
     public void showInfo() {
 
         JOptionPane.showMessageDialog(

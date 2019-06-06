@@ -54,7 +54,7 @@ public class MainLayoutView {
         //Create and set up the window.
         JFrame frame = new JFrame("CardLayoutDemo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800,800);
+        frame.setSize(800,700);
 
         //Create and set up the content pane.
       //  MainLayoutView demo = new MainLayoutView(controller);
