@@ -17,7 +17,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HittingPanel extends LayerUI<JPanel> {
     private static final int ACTION_COUNT = 2;
@@ -126,7 +128,7 @@ public class HittingPanel extends LayerUI<JPanel> {
 
                     try {
                         controller.sendBattleActionToServer(new HeroBattleAction(controller.getEnemy(), secAttack, secDef));
-                    }catch (IOException error){
+                    } catch (IOException error) {
                         System.out.println("sendBattleActionToServer failed");
                         error.printStackTrace();
                     }
@@ -176,6 +178,12 @@ public class HittingPanel extends LayerUI<JPanel> {
         sectionsDefenseList = createHeroSelector(200 + 250, 100, 40, 60);
     }
 
+
+    private Map<String, Image> map = new HashMap<String, Image>() {{
+        put("BUTTON_OK", ImageLoader.loadImage(HeroImages.DATA_BASE.get("BUTTON_OK")));
+        put("BUTTON_CANCEL", ImageLoader.loadImage(HeroImages.DATA_BASE.get("BUTTON_CANCEL")));
+    }};
+
     @Override
     public void paint(Graphics g, JComponent c) {
         super.paint(g, c);
@@ -210,15 +218,18 @@ public class HittingPanel extends LayerUI<JPanel> {
 
             //todo Картинки где то сохранять, и не загружать каждый раз
             go.draw(g2, 0, 0, 2, Color.PINK.getRGB(), true);
-            g.drawImage(ImageLoader.loadImage(
-                    HeroImages.OK_PATH),
+            g.drawImage(
+                    map.get("BUTTON_OK"),
+                    //ImageLoader.loadImage(HeroImages.OK_PATH),
                     go.getCenter().x - 35,
                     go.getCenter().y - 35,
                     null);
 
             cancel.draw(g2, 0, 0, 2, Color.PINK.getRGB(), true);
-            g.drawImage(ImageLoader.loadImage(
-                    HeroImages.CANCEL_PATH),
+
+            g.drawImage(
+                    map.get("BUTTON_CANCEL"),
+                    //ImageLoader.loadImage(HeroImages.CANCEL_PATH),
                     cancel.getCenter().x - 28,
                     cancel.getCenter().y - 30,
                     null);

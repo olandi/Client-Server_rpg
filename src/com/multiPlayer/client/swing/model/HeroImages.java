@@ -1,14 +1,34 @@
 package com.multiPlayer.client.swing.model;
 
 import java.net.URL;
+import java.util.HashMap;
 
 public class HeroImages {
+
 
     public static final URL PIRATE_PATH = HeroImages.class.getClassLoader().getResource("image/pirate.png");
     public static final URL KNIGHT_PATH = HeroImages.class.getClassLoader().getResource("image/knight.png");
 
+    public static final URL PIRATE_HEAD_PATH = HeroImages.class.getClassLoader().getResource("image/pirateHead.png");
+    public static final URL KNIGHT_HEAD_PATH = HeroImages.class.getClassLoader().getResource("image/knightHead.png");
+
     public static final URL OK_PATH = HeroImages.class.getClassLoader().getResource("image/a/ok.png");
     public static final URL CANCEL_PATH = HeroImages.class.getClassLoader().getResource("image/a/cancel.png");
+
+    public final static HashMap<String, URL> DATA_BASE = new HashMap<String, URL>() {
+        {
+            put("PIRATE", PIRATE_PATH);
+            put("KNIGHT", KNIGHT_PATH);
+
+            put("PIRATE_HEAD", PIRATE_HEAD_PATH);
+            put("KNIGHT_HEAD", KNIGHT_HEAD_PATH);
+
+            put("BUTTON_OK",OK_PATH);
+            put("BUTTON_CANCEL",CANCEL_PATH);
+        }
+
+
+    };
 }
 /*
 Пример 1. используем конструкцию getClass().getResource("/images/logo.png").

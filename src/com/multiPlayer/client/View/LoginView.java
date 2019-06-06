@@ -29,46 +29,30 @@ public class LoginView {
     private void initLoginGui() {
         clientName = "Player" + ThreadLocalRandom.current().nextInt(1, 5000);
 
-        // loginFrame = new JFrame();
-        //  loginFrame.setSize(300, 300);
-
-        loginPanel = new JPanel();
-
-        loginPanel.setLayout(new BoxLayout(loginPanel, BoxLayout.Y_AXIS));
+        loginPanel = new JPanel(null);
 
         login = new JTextField(clientName, 30);
         login.setEditable(true);
-        login.setAlignmentX(Component.CENTER_ALIGNMENT);
-
 
         button = new JButton("Connect to server");
-        button.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         button.addActionListener(actionEvent -> {
-
             controller.createPlayer(login.getText());
-
             new ClientListener(controller).start();
-
-
         });
 
-        Dimension minSize0 = new Dimension(5, 50);
-        Dimension prefSize0 = new Dimension(5, 50);
-        Dimension maxSize0 = new Dimension(Short.MAX_VALUE, 50);
+        JLabel loginLabel = new JLabel("Player name");
+        loginLabel.setFont(new Font("Arial", Font.BOLD,18));
+        login.setFont(new Font("Arial", Font.PLAIN,16));
+
+        loginLabel.setBounds(300,250,200,50);
+        login.setBounds(300,300,200,30);
+        button.setBounds(310,400,180,40);
 
 
-        Dimension minSize = new Dimension(5, 400);
-        Dimension prefSize = new Dimension(5, 400);
-        Dimension maxSize = new Dimension(Short.MAX_VALUE, 400);
-
-        loginPanel.add(new Box.Filler(minSize, prefSize, maxSize));
+        loginPanel.add(loginLabel);
         loginPanel.add(login);
-
-        loginPanel.add(new Box.Filler(minSize0, prefSize0, maxSize0));
-
         loginPanel.add(button);
-        loginPanel.add(new Box.Filler(minSize, prefSize, maxSize));
 
     }
 

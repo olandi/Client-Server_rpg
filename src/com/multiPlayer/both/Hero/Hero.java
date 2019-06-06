@@ -13,8 +13,25 @@ public class Hero implements Serializable {
     private int speed;
     private int attackRange;
 
+    private String viewId;
+    private String portretId;
     private URL view;
 
+    public String getPortretId() {
+        return portretId;
+    }
+
+    public void setPortretId(String portretId) {
+        this.portretId = portretId;
+    }
+
+    public String getViewId() {
+        return viewId;
+    }
+
+    public void setViewId(String viewId) {
+        this.viewId = viewId;
+    }
 
     public int getSpeed() {
         return speed;

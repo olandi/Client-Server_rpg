@@ -14,10 +14,10 @@ public class PickBattleView {
 
     //private JFrame frame = new JFrame("Клиент");
 
-    private JPanel goBattlePanel = new JPanel(new BorderLayout());
-    private JLabel playerLabel = new JLabel("", SwingConstants.CENTER);
-    private JLabel serverLabel = new JLabel("", SwingConstants.CENTER);
-    private JButton button = new JButton("check");
+    private JPanel goBattlePanel ;//= new JPanel(new BorderLayout());
+    private JLabel playerLabel ;//= new JLabel("", SwingConstants.CENTER);
+    private JLabel serverLabel ;//= new JLabel("", SwingConstants.CENTER);
+    private JButton button ;//= new JButton("check");
 
 
     public PickBattleView(MainLayoutController controller) {
@@ -30,11 +30,11 @@ public class PickBattleView {
     }
 
     public void updatePlayerLabel(String newLabel) {
-        playerLabel.setText(newLabel);
+        playerLabel.setText("Welcome, "+newLabel+" !");
     }
 
     public void updateServerLabel(String newLabel) {
-        serverLabel.setText(newLabel);
+        serverLabel.setText("Server: " + newLabel);
     }
 
     public void showInfo() {
@@ -48,12 +48,23 @@ public class PickBattleView {
     }
 
     private void initView() {
+            goBattlePanel = new JPanel(null);
+            playerLabel = new JLabel();
+            serverLabel = new JLabel();
+            button = new JButton("Join to 1x1 battle");
+            button.setFont(new Font("Arial", Font.PLAIN, 16));
 
+
+            serverLabel.setBounds(270,100,400,50);
+            playerLabel.setBounds(300,300,300,50);
+            button.setBounds(300,370,200,40);
         // frame.setSize(400,400);
 
-        goBattlePanel.add(serverLabel, BorderLayout.NORTH);
-        goBattlePanel.add(playerLabel, BorderLayout.CENTER);
-        goBattlePanel.add(button, BorderLayout.SOUTH);
+
+
+        goBattlePanel.add(serverLabel/*, BorderLayout.NORTH*/);
+        goBattlePanel.add(playerLabel/*, BorderLayout.CENTER*/);
+        goBattlePanel.add(button/*, BorderLayout.SOUTH*/);
 
         playerLabel.setFont(new Font(playerLabel.getName(), Font.PLAIN, 20));
         serverLabel.setFont(new Font(serverLabel.getName(), Font.PLAIN, 20));

@@ -123,8 +123,9 @@ public class BattleFieldPanel extends JPanel {
                 h.draw(g2, 0, 0, 2, Color.blue.getRGB(), false);
             }
 
-            g.drawImage(ImageLoader.loadImage(
-                    hero.getView()),
+            g.drawImage(
+                   // ImageLoader.loadImage(hero.getView()),
+                    controller.getModel().getImageMap().get(hero.getViewId()),
                     h.getCenter().x - 35,
                     h.getCenter().y - 35,
                     null);

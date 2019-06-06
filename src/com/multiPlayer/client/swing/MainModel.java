@@ -1,19 +1,21 @@
 package com.multiPlayer.client.swing;
 
 import com.multiPlayer.both.Hero.Hero;
+import com.multiPlayer.both.ImageLoader;
 import com.multiPlayer.both.battleField.BattleField;
+import com.multiPlayer.client.swing.model.HeroImages;
 import com.multiPlayer.client.swing.model.HexagonItem;
 import com.multiPlayer.client.swing.model.util.BattleFildDrawer;
-import com.multiPlayer.server.ServerUtils;
 
-
+import java.awt.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 
 public class MainModel {
-
+    private HashMap<String, Image> imageMap;
     private Hero currentHero;
     private Hero enemy;
     private boolean isHittingPanelVisible = false;
@@ -35,6 +37,18 @@ public class MainModel {
 
 
         this.battleFieldArr = battleFieldArr;
+
+
+        //инициализация картинок персонажей
+        imageMap = new HashMap<>();
+        heroes.keySet().forEach(hero -> {
+            imageMap.put(hero.getViewId(), ImageLoader.loadImage(HeroImages.DATA_BASE.get(hero.getViewId())));
+            imageMap.put(hero.getPortretId(), ImageLoader.loadImage(HeroImages.DATA_BASE.get(hero.getPortretId())));
+        });
+
+
+
+
     }
 
     public void initPlayerHero(Hero playersHero) {
@@ -43,23 +57,23 @@ public class MainModel {
         //update battleField
         battleField.get(heroes.get(playersHero)).setSelected(true);
 
-
         heroRangeSet = battleFieldArr.getMovementArray(heroes.get(playersHero), playersHero.getSpeed()); //todo перенести инициализацию moveRange
-
 
         heroRangeSet.forEach(i -> {
             battleField.get(i).setSelected(true);
         });
+
+
     }
 
-    public void updateData(Map<Hero,Integer> map){
+    public void updateData(Map<Hero, Integer> map) {
         this.heroes = map;
 
 
         battleField.forEach(i -> i.setSelected(false));
 //        battleField.get(heroes.get(playersHero)).setSelected(true);
 
-        if (heroes.size()>0) {
+        if (heroes.size() > 0) {
             heroRangeSet = battleFieldArr.getMovementArray(heroes.get(playersHero), playersHero.getSpeed()); //todo перенести инициализацию moveRange
             heroRangeSet.forEach(i -> {
                 battleField.get(i).setSelected(true);
@@ -71,6 +85,9 @@ public class MainModel {
     }
 
 
+    public HashMap<String, Image> getImageMap() {
+        return imageMap;
+    }
 
     public Set<Integer> getHeroRangeSet() {
         return heroRangeSet;

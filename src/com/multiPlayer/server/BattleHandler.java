@@ -24,7 +24,7 @@ public class BattleHandler extends Thread {
 
     private List<Hero> heroes = new ArrayList<>();
 
-    private static volatile Map<Hero, Integer> heroesForClient = new ConcurrentHashMap<>();
+    private volatile Map<Hero, Integer> heroesForClient = new ConcurrentHashMap<>();
 
     private Map<Hero, HeroMovementAction> movementActions = new ConcurrentHashMap<>();
     private Map<Hero, HeroBattleAction> heroHeroBattleActions = new ConcurrentHashMap<>();
@@ -54,8 +54,14 @@ public class BattleHandler extends Thread {
         //todo только для 2-x
         heroesForClient.put(heroes.get(0), 18);
         heroesForClient.put(heroes.get(1), 29);
+
         heroes.get(0).setView(HeroImages.KNIGHT_PATH);
+        heroes.get(0).setViewId("KNIGHT");
+        heroes.get(0).setPortretId("KNIGHT_HEAD");
+
         heroes.get(1).setView(HeroImages.PIRATE_PATH);
+        heroes.get(1).setViewId("PIRATE");
+        heroes.get(1).setPortretId("PIRATE_HEAD");
 
         //старт игры
         playerConnections.forEach((k, v) -> {
