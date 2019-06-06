@@ -76,8 +76,11 @@ public class ClientListener extends Thread {
                     BattleFieldInstance bfi = (BattleFieldInstance) message.getData();
 
                     //controller.setBattleFieldController(new Controller(controller));
+                    controller.getBattleFieldController().initBattle(bfi.getBattleField(), bfi.getHeroes());
+                    /*
                     controller.getBattleFieldController().getModel().initBattle(bfi.getBattleField(), bfi.getHeroes());
-                    controller.getBattleFieldController().initPlayerHero();
+                    controller.getBattleFieldController().initPlayerHero();*/
+
                     System.out.println("BATTLE_FIELD_INSTANCE");
 
 

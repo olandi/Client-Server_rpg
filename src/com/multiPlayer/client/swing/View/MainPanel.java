@@ -21,7 +21,15 @@ public class MainPanel extends JPanel {
         add(controller.getTimerPanel(), BorderLayout.NORTH);
         JLayer<JPanel> jlayer = new JLayer<JPanel>(controller.getBattleFieldPanel(), controller.getHittingPanel());
         add(jlayer, BorderLayout.CENTER);
-        add(controller.getCombatLogPanel().getMiddlePanel(), BorderLayout.SOUTH);
+
+        JPanel bottom = new JPanel();
+        BoxLayout boxLayout = new BoxLayout(bottom, BoxLayout.X_AXIS);
+        bottom.setLayout(boxLayout);
+
+        bottom.add(controller.getHeroInfoPanel().getHeroInfoPanel());
+        bottom.add(controller.getCombatLogPanel().getMiddlePanel());
+
+        add(bottom, BorderLayout.SOUTH);
     }
 
 }

@@ -2,6 +2,7 @@ package com.multiPlayer.client.swing;
 
 import com.multiPlayer.both.Hero.Hero;
 import com.multiPlayer.both.Hero.TurnState;
+import com.multiPlayer.both.battleField.BattleField;
 import com.multiPlayer.other.MessageObjects.HeroBattleAction;
 import com.multiPlayer.other.MessageObjects.HeroMovementAction;
 import com.multiPlayer.client.MainLayoutController;
@@ -29,6 +30,9 @@ public class Controller {
     private BattleFieldPanel battleFieldPanel = new BattleFieldPanel(this);
     private HittingPanel hittingPanel = new HittingPanel(this);
     private TimerPanel timerPanel = new TimerPanel(this);
+
+    private HeroInfoPanel heroInfoPanel = new HeroInfoPanel(this);
+
     private MainPanel mainGamePanel = new MainPanel(this);
 
     public Controller(MainLayoutController controller) {
@@ -40,14 +44,7 @@ public class Controller {
     }
 
 
-    public void initPlayerHero() {
-        model.initPlayerHero(
-                model.getHeroByName(controller.getPlayer()));
 
-
-        //model.getHeroByName(controller.getPlayer())
-
-    }
 
 
     public MainModel getModel() {
@@ -170,14 +167,37 @@ public class Controller {
         timerPanel.getjLabel().setText(string);
     }
 
-    public void uptateBattleField(Map<Hero, Integer> data) {
-        model.updateData(data);
-        mainGamePanel.repaint();
+    public void initBattle(BattleField battleFieldArr, Map<Hero, Integer> heroes){
+        model.initBattle(battleFieldArr,heroes);
+        initPlayerHero();
+        heroInfoPanel.initPlayerInfo();
+
+        //heroInfoPanel = new HeroInfoPanel(this);
+    }
+
+    public void initPlayerHero() {
+        model.initPlayerHero(
+                model.getHeroByName(controller.getPlayer()));
+
+
+        //model.getHeroByName(controller.getPlayer())
+
     }
 
 
+    public void uptateBattleField(Map<Hero, Integer> data) {
+        model.updateData(data);
 
 
+        //update hero HP info
+        heroInfoPanel.setHeroHP(model.getPlayersHero().getHealth());
+
+        mainGamePanel.repaint();
+    }
+
+    public HeroInfoPanel getHeroInfoPanel() {
+        return heroInfoPanel;
+    }
 
 /*
     private int round = 0;

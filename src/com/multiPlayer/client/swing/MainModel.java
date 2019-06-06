@@ -69,6 +69,9 @@ public class MainModel {
     public void updateData(Map<Hero, Integer> map) {
         this.heroes = map;
 
+        if (map.keySet().stream().anyMatch((hero)-> hero.equals(playersHero))) {
+            playersHero = map.keySet().stream().filter((hero) -> hero.equals(playersHero)).findFirst().get();
+        }
 
         battleField.forEach(i -> i.setSelected(false));
 //        battleField.get(heroes.get(playersHero)).setSelected(true);
@@ -80,6 +83,9 @@ public class MainModel {
             });
 
         }
+
+
+        //update Player Info
 
 
     }
