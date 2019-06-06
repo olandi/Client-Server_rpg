@@ -60,7 +60,7 @@ public class HeroInfoPanel {
         heroHP = new JLabel();
         Font f = new Font("Arial", Font.PLAIN, 30);
         heroHP.setFont(f);
-        // heroHP.setPreferredSize(new Dimension(100, 100));
+         heroHP.setPreferredSize(new Dimension(100, 100));
 
 
 

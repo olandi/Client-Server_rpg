@@ -84,11 +84,12 @@ public class MainModel {
 
         }
 
-
-        //update Player Info
-
-
     }
+
+    public boolean isHeroPlayerHeroAlive(){
+        return heroes.keySet().stream().anyMatch((hero)-> hero.equals(playersHero));
+    }
+
 
 
     public HashMap<String, Image> getImageMap() {

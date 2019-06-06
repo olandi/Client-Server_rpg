@@ -189,8 +189,11 @@ public class Controller {
 
 
         //update hero HP info
-        heroInfoPanel.setHeroHP(model.getPlayersHero().getHealth());
-
+        if (model.isHeroPlayerHeroAlive()) {
+            heroInfoPanel.setHeroHP(model.getPlayersHero().getHealth());
+        }else {
+            heroInfoPanel.setHeroHP(0);
+        }
         mainGamePanel.repaint();
     }
 
