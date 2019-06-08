@@ -142,39 +142,33 @@ public class ServerUtils {
         //для каждого героя
         heroes.forEach((hero, index) -> {
 
-                //для каждой атаки героя
-                if (heroHeroBattleActions.get(hero) != null)
-                    heroHeroBattleActions.get(hero).getAttack().forEach(attack -> {
+            //для каждой атаки героя
+            if (heroHeroBattleActions.get(hero) != null)
+                heroHeroBattleActions.get(hero).getAttack().forEach(attack -> {
 
-                                //если в списке защиты врага нет этой атаки
+                            //если в списке защиты врага нет этой атаки
 
-                                //исли цель не сделала ход, не поставила блоки
-                                if (heroHeroBattleActions.get(heroHeroBattleActions.get(hero).getTarget()) == null) {
-                                    heroHeroBattleActions.get(hero).getTarget().setHealth(
-                                            heroHeroBattleActions.get(hero).getTarget().getHealth() -
-                                                    hero.getDamage());
-
-                                    //todo BattleFieldController.getCombatLogPanel().appendText("Hero: " + heroHeroBattleActions.get(hero).getToHero().getName() + " received 20 damage\n");
-
-
-                                }
-
-                                if (
-                                        heroHeroBattleActions.get(heroHeroBattleActions.get(hero).getTarget()) != null
-                                                && !heroHeroBattleActions.get(heroHeroBattleActions.get(hero).getTarget()).getDefense()
-                                                .contains(attack)) {
-
-                                    System.out.println("Hero " + hero + " hits");
-
-                                    heroHeroBattleActions.get(hero).getTarget().setHealth(
-                                            heroHeroBattleActions.get(hero).getTarget().getHealth() -
-                                                    hero.getDamage());
-
-                                    //todo   BattleFieldController.getCombatLogPanel().appendText("Hero: " + heroHeroBattleActions.get(hero).getToHero().getName() + " received 20 damage\n");
-
-                                }
+                            //исли цель не сделала ход, не поставила блоки
+                            if (heroHeroBattleActions.get(heroHeroBattleActions.get(hero).getTarget()) == null) {
+                                heroHeroBattleActions.get(hero).getTarget().setHealth(
+                                        heroHeroBattleActions.get(hero).getTarget().getHealth() -
+                                                hero.getDamage());
                             }
-                    );
+
+                            if (
+                                    heroHeroBattleActions.get(heroHeroBattleActions.get(hero).getTarget()) != null
+                                            && !heroHeroBattleActions.get(heroHeroBattleActions.get(hero).getTarget()).getDefense()
+                                            .contains(attack)) {
+
+                                System.out.println("Hero " + hero + " hits");
+
+                                heroHeroBattleActions.get(hero).getTarget().setHealth(
+                                        heroHeroBattleActions.get(hero).getTarget().getHealth() -
+                                                hero.getDamage());
+
+                            }
+                        }
+                );
         });
 
         heroHeroBattleActions.clear();

@@ -161,7 +161,6 @@ public class HittingPanel extends LayerUI<JPanel> {
 
 
     public void initAttackAndDefense() {
-        //todo убрать константы из всего класса
         sectionsAttackList = createHeroSelector(200, 100, 40, 60);
         sectionsDefenseList = createHeroSelector(200 + 250, 100, 40, 60);
     }
@@ -198,7 +197,6 @@ public class HittingPanel extends LayerUI<JPanel> {
                             defenseColor.getRGB()
                     , true));
 
-            //todo Картинки где то сохранять, и не загружать каждый раз
             go.draw(g2, 0, 0, 2, Color.PINK.getRGB(), true);
             g.drawImage(ImageLoader.loadImage(
                     HeroImages.OK_PATH),

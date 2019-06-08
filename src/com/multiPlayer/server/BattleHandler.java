@@ -35,7 +35,6 @@ public class BattleHandler extends Thread {
         System.out.println("battle handler start");
 
         //инициализация heroesForClient
-        //todo только для 2-x
         String[] playerNames = playerConnections.keySet().toArray(new String[0]);
         Hero knight = new Hero(playerNames[0]);
         knight.setPosition(18);
@@ -171,7 +170,7 @@ public class BattleHandler extends Thread {
         https://stackoverflow.com/questions/20543403/in-simple-chat-program-server-sending-arraylist-of-string-but-clients-receiving
          */
 
-        //todo: без нью хеш мап - сервер отправляет одни данные, а клиент получает другие.
+        // без нью хеш мап - сервер отправляет одни данные, а клиент получает другие.
         for (Connection c : playerConnections.values()) {
             try {
                 System.out.println("sending data: " + heroesForClient);
@@ -203,7 +202,7 @@ public class BattleHandler extends Thread {
         https://stackoverflow.com/questions/20543403/in-simple-chat-program-server-sending-arraylist-of-string-but-clients-receiving
          */
 
-        //todo: без нью хеш мап - сервер отправляет одни данные, а клиент получает другие.
+        //без нью хеш мап - сервер отправляет одни данные, а клиент получает другие.
         for (Connection c : playerConnections.values()) {
             try {
                 System.out.println("sending data: " + heroesForClient);
@@ -308,28 +307,12 @@ public class BattleHandler extends Thread {
     }
 
     public boolean isOneHeroRemain() {
-      //  return heroesForClient.size() <= 1;
         //todo: в идеале все игроки делятся на команды. проверять надо по командам
         for (Hero hero : heroesForClient.values()) {
             if (hero.getHealth() < 0) return true;
         }
         return false;
     }
-
-    /*
-    public void checkAliveHero() {
-        Set<Hero> h = new HashSet<>(heroesForClient.values());
-
-        for (Hero hero : h) {
-            if (hero.getHealth() < 0) removeHero(hero);
-        }
-    }
-*/
-/*
-    public void removeHero(Hero hero) {
-        heroesForClient.remove(hero);
-    }
-*/
 
     private void animation() {
         long start = System.currentTimeMillis();
