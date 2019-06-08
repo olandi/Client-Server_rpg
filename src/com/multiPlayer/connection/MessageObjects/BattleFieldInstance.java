@@ -1,18 +1,16 @@
-package com.multiPlayer.other.MessageObjects;
+package com.multiPlayer.connection.MessageObjects;
 
 import com.multiPlayer.both.Hero.Hero;
 import com.multiPlayer.both.battleField.BattleField;
-import com.multiPlayer.client.swing.model.HexagonItem;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 
 public class BattleFieldInstance implements Serializable {
     private BattleField battleField;
-    private Map<Hero, Integer> heroes;
+    private Map<String, Hero> heroes;
 
-    public BattleFieldInstance(BattleField battleField, Map<Hero, Integer> heroes) {
+    public BattleFieldInstance(BattleField battleField, Map<String, Hero> heroes) {
         this.battleField = battleField;
         this.heroes = heroes;
     }
@@ -21,7 +19,7 @@ public class BattleFieldInstance implements Serializable {
         return battleField;
     }
 
-    public Map<Hero, Integer> getHeroes() {
+    public Map<String, Hero> getHeroes() {
         return heroes;
     }
 }

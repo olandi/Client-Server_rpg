@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.Objects;
 
-public class Hero implements Serializable {
+public class Hero implements Serializable, Movable {
     private String name;
     private int health;
     private int damage;
@@ -15,7 +15,8 @@ public class Hero implements Serializable {
 
     private String viewId;
     private String portretId;
-    private URL view;
+
+    private Integer position;
 
     public String getPortretId() {
         return portretId;
@@ -45,14 +46,6 @@ public class Hero implements Serializable {
         this.health = health;
     }
 
-    public Hero setView(URL view) {
-        this.view = view;
-        return this;
-    }
-
-    public URL getView() {
-        return view;
-    }
 
     public Hero(String name) {
         this.name = name;
@@ -97,7 +90,11 @@ public class Hero implements Serializable {
                 ", health=" + health +
                 ", damage=" + damage +
                 ", turnState=" + turnState +
-                ", view=" + view +
+                ", speed=" + speed +
+                ", attackRange=" + attackRange +
+                ", viewId='" + viewId + '\'' +
+                ", portretId='" + portretId + '\'' +
+                ", position=" + position +
                 '}';
     }
 
@@ -112,5 +109,18 @@ public class Hero implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
+
+    @Override
+    public void moveTo(int newPosition) {
+        setPosition(newPosition);
     }
 }

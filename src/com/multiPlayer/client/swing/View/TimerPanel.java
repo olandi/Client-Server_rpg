@@ -1,21 +1,17 @@
 package com.multiPlayer.client.swing.View;
 
-import com.multiPlayer.client.swing.Controller;
+import com.multiPlayer.client.swing.BattleFieldController;
 
 import javax.swing.*;
 import java.awt.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
 
 public class TimerPanel extends JPanel {
 
     private JLabel jLabel;
-    private Controller controller;
+    private BattleFieldController battleFieldController;
 
-    public TimerPanel(Controller controller) {
-        this.controller = controller;
+    public TimerPanel(BattleFieldController battleFieldController) {
+        this.battleFieldController = battleFieldController;
         jLabel = new JLabel();
         jLabel.setText("Start Battle");
         jLabel.setFont(new Font("Arial", Font.BOLD, 25));

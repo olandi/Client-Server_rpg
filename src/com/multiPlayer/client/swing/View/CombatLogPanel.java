@@ -1,10 +1,11 @@
 package com.multiPlayer.client.swing.View;
 
-import com.multiPlayer.client.swing.Controller;
+import com.multiPlayer.client.swing.BattleFieldController;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.DefaultCaret;
 
 public class CombatLogPanel extends JPanel {
 
@@ -20,11 +21,11 @@ public class CombatLogPanel extends JPanel {
         display.append(text);
     }
 
-    private Controller controller;
+    private BattleFieldController battleFieldController;
 
-    public CombatLogPanel(Controller controller) {
+    public CombatLogPanel(BattleFieldController battleFieldController) {
 
-        this.controller = controller;
+        this.battleFieldController = battleFieldController;
 
         middlePanel = new JPanel();
         middlePanel.setBorder(new TitledBorder(new EtchedBorder(), "Combat Log"));
@@ -37,6 +38,13 @@ public class CombatLogPanel extends JPanel {
 
         scroll = new JScrollPane(display);
         scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+
+
+        DefaultCaret caret = (DefaultCaret)display.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+
+
 
         //Add Textarea in to middle panel
         middlePanel.add(scroll);

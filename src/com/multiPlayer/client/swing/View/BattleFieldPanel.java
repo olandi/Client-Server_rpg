@@ -2,9 +2,8 @@ package com.multiPlayer.client.swing.View;
 
 import com.multiPlayer.both.Hero.Hero;
 import com.multiPlayer.both.Hero.TurnState;
-import com.multiPlayer.other.MessageObjects.HeroMovementAction;
-import com.multiPlayer.both.ImageLoader;
-import com.multiPlayer.client.swing.Controller;
+import com.multiPlayer.connection.MessageObjects.HeroMovementAction;
+import com.multiPlayer.client.swing.BattleFieldController;
 import com.multiPlayer.client.swing.model.Hexagon;
 
 import javax.swing.*;
@@ -15,38 +14,26 @@ import java.awt.event.MouseListener;
 
 public class BattleFieldPanel extends JPanel {
 
-   // private List<HexagonItem> battleField;
-  //  private Map<Hero, Integer> heroes;
-
     private MouseListener mouseListener;
+    private BattleFieldController battleFieldController;
 
-    private Controller controller;
-
-    public BattleFieldPanel(Controller controller) {
-        this.controller = controller;
-
-      //  battleField = controller.getBattleField();
-     //   heroes = controller.getHeroes();
-
+    public BattleFieldPanel(BattleFieldController battleFieldController) {
+        this.battleFieldController = battleFieldController;
         initMouseListener();
-
     }
 
     public MouseListener getMouseListener() {
         return mouseListener;
     }
 
-
     private void initMouseListener() {
-
-
         mouseListener = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
 
                 System.out.println(e.getPoint());
 
-                controller.getBattleField().forEach(i -> {
+                battleFieldController.getBattleField().forEach(i -> {
                     Hexagon hexagon = i.getHexagon();
 
                     //Todo: Косяк с некорректными координатами. У каждой панели своя система координат.
@@ -56,52 +43,45 @@ public class BattleFieldPanel extends JPanel {
 
                     //предполагается, что игрок не может быть равен null
                     //если игрок может ходить и вообще попадаем в хексагон
-                    if (controller.getPlayerHero().getTurnState().equals(TurnState.ReadyForTurn)
+                    if (battleFieldController.getPlayerHero().getTurnState().equals(TurnState.ReadyForTurn)
                             && hexagon.contains(clickPoint)) {
 
                         System.out.println("Hexagon with center at " + hexagon.getCenter());
 
-                        if (controller.getModel().getHeroRangeSet().contains(i.getIndex())){
+                        if (battleFieldController.getModel().getHeroRangeSet().contains(i.getIndex())) {
                             System.out.println("in range");
 
-                                    //Если попадаем в персонажа, и этот персонаж - не игрока
-                                  if (controller.getHeroes().containsValue(i.getIndex())){
-                                      Hero targetHero = controller.getModel().getHeroByIndex(i.getIndex());
+                            //Если попадаем в хексагон с героем (любым)
+                            if (battleFieldController.getHeroes().values().stream()
+                                    .anyMatch(hero -> hero.getPosition() == i.getIndex())) {
 
-                                      //5) Если попадаем не в себя
-                                    if (!controller.getPlayerHero().equals(targetHero)) {
-                                        //становится видимой панель атаки
+                                Hero targetHero = battleFieldController.getModel().getHeroByIndex(i.getIndex());
 
-                                        controller.setCurrentHero(controller.getPlayerHero());
-                                        controller.setEnemy(targetHero);
-                                        controller.openHittingPanel();
-                                        controller.setHittingPanelMouseListener();
-                                        controller.repaintAllView();
+                                //5) Если попадаем не в себя
+                                if (!battleFieldController.getPlayerHero().equals(targetHero)) {
+                                    //становится видимой панель атаки
+                                    battleFieldController.setEnemy(targetHero);
+                                    battleFieldController.openHittingPanel();
+                                    battleFieldController.setHittingPanelMouseListener();
+                                    battleFieldController.repaintAllView();
 
-                                    }
-                                } else {
-                                    // ПЕРСОНАЖ ХОДИТ НА СВОБОДНУЮ КЛЕТКУ (КуррентХиро = NULL  обнуляется)
-                                      controller.getBattleField().get(controller.getHeroes().get(controller.getPlayerHero())).setSelected(false);
-
-                                      //убираю область действия перса
-                                      //controller.getModel().getHeroRangeSet().forEach(a->a.);
-                                      controller.getBattleField().stream().
-                                              filter(a ->controller.getModel().getHeroRangeSet().contains(a.getIndex()))
-                                              .forEach(aa-> aa.setSelected(false));
-
-
-
-                                    i.setSelected(true);
-                                    controller.repaintAllView();
-
-                                      try {
-                                          controller.sendMovementActionToServer(new HeroMovementAction(i.getIndex()));
-                                      } catch (Exception error){
-                                          System.out.println("sendMovementActionToServer error");
-                                          error.printStackTrace();
-                                      }
                                 }
-                    }}
+                            } else {
+                                // ПЕРСОНАЖ ХОДИТ НА СВОБОДНУЮ КЛЕТКУ (КуррентХиро = NULL  обнуляется)
+                                //убираю область действия перса
+                                battleFieldController.getModel().setHeroMovementRangeSelected(false);
+                                i.setSelected(true);
+                                battleFieldController.repaintAllView();
+
+                                try {
+                                    battleFieldController.sendMovementActionToServer(new HeroMovementAction(i.getIndex()));
+                                } catch (Exception error) {
+                                    System.out.println("sendMovementActionToServer error");
+                                    error.printStackTrace();
+                                }
+                            }
+                        }
+                    }
                 });
             }
         };
@@ -114,7 +94,7 @@ public class BattleFieldPanel extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
 
 
-        controller.getBattleField().forEach(u -> {
+        battleFieldController.getBattleField().forEach(u -> {
 
             Hexagon h = u.getHexagon();
 
@@ -124,17 +104,17 @@ public class BattleFieldPanel extends JPanel {
                 h.draw(g2, 0, 0, 2, Color.green.getRGB(), false);
         });
 
-        controller.getHeroes().forEach((hero, index) -> {
+        battleFieldController.getHeroes().forEach((heroName, hero) -> {
 
-            Hexagon h = controller.getBattleField().get(index).getHexagon();
+            Hexagon h = battleFieldController.getBattleField().get(hero.getPosition()).getHexagon();
 
             if (hero.getTurnState().equals(TurnState.TurnIsFinished)) {
                 h.draw(g2, 0, 0, 2, Color.blue.getRGB(), false);
             }
 
             g.drawImage(
-                   // ImageLoader.loadImage(hero.getView()),
-                    controller.getModel().getImageMap().get(hero.getViewId()),
+                    // ImageLoader.loadImage(hero.getView()),
+                    battleFieldController.getModel().getImageMap().get(hero.getViewId()),
                     h.getCenter().x - 35,
                     h.getCenter().y - 35,
                     null);

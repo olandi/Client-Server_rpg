@@ -1,9 +1,9 @@
 package com.multiPlayer.client.swing.View;
 
 import com.multiPlayer.both.Hero.BodyParts;
-import com.multiPlayer.other.MessageObjects.HeroBattleAction;
+import com.multiPlayer.client.swing.BattleFieldController;
+import com.multiPlayer.connection.MessageObjects.HeroBattleAction;
 import com.multiPlayer.both.ImageLoader;
-import com.multiPlayer.client.swing.Controller;
 import com.multiPlayer.client.swing.model.HeroImages;
 import com.multiPlayer.client.swing.model.HexSection;
 import com.multiPlayer.client.swing.model.Hexagon;
@@ -40,10 +40,10 @@ public class HittingPanel extends LayerUI<JPanel> {
     private Color defenseColor = Color.green;
     private Color defenseColorSelected = new Color(12, 119, 31);
 
-    private Controller controller;
+    private BattleFieldController battleFieldController;
 
-    public HittingPanel(Controller controller) {
-        this.controller = controller;
+    public HittingPanel(BattleFieldController battleFieldController) {
+        this.battleFieldController = battleFieldController;
         initAttackAndDefense();
         initBattleMouseListener();
 
@@ -64,9 +64,8 @@ public class HittingPanel extends LayerUI<JPanel> {
     }
 
     public void resetBattleActions() {
-        secAttack = new ArrayList<>();
-        secDef = new ArrayList<>();
-
+        secAttack.clear();
+        secDef.clear();
         sectionsAttackList.forEach(i -> i.setFilled(false));
         sectionsDefenseList.forEach(i -> i.setFilled(false));
     }
@@ -96,7 +95,7 @@ public class HittingPanel extends LayerUI<JPanel> {
                                 i.turn();
                             }
                         }
-                        controller.repaintAllView();
+                        battleFieldController.repaintAllView();
 
                     }
 
@@ -116,7 +115,7 @@ public class HittingPanel extends LayerUI<JPanel> {
                                 i.turn();
                             }
                         }
-                        controller.repaintAllView();
+                        battleFieldController.repaintAllView();
 
                     }
 
@@ -125,18 +124,14 @@ public class HittingPanel extends LayerUI<JPanel> {
                 //Если кликаем на ОК
                 if (go.contains(clickPoint)) {
 
-
+                    //передать атаки и блоки в метод отправки данных на сервер
                     try {
-                        controller.sendBattleActionToServer(new HeroBattleAction(controller.getEnemy(), secAttack, secDef));
+                        battleFieldController.sendBattleActionToServer(new HeroBattleAction(battleFieldController.getEnemy(), secAttack, secDef));
                     } catch (IOException error) {
                         System.out.println("sendBattleActionToServer failed");
                         error.printStackTrace();
                     }
-                    //передать атаки и блоки в метод отправки данных на сервер
-
-
                     resetBattleMenu();
-
                 }
                 //Если кликаем на отмену
                 if (cancel.contains(clickPoint)) {
@@ -149,11 +144,12 @@ public class HittingPanel extends LayerUI<JPanel> {
 
 
     public void resetBattleMenu() {
-        controller.closeHittingPanel();
+        battleFieldController.closeHittingPanel();
         resetBattleActions();
-        controller.repaintAllView();
+        battleFieldController.repaintAllView();
+        battleFieldController.setBattleFieldPanelMouseListener();
 
-        controller.setBattleFieldPanelMouseListener();
+        battleFieldController.setEnemy(null);
     }
 
 
@@ -192,7 +188,7 @@ public class HittingPanel extends LayerUI<JPanel> {
         int w = c.getWidth();
         int h = c.getHeight();
 
-        if (controller.isVisibleBattleFrame()) {
+        if (battleFieldController.isVisibleBattleFrame()) {
 
             // Gray it out.
             Composite urComposite = g2.getComposite();
@@ -216,11 +212,9 @@ public class HittingPanel extends LayerUI<JPanel> {
                             defenseColor.getRGB()
                     , true));
 
-            //todo Картинки где то сохранять, и не загружать каждый раз
             go.draw(g2, 0, 0, 2, Color.PINK.getRGB(), true);
             g.drawImage(
                     map.get("BUTTON_OK"),
-                    //ImageLoader.loadImage(HeroImages.OK_PATH),
                     go.getCenter().x - 35,
                     go.getCenter().y - 35,
                     null);
@@ -229,7 +223,6 @@ public class HittingPanel extends LayerUI<JPanel> {
 
             g.drawImage(
                     map.get("BUTTON_CANCEL"),
-                    //ImageLoader.loadImage(HeroImages.CANCEL_PATH),
                     cancel.getCenter().x - 28,
                     cancel.getCenter().y - 30,
                     null);

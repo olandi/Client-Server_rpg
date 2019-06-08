@@ -1,16 +1,12 @@
 package com.multiPlayer.server;
 
-import com.multiPlayer.both.Hero.Hero;
-import com.multiPlayer.both.battleField.BattleField;
 import com.multiPlayer.connection.Connection;
 import com.multiPlayer.connection.Message;
 import com.multiPlayer.connection.MessageType;
 
-import static com.multiPlayer.other.ServerConstants.SERVER_PORT;
-
-import com.multiPlayer.other.MessageObjects.BattleFieldInstance;
-import com.multiPlayer.other.MessageObjects.HeroBattleAction;
-import com.multiPlayer.other.MessageObjects.HeroMovementAction;
+import static com.multiPlayer.both.ServerConstants.SERVER_PORT;
+import com.multiPlayer.connection.MessageObjects.HeroBattleAction;
+import com.multiPlayer.connection.MessageObjects.HeroMovementAction;
 
 import com.myDrafts.differentExamples.chat.ConsoleHelper;
 
@@ -18,9 +14,6 @@ import com.myDrafts.differentExamples.chat.ConsoleHelper;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -93,7 +86,7 @@ public class Server {
             if (playerName != null) {
                 //После того как все исключения обработаны, удаляем запись из connectionMap
                 onlinePlayers.remove(playerName);
-               // waitingForBattle.remove(playerName);
+                // waitingForBattle.remove(playerName);
                 //и отправлялем сообщение остальным пользователям
             }
             ConsoleHelper.writeMessage("Соединение с удаленным адресом закрыто");
@@ -113,29 +106,23 @@ public class Server {
                     if (message.getType() == MessageType.JOIN_TO_BATTLE_REQUEST) {
                         //должен проверять достаточно ли игроков для старта боя
                         battleManager.addToBattleQueue(userName, connection);
-                       // waitingForBattle.put(userName, connection);
                         connection.send(new Message(MessageType.JOIN_TO_BATTLE_RESPONSE));
                     }
 
                     if (message.getType() == MessageType.LEAVE_BATTLE_REQUEST) {
-                        //должен проверять достаточно ли игроков для старта боя
                         battleManager.removeFromBattleQueue(userName, connection);
-                        // waitingForBattle.put(userName, connection);
                         connection.send(new Message(MessageType.LEAVE_BATTLE_RESPONSE));
                     }
 
 
-
-                    if (message.getType() == MessageType.PLAYER_MOVEMENT_MESSAGE){
-                        battleManager.getBattleByConnection(connection).moveHero(connection , (HeroMovementAction) message.getData());
+                    if (message.getType() == MessageType.PLAYER_MOVEMENT_MESSAGE) {
+                        battleManager.getBattleByConnection(connection).moveHero(userName, (HeroMovementAction) message.getData());
                     }
 
 
-                    if (message.getType() == MessageType.PLAYER_BATTLE_MESSAGE){
-                        battleManager.getBattleByConnection(connection).hitHero(connection, (HeroBattleAction) message.getData());
+                    if (message.getType() == MessageType.PLAYER_BATTLE_MESSAGE) {
+                        battleManager.getBattleByConnection(connection).hitHero(userName,connection, (HeroBattleAction) message.getData());
                     }
-
-
                 }
             }
         }
@@ -155,7 +142,6 @@ public class Server {
                 if (message.getType() == MessageType.PLAYER_NAME) {
 
                     //Достать из ответа имя, проверить, что оно не пустое
-                    //if (message.getData() != null && !message.getData().isEmpty()) {
                     if (!((String) message.getData()).isEmpty()) {
 
                         // и пользователь с таким именем еще не подключен (используй connectionMap)
@@ -173,20 +159,6 @@ public class Server {
                 }
             }
         }
-
-/*        private void sendListOfUsers(Connection connection, String userName) {
-            for (Map.Entry<String, Connection> pair : connectionMap.entrySet()) {
-                // Команду с именем равным userName отправлять не нужно, пользователь и так имеет информацию о себе
-                if (pair.getKey().equals(userName))
-                    break;
-
-                try {
-                    connection.send(new Message(MessageType.USER_ADDED, pair.getKey()));
-                } catch (IOException e) {
-                    ConsoleHelper.writeMessage("There is an error while sending messages");
-                }
-            }*/
-
     }
 
 }

@@ -1,4 +1,4 @@
-package com.multiPlayer.other;
+package com.multiPlayer.both;
 
 public class ServerConstants {
     public static final int SERVER_PORT = 5555;

@@ -4,7 +4,7 @@ package com.multiPlayer.client;
 import com.multiPlayer.client.View.LoginView;
 import com.multiPlayer.client.View.MainLayoutView;
 import com.multiPlayer.client.View.PickBattleView;
-import com.multiPlayer.client.swing.Controller;
+import com.multiPlayer.client.swing.BattleFieldController;
 import com.multiPlayer.connection.Connection;
 
 import java.io.IOException;
@@ -12,7 +12,7 @@ import java.net.Socket;
 
 public class MainLayoutController {
 
-    private Controller battleFieldController = new Controller(this);
+    private BattleFieldController battleFieldController = new BattleFieldController(this);
 
     private LoginView loginView = new LoginView(this);
     private PickBattleView pickBattleView = new PickBattleView(this);
@@ -23,7 +23,7 @@ public class MainLayoutController {
         return mainLayoutModel;
     }
 
-    public Controller getBattleFieldController() {
+    public BattleFieldController getBattleFieldController() {
         return battleFieldController;
     }
 

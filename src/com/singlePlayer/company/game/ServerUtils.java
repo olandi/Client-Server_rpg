@@ -154,7 +154,7 @@ public class ServerUtils {
                                             heroHeroBattleActions.get(hero).getTarget().getHealth() -
                                                     hero.getDamage());
 
-                                    //todo Controller.getCombatLogPanel().appendText("Hero: " + heroHeroBattleActions.get(hero).getToHero().getName() + " received 20 damage\n");
+                                    //todo BattleFieldController.getCombatLogPanel().appendText("Hero: " + heroHeroBattleActions.get(hero).getToHero().getName() + " received 20 damage\n");
 
 
                                 }
@@ -170,7 +170,7 @@ public class ServerUtils {
                                             heroHeroBattleActions.get(hero).getTarget().getHealth() -
                                                     hero.getDamage());
 
-                                    //todo   Controller.getCombatLogPanel().appendText("Hero: " + heroHeroBattleActions.get(hero).getToHero().getName() + " received 20 damage\n");
+                                    //todo   BattleFieldController.getCombatLogPanel().appendText("Hero: " + heroHeroBattleActions.get(hero).getToHero().getName() + " received 20 damage\n");
 
                                 }
                             }

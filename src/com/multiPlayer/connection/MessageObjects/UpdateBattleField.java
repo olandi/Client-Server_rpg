@@ -1,4 +1,4 @@
-package com.multiPlayer.other.MessageObjects;
+package com.multiPlayer.connection.MessageObjects;
 
 import com.multiPlayer.both.Hero.Hero;
 
@@ -6,18 +6,18 @@ import java.io.Serializable;
 import java.util.Map;
 
 public class UpdateBattleField implements Serializable {
-    private Map<Hero,Integer> heroes;
+    private Map<String, Hero> heroes;
     private String battleLog;
 
-    public UpdateBattleField(Map<Hero, Integer> heroes) {
+    public UpdateBattleField(Map<String, Hero> heroes) {
         this.heroes = heroes;
     }
 
-    public Map<Hero, Integer> getHeroes() {
+    public Map<String, Hero> getHeroes() {
         return heroes;
     }
 
-    public void setHeroes(Map<Hero, Integer> heroes) {
+    public void setHeroes(Map<String, Hero> heroes) {
         this.heroes = heroes;
     }
 

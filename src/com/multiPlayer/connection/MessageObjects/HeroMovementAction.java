@@ -1,7 +1,5 @@
-package com.multiPlayer.other.MessageObjects;
+package com.multiPlayer.connection.MessageObjects;
 
-
-import com.multiPlayer.connection.MessageAction;
 
 import java.io.Serializable;
 

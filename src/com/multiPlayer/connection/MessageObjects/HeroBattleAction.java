@@ -1,8 +1,7 @@
-package com.multiPlayer.other.MessageObjects;
+package com.multiPlayer.connection.MessageObjects;
 
 import com.multiPlayer.both.Hero.BodyParts;
 import com.multiPlayer.both.Hero.Hero;
-import com.multiPlayer.connection.MessageAction;
 
 import java.io.Serializable;
 import java.util.List;
@@ -18,7 +17,6 @@ public class HeroBattleAction implements Serializable {
         this.attack = attack;
         this.defense = defense;
     }
-
 
     public Hero getTarget() {
         return target;

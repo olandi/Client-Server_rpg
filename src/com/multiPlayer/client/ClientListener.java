@@ -3,16 +3,16 @@ package com.multiPlayer.client;
 import com.multiPlayer.client.swing.model.util.TimeUtil;
 import com.multiPlayer.connection.Message;
 import com.multiPlayer.connection.MessageType;
-import com.multiPlayer.other.MessageObjects.BattleFieldInstance;
-import com.multiPlayer.other.MessageObjects.UpdateBattleField;
-//import com.multiPlayer.other.MessageObjects.TimerMessage;
+import com.multiPlayer.connection.MessageObjects.BattleFieldInstance;
+import com.multiPlayer.connection.MessageObjects.UpdateBattleField;
+//import com.multiPlayer.connection.MessageObjects.TimerMessage;
 
 import javax.swing.*;
 import java.io.IOException;
 import java.net.Socket;
 
-import static com.multiPlayer.other.ServerConstants.SERVER_ADDRESS;
-import static com.multiPlayer.other.ServerConstants.SERVER_PORT;
+import static com.multiPlayer.both.ServerConstants.SERVER_ADDRESS;
+import static com.multiPlayer.both.ServerConstants.SERVER_PORT;
 
 
 public class ClientListener extends Thread {
@@ -20,7 +20,6 @@ public class ClientListener extends Thread {
     private MainLayoutController controller;
 
     public ClientListener(MainLayoutController controller) {
-
         this.controller = controller;
     }
 
@@ -29,16 +28,11 @@ public class ClientListener extends Thread {
     public void run() {
 
         Socket socket;
-
         try {
             socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
             controller.createConnection(socket);
-
-
             clientHandshake();
-
             controller.switchToPickBattleView();
-
             clientMainLoop();
 
         } catch (IOException e) {
@@ -72,11 +66,7 @@ public class ClientListener extends Thread {
 
                     BattleFieldInstance bfi = (BattleFieldInstance) message.getData();
 
-                    //controller.setBattleFieldController(new Controller(controller));
                     controller.getBattleFieldController().initBattle(bfi.getBattleField(), bfi.getHeroes());
-                    /*
-                    controller.getBattleFieldController().getModel().initBattle(bfi.getBattleField(), bfi.getHeroes());
-                    controller.getBattleFieldController().initPlayerHero();*/
 
                     System.out.println("BATTLE_FIELD_INSTANCE");
 
@@ -86,7 +76,6 @@ public class ClientListener extends Thread {
                 }
 
                 if (message.getType() == MessageType.TIMER) {
-                    //long l = ((TimerMessage) message.getData()).getTime();
                     long l = (long) message.getData();
                     controller.getBattleFieldController()
                             .getTimerPanel().getjLabel().setText(TimeUtil.getTime(l));
@@ -102,7 +91,6 @@ public class ClientListener extends Thread {
 
                     System.out.println("received: "+message);
 
-                    /*UpdateBattleField ubf =*/
 
                    if(! "".equals(((UpdateBattleField) message.getData()).getBattleLog())){
                        controller.getBattleFieldController().getCombatLogPanel().appendText(
@@ -110,7 +98,7 @@ public class ClientListener extends Thread {
 
                    }
 
-                    controller.getBattleFieldController().uptateBattleField(
+                    controller.getBattleFieldController().updateBattleField(
                             ((UpdateBattleField) message.getData()).getHeroes()
                     );
                 }
@@ -128,8 +116,7 @@ public class ClientListener extends Thread {
                             JOptionPane.INFORMATION_MESSAGE);
 
                     controller.switchToPickBattleView();
-                    controller.getBattleFieldController().getModel().resetAlldata();
-                    controller.getBattleFieldController().getHeroInfoPanel().destroyPlayerInfo();
+                    controller.getBattleFieldController().resetBattle();
                 }
             }
         }

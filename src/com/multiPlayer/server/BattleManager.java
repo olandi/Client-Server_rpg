@@ -2,7 +2,6 @@ package com.multiPlayer.server;
 
 import com.multiPlayer.connection.Connection;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,9 +44,8 @@ public class BattleManager extends Thread {
 
                 if (waitingForBattle.size() == 2) {
 
-                    HashMap myobjectListB = new HashMap<String, Connection>(waitingForBattle);
 
-                    BattleHandler battleHandler = new BattleHandler(myobjectListB);
+                    BattleHandler battleHandler = new BattleHandler(new HashMap<>(waitingForBattle));
 
                     waitingForBattle.forEach((name,conn)->
                             connectionBattleHandlerMap.put(conn,battleHandler));
@@ -63,10 +61,8 @@ public class BattleManager extends Thread {
             e.printStackTrace();
         }
 
-
-        //super.run();
-
     }
+
 
 
 }
