@@ -8,6 +8,8 @@ import com.multiPlayer.client.MainLayoutController;
 import com.multiPlayer.client.swing.View.*;
 import com.multiPlayer.client.swing.model.HexagonItem;
 import com.multiPlayer.connection.Message;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import javax.swing.*;
@@ -20,6 +22,7 @@ import static com.multiPlayer.connection.MessageType.PLAYER_BATTLE_MESSAGE;
 import static com.multiPlayer.connection.MessageType.PLAYER_MOVEMENT_MESSAGE;
 
 public class BattleFieldController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(BattleFieldController.class);
     private MainLayoutController controller;
 
     private BattleFieldModel model = new BattleFieldModel();
@@ -89,14 +92,14 @@ public class BattleFieldController {
 
     public void sendMovementActionToServer(HeroMovementAction heroMovementAction) throws IOException {
         Message message = new Message(PLAYER_MOVEMENT_MESSAGE, heroMovementAction);
-        System.out.println("send message to server: " + message);
+        LOGGER.debug("send message to server: {}", message);
         controller.getConnection().send(message);
     }
 
 
     public void sendBattleActionToServer(HeroBattleAction heroBattleAction) throws IOException {
         Message message = new Message(PLAYER_BATTLE_MESSAGE, heroBattleAction);
-        System.out.println("send message to server: " + message);
+        LOGGER.debug("send message to server: {}", message);
         controller.getConnection().send(message);
     }
 

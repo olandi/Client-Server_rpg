@@ -1,12 +1,16 @@
 package com.multiPlayer.server;
 
 import com.multiPlayer.connection.Connection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class BattleManager extends Thread {
+    private static final Logger  LOGGER = LoggerFactory.getLogger(BattleManager.class);
+
     private static Map<String, Connection> waitingForBattle = new ConcurrentHashMap<>();
 
     private static Map<Connection, BattleHandler> connectionBattleHandlerMap = new ConcurrentHashMap<>();
@@ -21,34 +25,32 @@ public class BattleManager extends Thread {
 
     public void addToBattleQueue(String userName, Connection connection) {
         waitingForBattle.put(userName, connection);
+        LOGGER.debug("User {} want to join to the battle. Current queue value is {}.", userName, waitingForBattle.size());
     }
 
     public void removeFromBattleQueue(String userName, Connection connection) {
         waitingForBattle.remove(userName);
+        LOGGER.debug("User {} want to leave queue. Current queue value is {}.", userName, waitingForBattle.size());
     }
 
 
-    public BattleHandler getBattleByConnection(Connection connection){
+    public BattleHandler getBattleByConnection(Connection connection) {
         return connectionBattleHandlerMap.get(connection);
     }
 
 
     @Override
     public void run() {
-        System.out.println("battle manager start");
+        LOGGER.debug("battle manager start");
         try {
             while (true) {
 
-                System.out.println("queue: " + waitingForBattle.size());
-
-
                 if (waitingForBattle.size() == 2) {
-
 
                     BattleHandler battleHandler = new BattleHandler(new HashMap<>(waitingForBattle));
 
-                    waitingForBattle.forEach((name,conn)->
-                            connectionBattleHandlerMap.put(conn,battleHandler));
+                    waitingForBattle.forEach((name, conn) ->
+                            connectionBattleHandlerMap.put(conn, battleHandler));
 
                     battleHandler.start();
 
@@ -62,7 +64,6 @@ public class BattleManager extends Thread {
         }
 
     }
-
 
 
 }

@@ -6,7 +6,7 @@ import com.multiPlayer.both.ImageLoader;
 import com.multiPlayer.both.battleField.BattleField;
 import com.multiPlayer.client.swing.model.HeroImages;
 import com.multiPlayer.client.swing.model.HexagonItem;
-import com.multiPlayer.client.swing.model.util.BattleFildDrawer;
+import com.multiPlayer.client.swing.model.util.BattleFieldDrawer;
 
 import java.awt.*;
 import java.util.*;
@@ -27,7 +27,7 @@ public class BattleFieldModel {
     //таймер и лог боя
     public void initBattle(BattleField battleFieldArr, Map<String, Hero> heroes) {
         this.heroes = heroes;
-        this.battleField = BattleFildDrawer.createGuiBattlefield(50, 50, battleFieldArr, 40, 10);
+        this.battleField = BattleFieldDrawer.createGuiBattlefield(50, 50, battleFieldArr, 40, 10);
         this.battleFieldArr = battleFieldArr;
 
         //инициализация картинок персонажей

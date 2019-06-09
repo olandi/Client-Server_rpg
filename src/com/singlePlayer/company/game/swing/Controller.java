@@ -1,7 +1,5 @@
 package com.singlePlayer.company.game.swing;
 
-import com.multiPlayer.both.battleField.BattleField;
-import com.multiPlayer.client.swing.model.util.BattleFildDrawer;
 import com.singlePlayer.company.game.swing.model.HexagonItem;
 import com.singlePlayer.company.game.swing.View.*;
 import com.singlePlayer.company.game.Hero.Hero;

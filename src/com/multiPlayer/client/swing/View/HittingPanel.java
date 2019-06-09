@@ -7,6 +7,8 @@ import com.multiPlayer.both.ImageLoader;
 import com.multiPlayer.client.swing.model.HeroImages;
 import com.multiPlayer.client.swing.model.HexSection;
 import com.multiPlayer.client.swing.model.Hexagon;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import javax.swing.*;
@@ -22,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 public class HittingPanel extends LayerUI<JPanel> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(HittingPanel.class);
     private static final int ACTION_COUNT = 2;
 
     private MouseListener mouseListener;
@@ -84,7 +87,7 @@ public class HittingPanel extends LayerUI<JPanel> {
                 //если кликаем по атака хексам
                 sectionsAttackList.forEach(i -> {
                     if (i.contains(clickPoint)) {
-                        System.out.println(i);
+                        LOGGER.trace("attack hex {}, is clicked",i);
 
                         if (i.isFilled()) {
                             removeHeroSelection(i, secAttack);
@@ -104,7 +107,7 @@ public class HittingPanel extends LayerUI<JPanel> {
                 //если кликаем по блок хексам
                 sectionsDefenseList.forEach(i -> {
                     if (i.contains(clickPoint)) {
-                        System.out.println(i);
+                        LOGGER.trace("defense hex {}, is clicked",i);
 
                         if (i.isFilled()) {
                             removeHeroSelection(i, secDef);
@@ -128,7 +131,7 @@ public class HittingPanel extends LayerUI<JPanel> {
                     try {
                         battleFieldController.sendBattleActionToServer(new HeroBattleAction(battleFieldController.getEnemy(), secAttack, secDef));
                     } catch (IOException error) {
-                        System.out.println("sendBattleActionToServer failed");
+                        LOGGER.error("sendingBattleActionToServer failed");
                         error.printStackTrace();
                     }
                     resetBattleMenu();

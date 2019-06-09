@@ -5,6 +5,8 @@ import com.multiPlayer.both.Hero.TurnState;
 import com.multiPlayer.connection.MessageObjects.HeroMovementAction;
 import com.multiPlayer.client.swing.BattleFieldController;
 import com.multiPlayer.client.swing.model.Hexagon;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class BattleFieldPanel extends JPanel {
+    private static final Logger LOGGER = LoggerFactory.getLogger(BattleFieldPanel.class);
 
     private MouseListener mouseListener;
     private BattleFieldController battleFieldController;
@@ -31,7 +34,7 @@ public class BattleFieldPanel extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-                System.out.println(e.getPoint());
+                LOGGER.trace("clicked at {}",e.getPoint());
 
                 battleFieldController.getBattleField().forEach(i -> {
                     Hexagon hexagon = i.getHexagon();
@@ -46,10 +49,10 @@ public class BattleFieldPanel extends JPanel {
                     if (battleFieldController.getPlayerHero().getTurnState().equals(TurnState.ReadyForTurn)
                             && hexagon.contains(clickPoint)) {
 
-                        System.out.println("Hexagon with center at " + hexagon.getCenter());
+                        LOGGER.trace("Hexagon with center at {}", hexagon.getCenter());
 
                         if (battleFieldController.getModel().getHeroRangeSet().contains(i.getIndex())) {
-                            System.out.println("in range");
+                            LOGGER.trace("in range");
 
                             //Если попадаем в хексагон с героем (любым)
                             if (battleFieldController.getHeroes().values().stream()
@@ -76,7 +79,7 @@ public class BattleFieldPanel extends JPanel {
                                 try {
                                     battleFieldController.sendMovementActionToServer(new HeroMovementAction(i.getIndex()));
                                 } catch (Exception error) {
-                                    System.out.println("sendMovementActionToServer error");
+                                    LOGGER.trace("sendingMovementActionToServer error");
                                     error.printStackTrace();
                                 }
                             }
@@ -113,7 +116,6 @@ public class BattleFieldPanel extends JPanel {
             }
 
             g.drawImage(
-                    // ImageLoader.loadImage(hero.getView()),
                     battleFieldController.getModel().getImageMap().get(hero.getViewId()),
                     h.getCenter().x - 35,
                     h.getCenter().y - 35,

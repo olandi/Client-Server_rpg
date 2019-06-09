@@ -1,53 +1,55 @@
 package com.multiPlayer.client.swing.model.util;
 
+
 import com.multiPlayer.both.battleField.BattleField;
 import com.multiPlayer.client.swing.model.Hexagon;
 import com.multiPlayer.client.swing.model.HexagonItem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public class BattleFildDrawer {
-    /*
-            for (int i = 0; i < 48; i++) {
-
-            int x = i % 8;
-            int y = i / 8;
-
-            int xx = (y % 2 == 0) ? 40 + 80 * x : 80 + 80 * x;
-            int yy = 40 + 70 * y;
-
-            int fieldOffset = 30;
-
-
-        }
-     */
+public class BattleFieldDrawer {
+    private final static Logger LOGGER = LoggerFactory.getLogger(BattleFieldDrawer.class);
 
     /***
+     * Создает поле вида:
+     *              *   *   *   *   *   *
+     *                *   *   *   *   *
+     *              *   *   *   *   *   *
+     *                *   *   *   *   *
+     *              *   *   *   *   *   *
      * r - hexagon radius
      * d - отступы
      *
      * x, y - крайние левая - верхняя координата, крайнего левого верхнего хексагона.
      */
+    public static void main(String[] args) {
+        createGuiBattlefield(40, 40, new BattleField(9, 6), 40, 5);
+    }
 
 
     public static List<HexagonItem> createGuiBattlefield(int x, int y, BattleField battleField, int r, int d) {
         List<HexagonItem> list = new ArrayList<>();
-        int j = 0;
-        boolean switcher = true;
+        int j = 0;//номер эл-та в ряде
+        boolean isOddRow = true;
         int xx = 0, yy = 0;
 
         for (int i = 0; i < battleField.getSize(); i++) {
 
-            if (j == (switcher ? battleField.getOddRowLength() : battleField.getEvenRowLength())) {
+            if (j == (isOddRow ? battleField.getOddRowLength() : battleField.getEvenRowLength())) {
                 // sb.append("\n"); //тут переход на новую строку
 
-               // xx = x + r;
-                xx=0;
-                yy += r + (r-10);//todo константа отступ по у
+                if (isOddRow) LOGGER.trace("odd row is finished");
+                else LOGGER.trace("even row is finished");
 
-                switcher = !switcher;
+                // xx = x + r;
+                xx = 0;
+                yy += r + (r - 10);//todo константа отступ по у
 
-                if (!switcher) {
+                isOddRow = !isOddRow;
+
+                if (!isOddRow) {
                     // sb.append("\t"); //тут сдвиг вперед на пол хекса
                     xx += r;
                 }
@@ -56,9 +58,10 @@ public class BattleFildDrawer {
 
             //добавление эл-та
             list.add(new HexagonItem(new Hexagon(x + xx, y + yy, r), i));
-            System.out.println("x: " + (int) (x + xx) + " y: " + (int) (y + yy));
+
+            LOGGER.trace("x: {},  y: {}", (x + xx), (y + yy));
             j++;
-            xx += r*2;
+            xx += r * 2;
         }
 
 

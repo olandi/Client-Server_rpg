@@ -5,11 +5,12 @@ import com.multiPlayer.connection.Message;
 import com.multiPlayer.connection.MessageType;
 
 import static com.multiPlayer.both.ServerConstants.SERVER_PORT;
+
 import com.multiPlayer.connection.MessageObjects.HeroBattleAction;
 import com.multiPlayer.connection.MessageObjects.HeroMovementAction;
 
-import com.myDrafts.differentExamples.chat.ConsoleHelper;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -19,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 public class Server {
-
+    private static final Logger  LOGGER = LoggerFactory.getLogger(Server.class);
 
     private static Map<String, Connection> onlinePlayers = new ConcurrentHashMap<>();
     private static BattleManager battleManager = new BattleManager();
@@ -29,12 +30,12 @@ public class Server {
 
         try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT)) {
 
-            ConsoleHelper.writeMessage("The Server is running..");
+            LOGGER.info("The Server is running..");
 
             battleManager.start();
 
             while (true) {
-                //Listen
+
                 Socket socket = null;
                 try {
                     socket = serverSocket.accept();
@@ -47,7 +48,8 @@ public class Server {
                 handler.start();
             }
         } catch (IOException e) {
-            System.err.println("Could not listen on port " + SERVER_PORT);
+            LOGGER.error("Could not listen on port {} ", SERVER_PORT);
+
             System.exit(-1);
         }
     }
@@ -61,25 +63,21 @@ public class Server {
 
         @Override
         public void run() {
-            super.run();
-
-            ConsoleHelper.writeMessage("Установленно соединение с адресом " + socket.getRemoteSocketAddress());
+            LOGGER.info("Установленно соединение с адресом {}", socket.getRemoteSocketAddress());
 
             String playerName = null;
 
             try (Connection connection = new Connection(socket)) {
 
-
                 playerName = serverHandshake(connection);
                 serverMainLoop(connection, playerName);
 
-
             } catch (IOException e) {
                 e.printStackTrace();
-                ConsoleHelper.writeMessage("Ошибка при обмене данными с удаленным адресом");
-                // ConsoleHelper.writeMessage("Disconnect from server");
+                LOGGER.error("Ошибка при обмене данными с удаленным адресом", e.fillInStackTrace());
+
             } catch (ClassNotFoundException e) {
-                ConsoleHelper.writeMessage("Ошибка при обмене данными с удаленным адресом");
+                LOGGER.error("Ошибка при обмене данными с удаленным адресом", e.fillInStackTrace());
                 e.printStackTrace();
             }
 
@@ -89,7 +87,7 @@ public class Server {
                 // waitingForBattle.remove(playerName);
                 //и отправлялем сообщение остальным пользователям
             }
-            ConsoleHelper.writeMessage("Соединение с удаленным адресом закрыто");
+            LOGGER.info("Соединение с удаленным адресом закрыто");
 
 
         }
@@ -100,8 +98,7 @@ public class Server {
                 if ((message = connection.receive()) != null) {
 
                     /**печать всех сообщений*/
-                    System.out.println("received: " + message);
-
+                    LOGGER.debug("received: {}", message);
 
                     if (message.getType() == MessageType.JOIN_TO_BATTLE_REQUEST) {
                         //должен проверять достаточно ли игроков для старта боя
@@ -121,7 +118,7 @@ public class Server {
 
 
                     if (message.getType() == MessageType.PLAYER_BATTLE_MESSAGE) {
-                        battleManager.getBattleByConnection(connection).hitHero(userName,connection, (HeroBattleAction) message.getData());
+                        battleManager.getBattleByConnection(connection).hitHero(userName, connection, (HeroBattleAction) message.getData());
                     }
                 }
             }
@@ -135,7 +132,7 @@ public class Server {
                 Message message = connection.receive();
 
                 /**печать всех сообщений*/
-                if (message != null) System.out.println("received: " + message);
+                if (message != null)  LOGGER.debug("received: {}", message);
 
 
                 // Проверить, что получена команда с именем пользователя

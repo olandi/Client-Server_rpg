@@ -1,5 +1,6 @@
 package com.multiPlayer.server;
 
+
 import com.multiPlayer.both.Hero.Hero;
 import com.multiPlayer.both.Hero.TurnState;
 import com.multiPlayer.both.battleField.BattleField;
@@ -10,6 +11,9 @@ import com.multiPlayer.connection.MessageObjects.BattleFieldInstance;
 import com.multiPlayer.connection.MessageObjects.HeroBattleAction;
 import com.multiPlayer.connection.MessageObjects.HeroMovementAction;
 import com.multiPlayer.connection.MessageObjects.UpdateBattleField;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import java.io.IOException;
 import java.util.*;
@@ -17,6 +21,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 public class BattleHandler extends Thread {
+    private static final Logger LOGGER = LoggerFactory.getLogger(BattleHandler.class);
+
     private Map<String, Connection> playerConnections;
 
     private Map<String, Hero> heroesForClient = new ConcurrentHashMap<>();
@@ -32,7 +38,7 @@ public class BattleHandler extends Thread {
 
     @Override
     public void run() {
-        System.out.println("battle handler start");
+        LOGGER.debug("battle handler start");
 
         //инициализация heroesForClient
         String[] playerNames = playerConnections.keySet().toArray(new String[0]);
@@ -64,8 +70,6 @@ public class BattleHandler extends Thread {
             }
         });
 
-        System.out.println(" " + currentThread());
-
 
         playerConnections.keySet().forEach(i -> battleLog.append(i).append(" Вступает в бой!\n"));
 
@@ -74,8 +78,6 @@ public class BattleHandler extends Thread {
             //пока не останется только один живой перс
             while (!isOneHeroRemain()) {
 
-                System.out.println("Есть живые");
-
                 long start = System.currentTimeMillis();
                 long finish = start + 30_700L;
                 long current = 1;
@@ -83,13 +85,10 @@ public class BattleHandler extends Thread {
                 //пока таймер не дошел до 0
                 while (current > 0 && isReadyToMoveHeroExist()) {
 
-                    // System.out.println("time: " + current);
-
                     current = finish - System.currentTimeMillis();
-                    System.out.println(current);
 
                     for (Connection c : playerConnections.values()) {
-                        c.send(new Message(MessageType.TIMER, /*new TimerMessage(current)*/current));
+                        c.send(new Message(MessageType.TIMER, current));
                     }
                     sleep(500);
 
@@ -106,13 +105,10 @@ public class BattleHandler extends Thread {
                 performAllMovements();
                 computeDamage();
 
-                //checkAliveHero();
-
                 restartPlayersTurn();
                 sendBroadcastData();
 
                 battleLog.setLength(0);
-                // battleLog.append(" ");
             }
             //окончание боя
 
@@ -123,15 +119,15 @@ public class BattleHandler extends Thread {
             playerConnections.forEach((k, v) -> BattleManager.getConnectionBattleHandlerMap().remove(v));
 
 
-        } catch (/*ClassNotFoundException |*/ InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (IOException e1) {
             e1.printStackTrace();
             interrupt();
         }
 
+        LOGGER.debug("battle handler finish");
     }
-
 
 
     public void moveHero(String userName, HeroMovementAction action) {
@@ -173,7 +169,7 @@ public class BattleHandler extends Thread {
         // без нью хеш мап - сервер отправляет одни данные, а клиент получает другие.
         for (Connection c : playerConnections.values()) {
             try {
-                System.out.println("sending data: " + heroesForClient);
+                LOGGER.debug("sending data: {}", heroesForClient);
                 c.resetObjectOutputStream1();
                 c.send(message);
             } catch (IOException e) {
@@ -205,7 +201,7 @@ public class BattleHandler extends Thread {
         //без нью хеш мап - сервер отправляет одни данные, а клиент получает другие.
         for (Connection c : playerConnections.values()) {
             try {
-                System.out.println("sending data: " + heroesForClient);
+                LOGGER.debug("sending data: {}", heroesForClient);
 
                 c.resetObjectOutputStream1();
                 //   c.resetObjectInputStream();
@@ -213,7 +209,6 @@ public class BattleHandler extends Thread {
                 UpdateBattleField ubf = new UpdateBattleField(heroesForClient);
                 ubf.setBattleLog(
                         battleLog.toString()
-
                 );
 
                 c.send(new Message(MessageType.UPDATE_BATTLEFIELD, ubf));
@@ -257,7 +252,7 @@ public class BattleHandler extends Thread {
     }
 
 
-    public void hitHero(String userName,Connection connection, HeroBattleAction data) {
+    public void hitHero(String userName, Connection connection, HeroBattleAction data) {
         heroHeroBattleActions.put(heroesForClient.get(userName), data);
         performPlayersTurn(userName);
     }
@@ -280,7 +275,7 @@ public class BattleHandler extends Thread {
                                 heroesForClient.values().stream().filter(hero1 -> hero1.equals(heroHeroBattleActions.get(hero).getTarget()))
                                         .findFirst().get().takeDamage(hero.getDamage());
 
-                                System.out.println("damage received_1");
+                                //System.out.println("damage received_1");
 
                             }
                             //если в списке защиты врага нет этой атаки
@@ -323,7 +318,7 @@ public class BattleHandler extends Thread {
                 current = finish - System.currentTimeMillis();
 
                 Message message = new Message(MessageType.ANIMATION);
-                System.out.println("send: " + message);
+                LOGGER.debug(MessageType.ANIMATION.toString());
                 for (Connection c : playerConnections.values()) {
                     c.send(message);
                 }
