@@ -19,9 +19,6 @@ public class MainLayoutController {
     private MainLayoutView mainLayoutView = new MainLayoutView(this);
     private MainLayoutModel mainLayoutModel = new MainLayoutModel();
 
-    public MainLayoutModel getMainLayoutModel() {
-        return mainLayoutModel;
-    }
 
     public BattleFieldController getBattleFieldController() {
         return battleFieldController;
@@ -44,18 +41,13 @@ public class MainLayoutController {
 
     public void switchToPickBattleView(){
         updatePlayerLabels();
-
-        //ресет кнопки "в бой"
-        mainLayoutModel.setInQueueToArena(false);
-        pickBattleView.resetButton();
-
         mainLayoutView.switchToBattle();
-
     }
 
 
     public void switchToFightView(){
         mainLayoutView.switchToFight();
+        pickBattleView.setJoinButton();
     }
 
     private void updatePlayerLabels() {
@@ -80,4 +72,11 @@ public class MainLayoutController {
     }
 
 
+    public void joinToBattle() {
+        pickBattleView.setLeaveButton();
+    }
+
+    public void leaveBattle() {
+        pickBattleView.setJoinButton();
+    }
 }

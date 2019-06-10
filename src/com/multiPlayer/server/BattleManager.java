@@ -25,12 +25,12 @@ public class BattleManager extends Thread {
 
     public void addToBattleQueue(String userName, Connection connection) {
         waitingForBattle.put(userName, connection);
-        LOGGER.debug("User {} want to join to the battle. Current queue value is {}.", userName, waitingForBattle.size());
+        LOGGER.debug("User {} wants to join to the battle. Current queue value is {}.", userName, waitingForBattle.size());
     }
 
     public void removeFromBattleQueue(String userName, Connection connection) {
         waitingForBattle.remove(userName);
-        LOGGER.debug("User {} want to leave queue. Current queue value is {}.", userName, waitingForBattle.size());
+        LOGGER.debug("User {} wants to leave queue. Current queue value is {}.", userName, waitingForBattle.size());
     }
 
 

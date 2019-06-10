@@ -58,20 +58,14 @@ public class BattleHandler extends Thread {
 
 
         //старт игры
-        playerConnections.forEach((k, v) -> {
-            try {
-                v.send(new Message(MessageType.BATTLE_FIELD_INSTANCE,
-                                new BattleFieldInstance(
-                                        new BattleField(9, 6), heroesForClient)
-                        )
-                );
-            } catch (IOException error) {
-                error.printStackTrace();
-            }
-        });
-
-
         playerConnections.keySet().forEach(i -> battleLog.append(i).append(" Вступает в бой!\n"));
+        sendMessageToAllPlayers(
+                new Message(MessageType.BATTLE_FIELD_INSTANCE,
+                        new BattleFieldInstance(
+                                new BattleField(9, 6),
+                                heroesForClient,
+                                battleLog.toString())));
+        battleLog.setLength(0);
 
         try {
             int round = 0;
@@ -102,8 +96,8 @@ public class BattleHandler extends Thread {
                 battleLog.append("Round ").append(round).append("\n");
 
                 //считаем результаты боя : дамаг и передвижение
-                performAllMovements();
-                computeDamage();
+                computeAllMovements();
+                computeAllDamage();
 
                 restartPlayersTurn();
                 sendBroadcastData();
@@ -115,7 +109,7 @@ public class BattleHandler extends Thread {
             //оповещение всех об окончании боя
             sendMessageToAllPlayers(new Message(MessageType.FINISH_BATTLE));
 
-            //удаление игроков из текущих игр баттле менеджера
+            //удаление игроков из текущих игр баттл менеджера
             playerConnections.forEach((k, v) -> BattleManager.getConnectionBattleHandlerMap().remove(v));
 
 
@@ -130,21 +124,11 @@ public class BattleHandler extends Thread {
     }
 
 
-    public void moveHero(String userName, HeroMovementAction action) {
-        movementActions.put(heroesForClient.get(userName), action);
-        performPlayersTurn(userName);
-
-    }
-
-
     public void performPlayersTurn(String playerName) {
         Hero h = heroesForClient.get(playerName);
         h.setTurnState(TurnState.TurnIsFinished);
         heroesForClient.put(playerName, h);
-
-        // sendBroadcastData();
         sendMessageToAllPlayers(new Message(MessageType.UPDATE_BATTLEFIELD, new UpdateBattleField(heroesForClient)));
-
     }
 
     public void sendMessageToAllPlayers(Message message) {
@@ -170,8 +154,8 @@ public class BattleHandler extends Thread {
         for (Connection c : playerConnections.values()) {
             try {
                 LOGGER.debug("sending data: {}", heroesForClient);
-                c.resetObjectOutputStream1();
-                c.send(message);
+                //  c.resetObjectOutputStream1();
+                c.sendWithResetOut(message);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -203,15 +187,9 @@ public class BattleHandler extends Thread {
             try {
                 LOGGER.debug("sending data: {}", heroesForClient);
 
-                c.resetObjectOutputStream1();
-                //   c.resetObjectInputStream();
-
-                UpdateBattleField ubf = new UpdateBattleField(heroesForClient);
-                ubf.setBattleLog(
-                        battleLog.toString()
-                );
-
-                c.send(new Message(MessageType.UPDATE_BATTLEFIELD, ubf));
+                c.sendWithResetOut(
+                        new Message(MessageType.UPDATE_BATTLEFIELD,
+                                new UpdateBattleField(heroesForClient, battleLog.toString())));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -219,21 +197,12 @@ public class BattleHandler extends Thread {
     }
 
 
-    private void performAllMovements() {
-
-
+    private void computeAllMovements() {
         movementActions.forEach((hero, value) -> {
-
             battleLog.append(hero.getName()).append(" переходит в ").append(value.getTileIndex()).append(" хексагон\n");
-
-            moveHero(hero, value.getTileIndex());
-
+            hero.moveTo(value.getTileIndex());
         });
         movementActions.clear();
-    }
-
-    private void moveHero(Hero hero, int index) {
-        hero.moveTo(index);
     }
 
 
@@ -243,14 +212,17 @@ public class BattleHandler extends Thread {
 
     private boolean isReadyToMoveHeroExist() {
         boolean result = false;
-
         for (Hero hero : heroesForClient.values()) {
-            // System.out.println("Hero: " + hero + " " + hero.getTurnState());
             result |= hero.getTurnState().equals(TurnState.ReadyForTurn);
         }
         return result;
     }
 
+    public void moveHero(String userName, HeroMovementAction action) {
+        movementActions.put(heroesForClient.get(userName), action);
+        performPlayersTurn(userName);
+
+    }
 
     public void hitHero(String userName, Connection connection, HeroBattleAction data) {
         heroHeroBattleActions.put(heroesForClient.get(userName), data);
@@ -258,7 +230,7 @@ public class BattleHandler extends Thread {
     }
 
 
-    public void computeDamage() {
+    private void computeAllDamage() {
 
         //для каждого героя
         heroesForClient.forEach((playerName, hero) -> {
@@ -301,7 +273,7 @@ public class BattleHandler extends Thread {
         heroHeroBattleActions.clear();
     }
 
-    public boolean isOneHeroRemain() {
+    private boolean isOneHeroRemain() {
         //todo: в идеале все игроки делятся на команды. проверять надо по командам
         for (Hero hero : heroesForClient.values()) {
             if (hero.getHealth() < 0) return true;

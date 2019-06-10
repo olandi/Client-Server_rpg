@@ -9,9 +9,8 @@
     </appender>
 
 
-    <!--<logger name="com.multiPlayer" level="INFO">
-       &lt;!&ndash; <appender-ref ref="STDOUT"/>&ndash;&gt;
-    </logger>-->
+    <logger name="com.multiPlayer.client.swing.model.util.BattleFieldDrawer" level="TRACE"/>
+
 
     <root level="trace">
         <appender-ref ref="STDOUT"/>

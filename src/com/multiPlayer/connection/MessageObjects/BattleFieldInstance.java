@@ -9,10 +9,12 @@ import java.util.Map;
 public class BattleFieldInstance implements Serializable {
     private BattleField battleField;
     private Map<String, Hero> heroes;
+    private String battleLog;
 
-    public BattleFieldInstance(BattleField battleField, Map<String, Hero> heroes) {
+    public BattleFieldInstance(BattleField battleField, Map<String, Hero> heroes, String battleLog) {
         this.battleField = battleField;
         this.heroes = heroes;
+        this.battleLog = battleLog;
     }
 
     public BattleField getBattleField() {
@@ -21,5 +23,18 @@ public class BattleFieldInstance implements Serializable {
 
     public Map<String, Hero> getHeroes() {
         return heroes;
+    }
+
+    public String getBattleLog() {
+        return battleLog;
+    }
+
+    @Override
+    public String toString() {
+        return "BattleFieldInstance{" +
+                "battleField=" + battleField +
+                ", heroes=" + heroes +
+                ", battleLog='" + battleLog + '\'' +
+                '}';
     }
 }

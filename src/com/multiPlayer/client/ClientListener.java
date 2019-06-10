@@ -7,7 +7,6 @@ import com.multiPlayer.connection.MessageObjects.BattleFieldInstance;
 import com.multiPlayer.connection.MessageObjects.UpdateBattleField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-//import com.multiPlayer.connection.MessageObjects.TimerMessage;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -52,62 +51,44 @@ public class ClientListener extends Thread {
             Message message;
             if ((message = controller.getConnection().receive()) != null) {
 
-                /**печать всех сообщений*/
-                //  System.out.println("received: "+message);
-
                 if (message.getType() == MessageType.JOIN_TO_BATTLE_RESPONSE) {
                     LOGGER.debug("received: {}", message);
+                    controller.joinToBattle();
+                }
+
+                if (message.getType() == MessageType.LEAVE_BATTLE_RESPONSE) {
+                    LOGGER.debug("received: {}", message);
+                    controller.leaveBattle();
                 }
 
                 if (message.getType() == MessageType.BATTLE_FIELD_INSTANCE) {
 
                     LOGGER.debug("received: {}", message);
-
-                    BattleFieldInstance bfi = (BattleFieldInstance) message.getData();
-                    controller.getBattleFieldController().initBattle(bfi.getBattleField(), bfi.getHeroes());
-
-                    controller.getBattleFieldController().setBattleFieldPanelMouseListener();
+                    controller.getBattleFieldController().initBattle((BattleFieldInstance) message.getData());
                     controller.switchToFightView();
                 }
 
                 if (message.getType() == MessageType.TIMER) {
-                    long l = (long) message.getData();
                     controller.getBattleFieldController()
-                            .getTimerPanel().getjLabel().setText(TimeUtil.getTime(l));
+                            .updateTimer(TimeUtil.getTime((long) message.getData()));
                 }
 
+                //todo удалить
                 if (message.getType() == MessageType.ANIMATION) {
-                    //System.out.println("received: " + message);
-
-                    controller.getBattleFieldController().getTimerPanel().getjLabel().setText("Анимация боя");
+                   controller.getBattleFieldController().updateTimer("Анимация боя");
                 }
 
 
                 if (message.getType() == MessageType.UPDATE_BATTLEFIELD) {
-
                     LOGGER.debug("received: {}", message);
-
-
-                    if (!"".equals(((UpdateBattleField) message.getData()).getBattleLog())) {
-                        controller.getBattleFieldController().getCombatLogPanel().appendText(
-                                ((UpdateBattleField) message.getData()).getBattleLog());
-
-                    }
-
-                    controller.getBattleFieldController().updateBattleField(
-                            ((UpdateBattleField) message.getData()).getHeroes()
-                    );
+                    controller.getBattleFieldController().updateBattleField(((UpdateBattleField) message.getData()));
                 }
 
                 if (message.getType() == MessageType.FINISH_BATTLE) {
-                    String m = "Victory";
-                    if (!controller.getBattleFieldController().getModel().isHeroPlayerHeroAlive()) {
-                        m = "Defeat";
-                    }
 
                     JOptionPane.showMessageDialog(
                             controller.getBattleFieldController().getMainGamePanel(),
-                            m,
+                            controller.getBattleFieldController().getModel().isHeroPlayerHeroAlive()? "Victory": "Defeat",
                             "Бой закончен",
                             JOptionPane.INFORMATION_MESSAGE);
 

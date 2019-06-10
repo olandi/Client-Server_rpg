@@ -35,6 +35,7 @@ public class BattleFieldDrawer {
         boolean isOddRow = true;
         int xx = 0, yy = 0;
 
+        LOGGER.trace("Start computing battlefield item coordinates");
         for (int i = 0; i < battleField.getSize(); i++) {
 
             if (j == (isOddRow ? battleField.getOddRowLength() : battleField.getEvenRowLength())) {
@@ -64,7 +65,7 @@ public class BattleFieldDrawer {
             xx += r * 2;
         }
 
-
+        LOGGER.trace("Finish computing battlefield item coordinates");
         return list;
     }
 }

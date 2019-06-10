@@ -1,5 +1,6 @@
 package com.multiPlayer.client.swing.View;
 
+import com.multiPlayer.both.Hero.Hero;
 import com.multiPlayer.client.swing.BattleFieldController;
 
 import javax.swing.*;
@@ -44,7 +45,7 @@ public class HeroInfoPanel {
         heroInfoPanel.removeAll();
     }
 
-    public void initPlayerInfo(){
+    public void initPlayerInfo(Hero hero){
 
         JPanel mainPanel = heroInfoPanel;
         BoxLayout a = new BoxLayout(mainPanel, BoxLayout.X_AXIS);
@@ -65,9 +66,9 @@ public class HeroInfoPanel {
 
 
 
-        heroPicture = new JLabel(new ImageIcon(battleFieldController.getModel().getImageMap().get(battleFieldController.getModel().getPlayersHero().getPortretId())));
-        heroName.setText(battleFieldController.getModel().getPlayersHero().getName());
-        heroHP.setText(battleFieldController.getModel().getPlayersHero().getHealth() + " HP");
+        heroPicture = new JLabel(new ImageIcon(battleFieldController.getImageDataBase().get(hero.getPortretId())));
+        heroName.setText(hero.getName());
+        heroHP.setText(hero.getHealth() + " HP");
         // initPlayerInfo();
         //heroPicture = new JLabel(new ImageIcon(ImageLoader.loadImage(HeroImages.KNIGHT_HEAD_PATH)));
         //  heroName.setText("Player1852");

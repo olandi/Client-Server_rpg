@@ -10,8 +10,8 @@ public class RunServer {
 
     public static void main(String[] args) {
 
-        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-        StatusPrinter.print(lc);
+       /* LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+        StatusPrinter.print(lc);*/
 
 
         new Server().RunServer();

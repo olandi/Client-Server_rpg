@@ -12,21 +12,17 @@ public class UpdateBattleField implements Serializable {
     public UpdateBattleField(Map<String, Hero> heroes) {
         this.heroes = heroes;
     }
+    public UpdateBattleField(Map<String, Hero> heroes,String battleLog) {
+        this.heroes = heroes;
+        this.battleLog = battleLog;
+    }
 
     public Map<String, Hero> getHeroes() {
         return heroes;
     }
 
-    public void setHeroes(Map<String, Hero> heroes) {
-        this.heroes = heroes;
-    }
-
     public String getBattleLog() {
         return battleLog;
-    }
-
-    public void setBattleLog(String battleLog) {
-        this.battleLog = battleLog;
     }
 
     @Override

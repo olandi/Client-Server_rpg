@@ -2,19 +2,23 @@ package com.multiPlayer.client.swing;
 
 import com.multiPlayer.both.Hero.Hero;
 import com.multiPlayer.both.battleField.BattleField;
+import com.multiPlayer.connection.MessageObjects.BattleFieldInstance;
 import com.multiPlayer.connection.MessageObjects.HeroBattleAction;
 import com.multiPlayer.connection.MessageObjects.HeroMovementAction;
 import com.multiPlayer.client.MainLayoutController;
 import com.multiPlayer.client.swing.View.*;
 import com.multiPlayer.client.swing.model.HexagonItem;
 import com.multiPlayer.connection.Message;
+import com.multiPlayer.connection.MessageObjects.UpdateBattleField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -87,20 +91,17 @@ public class BattleFieldController {
         return model.getPlayersHero();
     }
 
-
-
-
     public void sendMovementActionToServer(HeroMovementAction heroMovementAction) throws IOException {
         Message message = new Message(PLAYER_MOVEMENT_MESSAGE, heroMovementAction);
         LOGGER.debug("send message to server: {}", message);
-        controller.getConnection().send(message);
+        controller.getConnection().sendWithResetOut(message);
     }
 
 
     public void sendBattleActionToServer(HeroBattleAction heroBattleAction) throws IOException {
         Message message = new Message(PLAYER_BATTLE_MESSAGE, heroBattleAction);
         LOGGER.debug("send message to server: {}", message);
-        controller.getConnection().send(message);
+        controller.getConnection().sendWithResetOut(message);
     }
 
 
@@ -137,20 +138,27 @@ public class BattleFieldController {
         return model.isHittingPanelVisible();
     }
 
-    private void setTimerValueOnGui(String string) {
+    public void updateTimer(String string) {
         timerPanel.getjLabel().setText(string);
     }
 
-    public void initBattle(BattleField battleFieldArr, Map<String, Hero> heroes) {
-        model.initBattle(battleFieldArr, heroes);
+    public void initBattle(BattleFieldInstance bfi) {
+        //BattleField battleFieldArr, Map<String, Hero> heroes
+
+        model.initBattle(bfi.getBattleField(), bfi.getHeroes());
         model.initPlayerHero(controller.getPlayer());
-        heroInfoPanel.initPlayerInfo();
+
+        combatLogPanel.appendText(bfi.getBattleLog());
+        heroInfoPanel.initPlayerInfo(model.getPlayersHero());
+
+        setBattleFieldPanelMouseListener();
     }
 
 
-    public void updateBattleField(Map<String, Hero> data) {
-        model.updateData(data);
+    public void updateBattleField(UpdateBattleField ubf) {
 
+        model.updateData(ubf.getHeroes());
+        combatLogPanel.appendText(ubf.getBattleLog());
         //update hero HP info
         if (model.isHeroPlayerHeroAlive()) {
             heroInfoPanel.setHeroHP(model.getPlayersHero().getHealth());
@@ -178,5 +186,8 @@ public class BattleFieldController {
 
     public void setEnemy(Hero hero){
         model.setEnemy(hero);
+    }
+    public HashMap<String, Image> getImageDataBase(){
+        return model.getImageMap();
     }
 }

@@ -20,11 +20,14 @@ public class PickBattleView {
     private JLabel playerLabel;//= new JLabel("", SwingConstants.CENTER);
     private JLabel serverLabel;//= new JLabel("", SwingConstants.CENTER);
     private JButton button;//= new JButton("check");
+    private Message sendingMessage;
 
 
     public PickBattleView(MainLayoutController controller) {
         this.controller = controller;
         initView();
+
+        setJoinButton();
     }
 
     public JPanel getGoBattlePanel() {
@@ -37,20 +40,6 @@ public class PickBattleView {
 
     public void updateServerLabel(String newLabel) {
         serverLabel.setText("Server: " + newLabel);
-    }
-
-    public void resetButton() {
-        button.setText("Join to 1x1 battle");
-    }
-
-    public void showInfo() {
-
-        JOptionPane.showMessageDialog(
-                goBattlePanel,
-                "Соединение с сервером установлено",
-                "Title",
-                JOptionPane.INFORMATION_MESSAGE);
-
     }
 
     private void initView() {
@@ -76,17 +65,8 @@ public class PickBattleView {
 
         button.addActionListener(actionEvent -> {
             try {
-                if (!controller.getMainLayoutModel().isInQueueToArena()) {
-                    controller.getConnection().send(new Message(MessageType.JOIN_TO_BATTLE_REQUEST));
-                    LOGGER.debug("send: JOIN_TO_BATTLE_REQUEST");
-                    button.setText("Leave queue");
-                    controller.getMainLayoutModel().setInQueueToArena(true);
-                } else {
-                    controller.getConnection().send(new Message(MessageType.LEAVE_BATTLE_REQUEST));
-                    LOGGER.debug("send: LEAVE_BATTLE_REQUEST");
-                    button.setText("Join to 1x1 battle");
-                    controller.getMainLayoutModel().setInQueueToArena(false);
-                }
+                controller.getConnection().send(sendingMessage);
+                LOGGER.debug("send: {}", sendingMessage);
 
             } catch (IOException e) {
                 LOGGER.error("cannot join/leave battle", e);
@@ -96,4 +76,13 @@ public class PickBattleView {
 
     }
 
+    public void setLeaveButton(){
+        button.setText("Leave queue");
+        sendingMessage = new Message(MessageType.LEAVE_BATTLE_REQUEST);
+    }
+
+    public void setJoinButton(){
+        button.setText("Join to 1x1 battle");
+        sendingMessage = new Message(MessageType.JOIN_TO_BATTLE_REQUEST);
+    }
 }

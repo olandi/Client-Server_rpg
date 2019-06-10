@@ -29,6 +29,13 @@ public class Connection implements Closeable {
         }
     }
 
+    public void sendWithResetOut(Message message) throws IOException {
+        synchronized (out) {
+            out.reset();
+            this.out.writeObject(message);
+        }
+    }
+
     public Message receive() throws IOException, ClassNotFoundException {
         synchronized (in) {
             return (Message) this.in.readObject();
@@ -45,14 +52,14 @@ public class Connection implements Closeable {
         this.socket.close();
     }
 
-
+/*
     public void resetObjectOutputStream1() throws IOException {
         out.reset();
     }
     public void resetObjectInputStream1() throws IOException {
         in.reset();
     }
-
+*/
     public Socket getSocket() {
         return socket;
     }

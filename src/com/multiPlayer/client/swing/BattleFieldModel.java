@@ -123,4 +123,5 @@ public class BattleFieldModel {
     public void setEnemy(Hero enemy) {
         this.enemy = enemy;
     }
+
 }

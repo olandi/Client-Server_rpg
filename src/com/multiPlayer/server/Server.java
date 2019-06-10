@@ -74,10 +74,10 @@ public class Server {
 
             } catch (IOException e) {
                 e.printStackTrace();
-                LOGGER.error("Ошибка при обмене данными с удаленным адресом", e.fillInStackTrace());
+                LOGGER.error("Ошибка при обмене данными с удаленным адресом", e);
 
             } catch (ClassNotFoundException e) {
-                LOGGER.error("Ошибка при обмене данными с удаленным адресом", e.fillInStackTrace());
+                LOGGER.error("Ошибка при обмене данными с удаленным адресом", e);
                 e.printStackTrace();
             }
 
@@ -97,7 +97,6 @@ public class Server {
                 Message message;
                 if ((message = connection.receive()) != null) {
 
-                    /**печать всех сообщений*/
                     LOGGER.debug("received: {}", message);
 
                     if (message.getType() == MessageType.JOIN_TO_BATTLE_REQUEST) {
@@ -131,9 +130,7 @@ public class Server {
                 // Получить ответ клиента
                 Message message = connection.receive();
 
-                /**печать всех сообщений*/
                 if (message != null)  LOGGER.debug("received: {}", message);
-
 
                 // Проверить, что получена команда с именем пользователя
                 if (message.getType() == MessageType.PLAYER_NAME) {

@@ -116,7 +116,7 @@ public class BattleFieldPanel extends JPanel {
             }
 
             g.drawImage(
-                    battleFieldController.getModel().getImageMap().get(hero.getViewId()),
+                    battleFieldController.getImageDataBase().get(hero.getViewId()),
                     h.getCenter().x - 35,
                     h.getCenter().y - 35,
                     null);

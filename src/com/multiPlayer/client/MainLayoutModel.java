@@ -6,16 +6,6 @@ public class MainLayoutModel {
     private Connection connection;
     private String player;
 
-    private boolean isInQueueToArena = false;
-
-    public boolean isInQueueToArena() {
-        return isInQueueToArena;
-    }
-
-    public void setInQueueToArena(boolean inQueueToArena) {
-        isInQueueToArena = inQueueToArena;
-    }
-
     public Connection getConnection() {
         return connection;
     }
