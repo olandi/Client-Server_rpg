@@ -124,76 +124,37 @@ public class BattleHandler extends Thread {
     }
 
 
-    public void performPlayersTurn(String playerName) {
+    private void performPlayersTurn(String playerName) {
         Hero h = heroesForClient.get(playerName);
         h.setTurnState(TurnState.TurnIsFinished);
         heroesForClient.put(playerName, h);
         sendMessageToAllPlayers(new Message(MessageType.UPDATE_BATTLEFIELD, new UpdateBattleField(heroesForClient)));
     }
 
-    public void sendMessageToAllPlayers(Message message) {
-                /*
-        Lets come to the problem. for the first time when a client sends String to server, server prints it well,
-        add to it's arraylist, then broadcasts it to all clients and all clients can see that too. But next time
-        when client sends String message, server accepts it, adds to arraylist and broadcasts it, but this time all
-        clients gets old arraylist ( list with only one String which was added first ). I have printed arraylist
-        before broadcasting and it shows modified values, but at client side it shows list with one entry only.
-
-        ----
-
-        This is normal behavior. If you send the same object (your ArrayList) several times to a given ObjectOutputStream,
-        the stream will send the full object the first time, and will only send a reference to this object the next times.
-        This is what allows sending a graph of objects without consuming too much bandwidth, and without going into infinite
-        loops because a references b which also references a.
-
-        To make sure the ArrayList is sent a second time, you need to call reset() on the ObjectOutputStream.
-        https://stackoverflow.com/questions/20543403/in-simple-chat-program-server-sending-arraylist-of-string-but-clients-receiving
-         */
-
-        // без нью хеш мап - сервер отправляет одни данные, а клиент получает другие.
-        for (Connection c : playerConnections.values()) {
+    private void sendMessageToAllPlayers(Message message) {
+        playerConnections.forEach((name, connect) -> {
             try {
-                LOGGER.debug("sending data: {}", heroesForClient);
-                //  c.resetObjectOutputStream1();
-                c.sendWithResetOut(message);
+                LOGGER.debug("sending data to {} : {}", name, heroesForClient);
+                connect.sendWithResetOut(message);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        });
     }
 
 
-    public void sendBroadcastData() {
-        /*
-        Lets come to the problem. for the first time when a client sends String to server, server prints it well,
-        add to it's arraylist, then broadcasts it to all clients and all clients can see that too. But next time
-        when client sends String message, server accepts it, adds to arraylist and broadcasts it, but this time all
-        clients gets old arraylist ( list with only one String which was added first ). I have printed arraylist
-        before broadcasting and it shows modified values, but at client side it shows list with one entry only.
-
-        ----
-
-        This is normal behavior. If you send the same object (your ArrayList) several times to a given ObjectOutputStream,
-        the stream will send the full object the first time, and will only send a reference to this object the next times.
-        This is what allows sending a graph of objects without consuming too much bandwidth, and without going into infinite
-        loops because a references b which also references a.
-
-        To make sure the ArrayList is sent a second time, you need to call reset() on the ObjectOutputStream.
-        https://stackoverflow.com/questions/20543403/in-simple-chat-program-server-sending-arraylist-of-string-but-clients-receiving
-         */
-
-        //без нью хеш мап - сервер отправляет одни данные, а клиент получает другие.
-        for (Connection c : playerConnections.values()) {
+    private void sendBroadcastData() {
+        playerConnections.forEach((name, connect) -> {
             try {
-                LOGGER.debug("sending data: {}", heroesForClient);
+                LOGGER.debug("sending data to {} : {}", name, heroesForClient);
 
-                c.sendWithResetOut(
+                connect.sendWithResetOut(
                         new Message(MessageType.UPDATE_BATTLEFIELD,
                                 new UpdateBattleField(heroesForClient, battleLog.toString())));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        });
     }
 
 

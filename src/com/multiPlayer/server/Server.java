@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
@@ -29,7 +30,9 @@ public class Server {
     public void RunServer() {
 
         try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT)) {
-
+       // InetAddress address = InetAddress.getLocalHost();
+        //address.getHostAddress()
+           // try (ServerSocket serverSocket = new ServerSocket(InetAddress.getLocalHost().)) {
             LOGGER.info("The Server is running..");
 
             battleManager.start();
