@@ -105,7 +105,7 @@ public class BattleField implements Serializable {
 
     private int getAndMoveToNordEast(int fromIndex) {
 
-        if (isValidIndex(fromIndex - evenRowLength) && getRowNumber(fromIndex) - getRowNumber(fromIndex - evenRowLength)==1)
+        if (isValidIndex(fromIndex - evenRowLength) && getRowNumber(fromIndex) - getRowNumber(fromIndex - evenRowLength) == 1)
             return fromIndex - evenRowLength;
         else
             return -1;
@@ -114,29 +114,29 @@ public class BattleField implements Serializable {
 
     private int getAndMoveToNordWest(int fromIndex) {
 
-        if (isValidIndex(fromIndex - oddRowLength) && getRowNumber(fromIndex) - getRowNumber(fromIndex - oddRowLength)==1)
+        if (isValidIndex(fromIndex - oddRowLength) && getRowNumber(fromIndex) - getRowNumber(fromIndex - oddRowLength) == 1)
             return fromIndex - oddRowLength;
         else
             return -1;
     }
 
     private int getAndMoveToSouthEast(int fromIndex) {
-        if (isValidIndex(fromIndex + oddRowLength) && getRowNumber(fromIndex) - getRowNumber(fromIndex + oddRowLength)==-1)
+        if (isValidIndex(fromIndex + oddRowLength) && getRowNumber(fromIndex) - getRowNumber(fromIndex + oddRowLength) == -1)
             return fromIndex + oddRowLength;
         else
             return -1;
 
-       // return isValidIndex(fromIndex + oddRowLength) ? fromIndex + oddRowLength : -1;
+        // return isValidIndex(fromIndex + oddRowLength) ? fromIndex + oddRowLength : -1;
     }
 
     private int getAndMoveToSouthWest(int fromIndex) {
 
-        if (isValidIndex(fromIndex + evenRowLength) && getRowNumber(fromIndex) - getRowNumber(fromIndex + evenRowLength)==-1)
+        if (isValidIndex(fromIndex + evenRowLength) && getRowNumber(fromIndex) - getRowNumber(fromIndex + evenRowLength) == -1)
             return fromIndex + evenRowLength;
         else
             return -1;
 
-       // return isValidIndex(fromIndex + evenRowLength) ? fromIndex + evenRowLength : -1;
+        // return isValidIndex(fromIndex + evenRowLength) ? fromIndex + evenRowLength : -1;
     }
 
 
@@ -188,6 +188,17 @@ public class BattleField implements Serializable {
 
         }
         return 0;
+    }
+
+
+    public int mirrorDirection(int from, int to) {
+        if (to == getAndMoveToEast(from)) return getAndMoveToEast(to);
+        else if (to == getAndMoveToWest(from)) return getAndMoveToWest(to);
+        else if (to == getAndMoveToNordEast(from)) return getAndMoveToNordEast(to);
+        else if (to == getAndMoveToNordWest(from)) return getAndMoveToNordWest(to);
+        else if (to == getAndMoveToSouthEast(from)) return getAndMoveToSouthEast(to);
+        else if (to == getAndMoveToSouthWest(from)) return getAndMoveToSouthWest(to);
+        else return -1;
     }
 
     public static void main(String[] args) {

@@ -74,6 +74,10 @@ public class Hero implements Serializable, Movable {
         return turnState;
     }
 
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
+
     public void setTurnState(TurnState turnState) {
         this.turnState = turnState;
     }

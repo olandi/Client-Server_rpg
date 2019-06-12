@@ -1,14 +1,15 @@
 package com.multiPlayer.connection;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
 import java.net.Socket;
 import java.net.SocketAddress;
 
 //класс соединения между клиентом и сервером
 public class Connection implements Closeable {
+    private static Logger LOGGER = LoggerFactory.getLogger(Connection.class);
     private final Socket socket;
     private final ObjectOutputStream out;
     private final ObjectInputStream in;
